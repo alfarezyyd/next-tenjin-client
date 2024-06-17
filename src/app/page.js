@@ -5,6 +5,9 @@ import React from "react";
 import Header from "@/components/landing/Sections/Header";
 import "@/style/flexboxgrid.min.css";
 import "@/style/index.css";
+
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import Services from "@/components/landing/Sections/Services";
 import Projects from "@/components/landing/Sections/Projects";
 import Blog from "@/components/landing/Sections/Blog";

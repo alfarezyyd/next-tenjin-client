@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 // Components
+import ClientSlider from "@/components/landing/Elements/ClientSlider";
 import ServiceBox from "@/components/landing/Elements/ServiceBox";
 import FullButton from "@/components/landing/Buttons/FullButton";
 // Assets
@@ -11,6 +12,7 @@ export default function Services() {
     <Wrapper id="services">
       <div className="lightBg" style={{ padding: "50px 0" }}>
         <div className="container">
+          <ClientSlider />
         </div>
       </div>
       <div className="whiteBg" style={{ padding: "60px 0" }}>
