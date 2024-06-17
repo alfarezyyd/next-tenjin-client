@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import {Image} from "@nextui-org/react";
 
 export default function ProjectBox({ img, title, text, action}) {
   return (
     <Wrapper>
       <ImgBtn className="aniamte pointer" onClick={action ? () => action() : null}>
-        <img className="radius8" src={img} alt="project"></img>
+        <Image className="radius8" src={img} alt="project"></Image>
       </ImgBtn>
       <h3 className="font20 extraBold">{title}</h3>
       <p className="font13">{text}</p>

@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Contact01 from "@/../public/assets/landing/contact-1.png";
-import Contact02 from "@/../public/assets/landing/contact-2.png";
-import Contact03 from "@/../public/assets/landing/contact-3.png";
+import {Image} from "@nextui-org/react";
 
 // Assets
 
@@ -38,14 +36,15 @@ export default function Contact() {
             <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 flex">
               <div style={{ width: "50%" }} className="flexNullCenter flexColumn">
                 <ContactImgBox>
+                  <Image src={"/assets/landing/contact-1.png"} alt="office" className="radius6"  />
                 </ContactImgBox>
                 <ContactImgBox>
-                  <img src={Contact02} alt="office" className="radius6" />
+                  <Image src={"/assets/landing/contact-2.png"} alt="office" className="radius6" />
                 </ContactImgBox>
               </div>
               <div style={{ width: "50%" }}>
                 <div style={{ marginTop: "100px" }}>
-                  <img src={Contact03} alt="office" className="radius6" />
+                  <Image src={"/assets/landing/contact-3.png"} alt="office" className="radius6" />
                 </div>
               </div>
             </div>

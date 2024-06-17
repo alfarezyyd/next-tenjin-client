@@ -1,21 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 // Components
-import ClientSlider from "../Elements/ClientSlider";
-import ServiceBox from "../Elements/ServiceBox";
-import FullButton from "../Buttons/FullButton";
+import ServiceBox from "@/components/landing/Elements/ServiceBox";
+import FullButton from "@/components/landing/Buttons/FullButton";
 // Assets
-import AddImage1 from "@/../public/assets/landing/img/add/1.png";
-import AddImage2 from "@/../public/assets/landing/img/add/2.png";
-import AddImage3 from "@/../public/assets/landing/img/add/3.png";
-import AddImage4 from "@/../public/assets/landing/img/add/4.png";
+import {Image} from "@nextui-org/react";
 
 export default function Services() {
   return (
     <Wrapper id="services">
       <div className="lightBg" style={{ padding: "50px 0" }}>
         <div className="container">
-          <ClientSlider />
         </div>
       </div>
       <div className="whiteBg" style={{ padding: "60px 0" }}>
@@ -78,14 +73,18 @@ export default function Services() {
                 <AddRightInner>
                   <div className="flexNullCenter">
                     <AddImgWrapp1 className="flexCenter">
+                      <Image src={"/assets/landing/img/add/1.png"} alt="office" />
                     </AddImgWrapp1>
                     <AddImgWrapp2>
+                      <Image src={"/assets/landing/img/add/2.png"} alt="office" />
                     </AddImgWrapp2>
                   </div>
                   <div className="flexNullCenter">
                     <AddImgWrapp3>
+                      <Image src={"/assets/landing/img/add/3.png"} alt="office" />
                     </AddImgWrapp3>
                     <AddImgWrapp4>
+                      <Image src={"/assets/landing/img/add/4.png"} alt="office" />
                     </AddImgWrapp4>
                   </div>
                 </AddRightInner>

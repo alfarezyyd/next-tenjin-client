@@ -1,13 +1,8 @@
 import React from "react";
 import Slider from "react-slick";
 import styled from "styled-components";
+import {Image} from "@nextui-org/react";
 // Assets
-import ClientLogo01 from "@/../public/assets/landing/img/clients/logo01.svg"
-import ClientLogo02 from "@/../public/assets/landing/img/clients/logo02.svg";
-import ClientLogo03 from "@/../public/assets/landing/img/clients/logo03.svg";
-import ClientLogo04 from "@/../public/assets/landing/img/clients/logo04.svg";
-import ClientLogo05 from "@/../public/assets/landing/img/clients/logo05.svg";
-import ClientLogo06 from "@/../public/assets/landing/img/clients/logo06.svg";
 
 export default function ClientSlider() {
   const settings = {
@@ -44,34 +39,34 @@ export default function ClientSlider() {
     <div>
       <Slider {...settings}>
         <LogoWrapper className="flexCenter">
-          <ImgStyle src={ClientLogo01} alt="client logo" />
+          <Image src={"/assets/landing/img/clients/logo01.svg"} alt="client logo" className={"w-full h-full p-[10%]"} />
         </LogoWrapper>
         <LogoWrapper className="flexCenter">
-          <ImgStyle src={ClientLogo02} alt="client logo" />
+          <Image src={"/assets/landing/img/clients/logo02.svg"} alt="client logo" className={"w-full h-full p-[10%]"} />
         </LogoWrapper>
         <LogoWrapper className="flexCenter">
-          <ImgStyle src={ClientLogo03} alt="client logo"  />
+          <Image src={"/assets/landing/img/clients/logo03.svg"} alt="client logo" className={"w-full h-full p-[10%]"} />
         </LogoWrapper>
         <LogoWrapper className="flexCenter">
-          <ImgStyle src={ClientLogo04} alt="client logo" />
+          <Image src={"/assets/landing/img/clients/logo04.svg"} alt="client logo" className={"w-full h-full p-[10%]"} />
         </LogoWrapper>
         <LogoWrapper className="flexCenter">
-          <ImgStyle src={ClientLogo05} alt="client logo" />
+          <Image src={"/assets/landing/img/clients/logo05.svg"} alt="client logo" className={"w-full h-full p-[10%]"} />
         </LogoWrapper>
         <LogoWrapper className="flexCenter">
-          <ImgStyle src={ClientLogo06} alt="client logo" />
+          <Image src={"/assets/landing/img/clients/logo06.svg"} alt="client logo" className={"w-full h-full p-[10%]"} />
         </LogoWrapper>
         <LogoWrapper className="flexCenter">
-          <ImgStyle src={ClientLogo03} alt="client logo" />
+          <Image src={"/assets/landing/img/clients/logo03.svg"} alt="client logo" className={"w-full h-full p-[10%]"} />
         </LogoWrapper>
         <LogoWrapper className="flexCenter">
-          <ImgStyle src={ClientLogo04} alt="client logo" />
+          <Image src={"/assets/landing/img/clients/logo04.svg"} alt="client logo" className={"w-full h-full p-[10%]"} />
         </LogoWrapper>
         <LogoWrapper className="flexCenter">
-          <ImgStyle src={ClientLogo01} alt="client logo" />
+          <Image src={"/assets/landing/img/clients/logo01.svg"} alt="client logo" className={"w-full h-full p-[10%]"} />
         </LogoWrapper>
         <LogoWrapper className="flexCenter">
-          <ImgStyle src={ClientLogo02} alt="client logo" />
+          <Image src={"/assets/landing/img/clients/logo01.svg"} alt="client logo" className={"w-full h-full p-[10%]"} />
         </LogoWrapper>
       </Slider>
     </div>

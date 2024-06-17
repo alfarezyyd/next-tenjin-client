@@ -93,7 +93,6 @@ export default function Blog() {
               labore et dolore magna aliquyam erat, sed diam voluptua.
             </p>
           </HeaderInfo>
-          <TestimonialSlider />
         </div>
       </div>
     </Wrapper>

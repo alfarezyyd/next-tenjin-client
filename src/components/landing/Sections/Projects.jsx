@@ -4,13 +4,7 @@ import styled from "styled-components";
 import ProjectBox from "@/components/landing/Elements/ProjectBox";
 import FullButton from "@/components/landing/Buttons/FullButton";
 // Assets
-import ProjectImg1 from "@/../public/assets/landing/img/projects/1.png";
-import ProjectImg2 from "@/../public/assets/landing/img/projects/2.png";
-import ProjectImg3 from "@/../public/assets/landing/img/projects/3.png";
-import ProjectImg4 from "@/../public/assets/landing/img/projects/4.png";
-import ProjectImg5 from "@/../public/assets/landing/img/projects/5.png";
-import ProjectImg6 from "@/../public/assets/landing/img/projects/6.png";
-import AddImage2 from "@/../public/assets/landing/img/add/add2.png";
+import {Image} from "@nextui-org/react";
 
 export default function Projects() {
   return (
@@ -28,7 +22,7 @@ export default function Projects() {
           <div className="row textCenter">
             <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4">
               <ProjectBox
-                img={ProjectImg1}
+                img={"/assets/landing/img/projects/1.png"}
                 title="Awesome Project"
                 text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor."
                 action={() => alert("clicked")}
@@ -36,7 +30,7 @@ export default function Projects() {
             </div>
             <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4">
               <ProjectBox
-                img={ProjectImg2}
+                img={"/assets/landing/img/projects/2.png"}
                 title="Awesome Project"
                 text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor."
                 action={() => alert("clicked")}
@@ -44,7 +38,7 @@ export default function Projects() {
             </div>
             <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4">
               <ProjectBox
-                img={ProjectImg3}
+                img={"/assets/landing/img/projects/3.png"}
                 title="Awesome Project"
                 text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor."
                 action={() => alert("clicked")}
@@ -54,7 +48,7 @@ export default function Projects() {
           <div className="row textCenter">
             <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4">
               <ProjectBox
-                img={ProjectImg4}
+                img={"/assets/landing/img/projects/4.png"}
                 title="Awesome Project"
                 text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor."
                 action={() => alert("clicked")}
@@ -62,7 +56,7 @@ export default function Projects() {
             </div>
             <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4">
               <ProjectBox
-                img={ProjectImg5}
+                img={"/assets/landing/img/projects/5.png"}
                 title="Awesome Project"
                 text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor."
                 action={() => alert("clicked")}
@@ -70,7 +64,7 @@ export default function Projects() {
             </div>
             <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4">
               <ProjectBox
-                img={ProjectImg6}
+                img={"/assets/landing/img/projects/6.png"}
                 title="Awesome Project"
                 text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor."
                 action={() => alert("clicked")}
@@ -90,7 +84,7 @@ export default function Projects() {
             <AddLeft>
               <AddLeftInner>
                 <ImgWrapper className="flexCenter">
-                  <img className="radius8" src={AddImage2} alt="add" />
+                  <Image className="radius8" src={"/assets/landing/img/add/add2.png"} alt="add" />
                 </ImgWrapper>
               </AddLeftInner>
             </AddLeft>
@@ -135,7 +129,7 @@ const Advertising = styled.div`
   @media (max-width: 860px) {
     flex-direction: column;
     padding: 0 0 30px 0;
-    margin: 80px 0 0px 0;
+    margin: 80px 0 0 0;
   }
 `;
 const ButtonsRow = styled.div`

@@ -3,7 +3,6 @@ import styled from "styled-components";
 // Components
 import FullButton from "@/components/landing/Buttons/FullButton";
 // Assets
-import HeaderImage from "@/../public/assets/landing/img/header-img.png";
 import QuotesIcon from "@/../public/assets/landing/svg/Quotes";
 import Dots from "@/../public/assets/landing/svg/Dots";
 
@@ -24,7 +23,7 @@ export default function Header() {
       </LeftSide>
       <RightSide>
         <ImageWrapper>
-          <Img className="radius8" src={HeaderImage} alt="office" style={{zIndex: 9}} />
+          <Img className="radius8" src={"/assets/landing/img/header-img.png"} alt="office" style={{zIndex: 9}} />
           <QuoteWrapper className="flexCenter darkBg radius8">
             <QuotesWrapper>
               <QuotesIcon />
