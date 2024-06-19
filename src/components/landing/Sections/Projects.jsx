@@ -1,11 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 // Components
-import ProjectBox from "@/components/landing/Elements/ProjectBox";
 import FullButton from "@/components/landing/Buttons/FullButton";
 // Assets
 import {Button, Card, CardBody, CardFooter, CardHeader, Chip, Image} from "@nextui-org/react";
-import {CheckIcon} from "@/components/admin/icons/check-icon";
 
 export default function Projects() {
   return (
