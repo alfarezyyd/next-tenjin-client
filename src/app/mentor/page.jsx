@@ -3,16 +3,17 @@ import LandingLayout from "@/components/landing/LandingLayout";
 import styled from "styled-components";
 import {BreadcrumbItem, Breadcrumbs} from "@nextui-org/react";
 import {ShoppingCartIcon} from "@/components/landing/Icons/shopping-cart";
-import ProductCard from "@/components/landing/Components/product-card";
+import MentorImageCard from "@/components/landing/Components/mentor-image-card";
+import MentorProfileCard from "@/components/landing/Components/mentor-profile-card";
 
 export default function Page(props) {
   return (
     <>
       <LandingLayout>
-        <Wrapper>
+        <Wrapper className="bg-slate-50">
           <div className="flex h-full pt-16 container">
             <div className="w-2/3 h-full overflow-y-auto p-4">
-              <div className="space-y-4">
+              <div className="space-y-4 mr-24">
                 <Breadcrumbs
                   underline="hover"
                   classNames={{
@@ -31,7 +32,8 @@ export default function Page(props) {
                   <BreadcrumbItem href="#payment">Payment</BreadcrumbItem>
                   <BreadcrumbItem href="#delivery-address">Delivery Address</BreadcrumbItem>
                 </Breadcrumbs>
-                <ProductCard className="mt-24"/>
+                <MentorImageCard className="mt-36"/>
+                <MentorProfileCard className="mt-36"/>
               </div>
             </div>
             <div className="w-1/3 h-full bg-gray-100 p-4">
