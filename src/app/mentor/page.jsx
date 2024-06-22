@@ -6,13 +6,32 @@ import {ShoppingCartIcon} from "@/components/landing/Icons/shopping-cart";
 import MentorImageCard from "@/components/landing/Components/mentor-image-card";
 import MentorProfileCard from "@/components/landing/Components/mentor-profile-card";
 import {HeartIcon} from "@/components/landing/Icons/heart-icon";
+import MentorAssistance from "@/components/landing/Components/mentor-assistance";
 
 export default function Page(props) {
   return (
     <>
       <LandingLayout className="bg-slate-50">
         <Wrapper className="container">
-          <div className="pt-8">
+          <Breadcrumbs className="mt-4"
+                       underline="hover"
+                       classNames={{
+                         list: "bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-small",
+                       }}
+                       itemClasses={{
+                         item: "text-white/60 data-[current=true]:text-white",
+                         separator: "text-white/40",
+                       }}
+                       variant="solid"
+          >
+            <BreadcrumbItem href="#shopping-cart">
+              <ShoppingCartIcon/>
+            </BreadcrumbItem>
+            <BreadcrumbItem href="#checkout">Checkout</BreadcrumbItem>
+            <BreadcrumbItem href="#payment">Payment</BreadcrumbItem>
+            <BreadcrumbItem href="#delivery-address">Delivery Address</BreadcrumbItem>
+          </Breadcrumbs>
+          <div className="mt-4">
             <Card>
               <CardBody className="flex flex-row justify-between p-4">
                 <div className="div">
@@ -38,36 +57,17 @@ export default function Page(props) {
                 </div>
               </CardBody>
             </Card>
-            <Breadcrumbs
-              className="mt-4"
-              underline="hover"
-              classNames={{
-                list: "bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-small",
-              }}
-              itemClasses={{
-                item: "text-white/60 data-[current=true]:text-white",
-                separator: "text-white/40",
-              }}
-              variant="solid"
-            >
-              <BreadcrumbItem href="#shopping-cart">
-                <ShoppingCartIcon/>
-              </BreadcrumbItem>
-              <BreadcrumbItem href="#checkout">Checkout</BreadcrumbItem>
-              <BreadcrumbItem href="#payment">Payment</BreadcrumbItem>
-              <BreadcrumbItem href="#delivery-address">Delivery Address</BreadcrumbItem>
-            </Breadcrumbs>
           </div>
           <div className="flex h-full pt-4">
-            <div className="w-2/3 h-full overflow-y-auto p-4">
-              <div className="space-y-4 mr-24">
+            <div className="w-7/12 h-full overflow-y-auto">
+              <div className="space-y-4 mr-12">
                 <MentorImageCard className="mt-36"/>
                 <MentorProfileCard className="mt-36"/>
               </div>
             </div>
-            <div className="w-1/3 h-full bg-gray-100">
-              <div className="fixed  w-1/3 bg-white">
-                <h1 className="text-2xl font-bold">Kolom Kanan</h1>
+            <div className="w-5/12 h-full -pt-2">
+              <div className="fixed w-1/3 bg-white">
+                <MentorAssistance/>
                 <p>Kandungan tetap di sini.</p>
                 <p>Anda bisa menambahkan lebih banyak konten di sini.</p>
               </div>

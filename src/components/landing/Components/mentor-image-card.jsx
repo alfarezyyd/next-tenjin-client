@@ -61,6 +61,7 @@ export default function MentorImageCard() {
           <Card shadow="sm" key={index} className="flex-shrink-0 w-36"> {/* Set a fixed width */}
             <CardBody className="overflow-hidden p-0 rounded-xl"> {/* Set a fixed height */}
               <Image
+                isZoomed
                 shadow="sm"
                 radius="lg"
                 width="100%"
