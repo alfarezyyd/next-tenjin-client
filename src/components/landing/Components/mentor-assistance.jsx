@@ -9,7 +9,7 @@ export default function MentorAssistance() {
       <div className="overflow-x-auto flex flex-row gap-2 no-scrollbar">
         <Card
           isBlurred
-          className="border-none bg-background/60 dark:bg-default-100/50 w-[237px] h-fit hover:bg-sky-400 hover:text-white flex-shrink-0"
+          className="border-none bg-background/60 dark:bg-default-100/50 w-[236px] h-fit hover:bg-sky-400 hover:text-white flex-shrink-0"
           shadow="sm">
           <CardBody className="overflow-hidden">
             <div className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-4 items-center justify-center">
@@ -38,7 +38,7 @@ export default function MentorAssistance() {
         </Card>
         <Card
           isBlurred
-          className="border-none bg-background/60 dark:bg-default-100/50 w-[237px] h-fit hover:bg-sky-400 hover:text-white flex-shrink-0"
+          className="border-none bg-background/60 dark:bg-default-100/50 w-[236px] h-fit hover:bg-sky-400 hover:text-white flex-shrink-0"
           shadow="sm">
           <CardBody className="overflow-hidden">
             <div className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-4 items-center justify-center">

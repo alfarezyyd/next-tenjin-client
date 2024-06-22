@@ -11,12 +11,12 @@ import MentorAssistance from "@/components/landing/Components/mentor-assistance"
 export default function Page(props) {
   return (
     <>
-      <LandingLayout className="bg-slate-50">
+      <LandingLayout className="">
         <Wrapper className="container">
           <Breadcrumbs className="mt-4"
                        underline="hover"
                        classNames={{
-                         list: "bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-small",
+                         list: "bg-gradient-to-br from-cyan-500 to-sky-500 shadow-small",
                        }}
                        itemClasses={{
                          item: "text-white/60 data-[current=true]:text-white",
@@ -66,7 +66,7 @@ export default function Page(props) {
               </div>
             </div>
             <div className="w-5/12 h-full -pt-2">
-              <div className="fixed w-1/3 bg-white">
+              <div className="fixed w-1/3">
                 <MentorAssistance/>
                 <p>Kandungan tetap di sini.</p>
                 <p>Anda bisa menambahkan lebih banyak konten di sini.</p>
