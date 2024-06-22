@@ -5,7 +5,7 @@ import {
   Accordion,
   AccordionItem, Divider
 } from "@nextui-org/react";
-import { FaUserGraduate, FaTools, FaBriefcase } from 'react-icons/fa';
+import {FaUserGraduate, FaTools, FaBriefcase} from 'react-icons/fa';
 
 export default function MentorProfileCard() {
   return (
@@ -21,10 +21,16 @@ export default function MentorProfileCard() {
           <h1 className="text-xl font-semibold">Biodata</h1>
           <Divider className="my-4"/>
           <p className="mb-4">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, adipisci commodi consequatur corporis dolore dolorem est et, ipsa iure nemo obcaecati pariatur qui quia quibusdam, rerum tempore tenetur voluptatibus. A, aliquam aliquid asperiores at, autem consequuntur culpa debitis doloremque ea eius est ex facere ipsa magnam maiores, nemo neque non nulla numquam perspiciatis quas quisquam quos ratione recusandae repellat suscipit tenetur voluptas!
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, adipisci commodi consequatur corporis dolore
+            dolorem est et, ipsa iure nemo obcaecati pariatur qui quia quibusdam, rerum tempore tenetur voluptatibus. A,
+            aliquam aliquid asperiores at, autem consequuntur culpa debitis doloremque ea eius est ex facere ipsa magnam
+            maiores, nemo neque non nulla numquam perspiciatis quas quisquam quos ratione recusandae repellat suscipit
+            tenetur voluptas!
           </p>
           <p className="mb-4">
-            Architecto eligendi error et. Adipisci consectetur consequatur distinctio dolorem, eum illo incidunt maxime nemo nostrum numquam odio optio quae qui quia rerum ut vero. Ad animi corporis eius facilis itaque, labore nam, necessitatibus neque odit reprehenderit velit vero?
+            Architecto eligendi error et. Adipisci consectetur consequatur distinctio dolorem, eum illo incidunt maxime
+            nemo nostrum numquam odio optio quae qui quia rerum ut vero. Ad animi corporis eius facilis itaque, labore
+            nam, necessitatibus neque odit reprehenderit velit vero?
           </p>
         </CardBody>
       </Card>

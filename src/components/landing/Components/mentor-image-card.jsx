@@ -46,7 +46,7 @@ const list = [
 export default function MentorImageCard() {
   return (
     <>
-      <Card className=" bg-pattern">
+      <Card className="shadow-none bg-pattern">
         <CardBody className="overflow-visible w-fit mx-auto ">
           <Image
             isBlurred

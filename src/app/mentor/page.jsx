@@ -11,7 +11,7 @@ import MentorAssistance from "@/components/landing/Components/mentor-assistance"
 export default function Page(props) {
   return (
     <>
-      <LandingLayout className="">
+      <LandingLayout>
         <Wrapper className="container">
           <Breadcrumbs className="mt-4"
                        underline="hover"
