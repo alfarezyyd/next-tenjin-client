@@ -1,15 +1,15 @@
 "use client";
 
-import '../../public/assets/css/style.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import '../../public/assets/css/components.css';
+import '../../public/assets/css/style.css';
 
 import dynamic from 'next/dynamic';
 
 // Dynamically import libraries that depend on window
 dynamic(() => import('jquery/src/jquery'), {ssr: false});
-dynamic(() => import('popper.js/dist/popper.min'), {ssr: false});
+dynamic(() => import('popper.js/dist/popper'), {ssr: false});
 dynamic(() => import('bootstrap/dist/js/bootstrap'), {ssr: false});
 dynamic(() => import('jquery.nicescroll/jquery.nicescroll'), {ssr: false});
 dynamic(() => import('moment/moment'), {ssr: false});
