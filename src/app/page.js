@@ -1,9 +1,9 @@
 "use client";
 
+import '../../public/assets/css/style.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import '../../public/assets/css/components.css';
-import '../../public/assets/css/style.css';
 
 import dynamic from 'next/dynamic';
 
