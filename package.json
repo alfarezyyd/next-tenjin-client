@@ -29,7 +29,6 @@
     "eslint": "^8.40.0",
     "eslint-config-next": "^13.4.2",
     "framer-motion": "^11.3.8",
-    "fullcalendar": "^3.10.0",
     "gmaps": "^0.4.24",
     "izitoast": "^1.4.0",
     "jquery": "^3.3.1",
