@@ -2,8 +2,8 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@fortawesome/fontawesome-free/css/all.css'
-import '../../public/assets/css/components.css';
-import '../../public/assets/css/style.css';
+import '../../../public/assets/css/components.css';
+import '../../../public/assets/css/style.css';
 
 import dynamic from 'next/dynamic';
 
@@ -13,9 +13,9 @@ dynamic(() => import('popper.js/dist/popper'), {ssr: false});
 dynamic(() => import('bootstrap/dist/js/bootstrap'), {ssr: false});
 dynamic(() => import('jquery.nicescroll/jquery.nicescroll'), {ssr: false});
 dynamic(() => import('moment/moment'), {ssr: false});
-dynamic(() => import('../../public/assets/js/stisla'), {ssr: false});
-dynamic(() => import('../../public/assets/js/scripts'), {ssr: false});
-dynamic(() => import('../../public/assets/js/custom'), {ssr: false});
+dynamic(() => import('../../../public/assets/js/stisla'), {ssr: false});
+dynamic(() => import('../../../public/assets/js/scripts'), {ssr: false});
+dynamic(() => import('../../../public/assets/js/custom'), {ssr: false});
 
 export default function Page() {
 
