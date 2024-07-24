@@ -6,6 +6,10 @@
 @tailwind utilities;
 /* SLICK CAROUSEL LINKS */
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   margin: 0;
   font-family: 'Urbanist', sans-serif;

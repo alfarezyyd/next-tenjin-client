@@ -27,7 +27,6 @@ export default function Page() {
         <Beliefs/>
         <Wework/>
         <Ourteam/>
-        {/* <Featured /> */}
         <Manage/>
         <FAQ/>
         <Testimonials/>
