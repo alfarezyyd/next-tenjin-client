@@ -1,6 +1,6 @@
 "use client"
 import LandingWrapper from "/components/landing/LandingWrapper";
-import {Avatar, Button, Card, CardBody, CardFooter, CardHeader, Chip, Image} from "@nextui-org/react";
+import {Avatar, Button, Card, CardBody, CardFooter, Chip, Image, Tab, Tabs} from "@nextui-org/react";
 
 export default function Page(props) {
   const list = [
@@ -123,7 +123,103 @@ export default function Page(props) {
                     </div>
                   </div>
                 </div>
-                <div className="w-2/3"></div>
+                <div className="w-2/3">
+                  <Tabs aria-label="Options" size="lg">
+                    <Tab key="photos" title="Photos">
+                      <Card>
+                        <CardBody>
+                          <div className="flex flex-row gap-5">
+                            <Card isBlurred className="border-none bg-background/60 dark:bg-default-100/50 max-w-fit"
+                                  shadow="sm">
+                              <CardBody>
+                                <div
+                                  className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-4 items-center justify-center">
+                                  <div className="relative col-span-6 md:col-span-4">
+                                    <Image
+                                      alt="Album cover"
+                                      className="object-cover w-20"
+                                      shadow="md"
+                                      src="https://nextui.org/images/album-cover.png"
+                                    />
+                                  </div>
+
+                                  <div className="flex flex-col col-span-6 md:col-span-8">
+                                    <div className="flex justify-between items-start">
+                                      <div className="flex flex-col gap-0">
+                                        <h3 className="font-semibold text-foreground/90">Daily Mix</h3>
+                                        <p className="text-small text-foreground/80">12 Tracks</p>
+                                        <h1 className="text-large font-medium mt-2">Frontend Radio</h1>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </CardBody>
+                            </Card>
+                            <Card isBlurred className="border-none bg-background/60 dark:bg-default-100/50 max-w-fit"
+                                  shadow="sm">
+                              <CardBody>
+                                <div
+                                  className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-4 items-center justify-center">
+                                  <div className="relative col-span-6 md:col-span-4">
+                                    <Image
+                                      alt="Album cover"
+                                      className="object-cover w-20"
+                                      shadow="md"
+                                      src="https://nextui.org/images/album-cover.png"
+                                    />
+                                  </div>
+
+                                  <div className="flex flex-col col-span-6 md:col-span-8">
+                                    <div className="flex justify-between items-start">
+                                      <div className="flex flex-col gap-0">
+                                        <h3 className="font-semibold text-foreground/90">Daily Mix</h3>
+                                        <p className="text-small text-foreground/80">12 Tracks</p>
+                                        <h1 className="text-large font-medium mt-2">Frontend Radio</h1>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </CardBody>
+                            </Card>
+                          </div>
+                        </CardBody>
+                        <div className="flex flex-row ml-3 ">
+                          <Image
+                            width={300}
+                            alt="NextUI hero Image"
+                            src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+                          />
+                          <div className="flex flex-col ml-5">
+                            <h1 className="text-4xl font-bold">PUBG</h1>
+                            <div className="flex flex-row">
+                              <div className="">Rating</div>
+                              <div className="">Order</div>
+                            </div>
+                            <div className="">Harga</div>
+                            <div className="flex flex-row gap-3">
+                              <Button color="primary" variant="ghost" size="lg" radius="full">
+                                Ghost
+                              </Button>
+                              <Button color="primary" variant="solid" size="lg" radius="full">
+                                Chat
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+
+                    </Tab>
+                    <Tab key="music" title="Music">
+                      <Card>
+                        <CardBody>
+                          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                          commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                          dolore eu fugiat nulla pariatur.
+                        </CardBody>
+                      </Card>
+                    </Tab>
+                  </Tabs>
+                </div>
               </div>
             </div>
           </div>
