@@ -1,6 +1,19 @@
 "use client"
 import LandingWrapper from "/components/landing/LandingWrapper";
-import {Avatar, Button, Card, CardBody, CardFooter, Chip, Image, Tab, Tabs} from "@nextui-org/react";
+import {
+  Avatar,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Chip,
+  Divider,
+  Image,
+  Tab,
+  Tabs
+} from "@nextui-org/react";
+import Link from "next/link";
 
 export default function Page(props) {
   const list = [
@@ -125,7 +138,7 @@ export default function Page(props) {
                 </div>
                 <div className="w-2/3">
                   <Tabs aria-label="Options" size="lg">
-                    <Tab key="photos" title="Photos">
+                    <Tab key="photos" title="Photos" className="flex flex-col gap-5">
                       <Card>
                         <CardBody>
                           <div className="flex flex-row gap-5">
@@ -182,32 +195,112 @@ export default function Page(props) {
                               </CardBody>
                             </Card>
                           </div>
-                        </CardBody>
-                        <div className="flex flex-row ml-3 ">
-                          <Image
-                            width={300}
-                            alt="NextUI hero Image"
-                            src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
-                          />
-                          <div className="flex flex-col ml-5">
-                            <h1 className="text-4xl font-bold">PUBG</h1>
-                            <div className="flex flex-row">
-                              <div className="">Rating</div>
-                              <div className="">Order</div>
-                            </div>
-                            <div className="">Harga</div>
-                            <div className="flex flex-row gap-3">
-                              <Button color="primary" variant="ghost" size="lg" radius="full">
-                                Ghost
-                              </Button>
-                              <Button color="primary" variant="solid" size="lg" radius="full">
-                                Chat
-                              </Button>
+                          <div className="flex flex-row mt-5">
+                            <Image
+                              alt="NextUI hero Image"
+                              src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+                              className="w-32 h-40"
+                            />
+                            <div className="flex flex-col ml-5 gap-4">
+                              <h1 className="text-4xl font-bold">Mobile Legend</h1>
+                              <div className="flex flex-row gap-3">
+                                <Image src={"/assets/star.svg"} alt="Star" width={25}/>
+                                <span className="text-xl font-bold">5.00</span>
+                                <Divider orientation="vertical" className="bg-black"/>
+                                <div className="text-xl font-light">Order 133</div>
+                              </div>
+                              <div className="flex flex-row gap-3">
+                                <Image src={"/assets/coin.svg"} alt="Star" width={50}/>
+                                <div className="flex flex-col">
+                                  <div className="text-base text-amber-400"><span
+                                    className="text-xl font-bold">1</span> /30 Menit
+                                  </div>
+                                  <div className="text-xs line-through text-gray-400">1/30 Menit</div>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                          <div className="flex flex-row gap-3 mt-5">
+                            <Button color="primary" variant="ghost" size="lg" radius="full" className="w-48 h-16">
+                              <span className="font-bold text-2xl">Order</span>
+                            </Button>
+                            <Button variant="solid" size="lg" radius="full"
+                                    className="w-48 h-16 bg-gradient-to-r from-teal-400 to-blue-500 hover:from-pink-500 hover:to-orange-500 ">
+                              <span className="font-bold text-2xl text-white">Hi</span>
+                            </Button>
+                          </div>
+                        </CardBody>
                       </Card>
+                      <Card className="max-w">
+                        <CardHeader className="flex gap-3">
+                          <Image
+                            alt="nextui logo"
+                            height={40}
+                            radius="sm"
+                            src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
+                            width={40}
+                          />
+                          <div className="flex flex-col">
+                            <h1 className="text-2xl font-bold text-back">Biodata</h1>
+                          </div>
+                        </CardHeader>
+                        <Divider/>
+                        <div className="p-2 rounded-md">
+                          <CardBody className="bg-gray-200 ">
+                            <p>Make beautiful websites regardless of your design experience.</p>
+                          </CardBody>
+                        </div>
+                        <Divider/>
+                        <CardFooter>
+                          <Link
+                            isExternal
+                            showAnchorIcon
+                            href="https://github.com/nextui-org/nextui"
+                          >
+                            Visit source code on GitHub.
+                          </Link>
+                        </CardFooter>
+                      </Card>
+                      <Card className="max-w">
+                        <CardHeader className="flex gap-3">
+                          <Image
+                            alt="nextui logo"
+                            height={40}
+                            radius="sm"
+                            src="/assets/star.svg"
+                            width={40}
+                          />
+                          <p className="text-2xl font-bold">5.00 &bull; Ulasan User (193)</p>
+                        </CardHeader>
+                        <Divider/>
+                        <CardBody>
+                          <div className="flex flex-row gap-3">
+                            <div className="flex flex-row gap-5">
+                              <Avatar
+                                src="https://i.pravatar.cc/150?u=a04258114e29026302d"
+                                size="lg"
+                                className="rounded-full flex-shrink-0"
+                              />
+                              <div className="flex flex-col">
+                                <h3 className="text-xl font-semibold">Budi Saranshin</h3>
+                                <p className="text-sm">
+                                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur
+                                  cumque deserunt ea est fuga nisi,
+                                  numquam quasi quos ratione, reprehenderit soluta tempore totam. Dolores id nemo omnis
+                                  vero vitae.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
 
+
+                        </CardBody>
+                        <CardFooter>
+                          <Button color="primary" variant="bordered" radius="full" className="mx-auto">
+                            Lihat lebih banyak
+                          </Button>
+                        </CardFooter>
+                      </Card>
                     </Tab>
                     <Tab key="music" title="Music">
                       <Card>
