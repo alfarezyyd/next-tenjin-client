@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {FcGoogle} from "react-icons/fc";
 import {Button, Input} from "@nextui-org/react";
+import Cookies from "js-cookie";
 
 export default function Login() {
   const [loginRequest, setLoginRequest] = useState({
@@ -33,10 +34,12 @@ export default function Login() {
         body: JSON.stringify(loginRequest),
       });
 
+      const responseBody = await response.json();
       if (response.ok) {
+        Cookies.set('accessToken', responseBody['accessToken']);
         push('/');  // Redirect to the dashboard or another protected route
       } else {
-        const data = await response.json();
+        const data = responseBody;
         setUserError(data.errors || {general: 'Login failed'});
       }
     } catch (e) {
