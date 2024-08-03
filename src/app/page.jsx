@@ -1,18 +1,18 @@
-import Navbar from '/components/landing/Navbar/index';
-import Footer from '/components/landing/Footer/index';
-import Banner from '/components/landing/Banner/index';
-import Aboutus from '/components/landing/Aboutus/index';
-import Dedicated from '/components/landing/Dedicated/index';
-import Digital from '/components/landing/Digital/index';
-import Beliefs from '/components/landing/Beliefs/index';
-import Wework from '/components/landing/Wework/index';
-import Ourteam from '/components/landing/Ourteam/index';
-import Manage from '/components/landing/Manage/index';
-import FAQ from '/components/landing/FAQ/index';
-import Testimonials from '/components/landing/Testimonials/index';
-import Articles from '/components/landing/Articles/index';
-import Joinus from '/components/landing/Joinus/index';
-import Insta from '/components/landing/Insta/index';
+import Navbar from '/src/components/landing/Navbar/index';
+import Footer from '/src/components/landing/Footer/index';
+import Banner from '/src/components/landing/Banner/index';
+import Aboutus from '/src/components/landing/Aboutus/index';
+import Dedicated from '/src/components/landing/Dedicated/index';
+import Digital from '/src/components/landing/Digital/index';
+import Beliefs from '/src/components/landing/Beliefs/index';
+import Wework from '/src/components/landing/Wework/index';
+import Ourteam from '/src/components/landing/Ourteam/index';
+import Manage from '/src/components/landing/Manage/index';
+import FAQ from '/src/components/landing/FAQ/index';
+import Testimonials from '/src/components/landing/Testimonials/index';
+import Articles from '/src/components/landing/Articles/index';
+import Joinus from '/src/components/landing/Joinus/index';
+import Insta from '/src/components/landing/Insta/index';
 import './globals.css'
 
 export default function Page() {
