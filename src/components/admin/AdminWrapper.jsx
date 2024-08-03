@@ -1,7 +1,6 @@
 import AdminNavbar from "./AdminNavbar";
 import AdminSidebar from "./AdminSidebar";
 import AdminFooter from "./AdminFooter";
-import dynamic from "next/dynamic";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import '../../../public/assets/css/components.css'
@@ -11,8 +10,9 @@ if (typeof window !== "undefined") {
   import('jquery/src/jquery');
   import('popper.js/dist/popper');
   import('bootstrap/dist/js/bootstrap');
-  import('jquery.nicescroll/jquery.nicescroll');
+  import('nicescroll/dist/jquery.nicescroll.min')
   import('moment/moment');
+  import('tooltip.js/dist/tooltip.min')
   import('../../../public/assets/js/scripts');
   import('../../../public/assets/js/custom');
 }
