@@ -1,7 +1,7 @@
 "use client";
 
 
-import AdminWrapper from "../../../components/admin/AdminWrapper";
+import AdminWrapper from "@/components/admin/AdminWrapper";
 
 
 export default function Page() {

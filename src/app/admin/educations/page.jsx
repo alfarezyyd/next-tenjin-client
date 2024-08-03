@@ -1,5 +1,5 @@
 import '../../../../public/assets/css/educations.scss'
-import AdminWrapper from "../../../../components/admin/AdminWrapper";
+import AdminWrapper from "@/components/admin/AdminWrapper";
 
 export default function Page(props) {
   return (
