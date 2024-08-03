@@ -19,42 +19,32 @@ export default function Login() {
     });
   };
 
-  const fetchCsrf = (async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`, {
-      method: 'GET',
-      cache: "no-store",
-      credentials: "include",
-      headers: {
-        Referer: '127.0.0.1:8000',
-        Accept: 'application/json',
-      },
-    });
-  })
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUserError({});
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login`, {
-      method: 'POST',
-      credentials: "include",
-      headers: {
-        Referer: '127.0.0.1:8000',
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN')
-      },
-      body: JSON.stringify(loginRequest),
-    });
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/authentication/login`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginRequest),
+      });
 
-    if (response.ok) {
-      push('/products');  // Redirect to the dashboard or another protected route
-    } else {
-      const data = await response.json();
-      setUserError(data.errors || {general: 'Login failed'});
+      if (response.ok) {
+        push('/');  // Redirect to the dashboard or another protected route
+      } else {
+        const data = await response.json();
+        setUserError(data.errors || {general: 'Login failed'});
+      }
+    } catch (e) {
+      console.log(e)
     }
+
   };
   useEffect(() => {
-    fetchCsrf()
   }, []);
   return (
     <div
@@ -130,7 +120,7 @@ export default function Login() {
             Not registered yet?
           </span>
           <a
-            href={process.env.NEXT_PUBLIC_BASE_URL + '/auth/register'}
+            href={`${process.env.NEXT_PUBLIC_BASE_URL}/auth/register`}
             className="ml-1 text-sm font-medium text-brand-500 hover:text-brand-600"
           >
             Create an account
