@@ -1,9 +1,16 @@
 "use client";
 import AdminWrapper from "@/components/admin/AdminWrapper";
-import BundledEditor from "@/components/admin/BundledEditor";
-
+import {useEffect} from "react";
 
 export default function Page() {
+  useEffect(() => {
+    const loadAssets = async () => {
+      await import('select2/dist/css/select2.min.css');
+      await import('select2/dist/js/select2.min')
+    }
+    loadAssets();
+  })
+
   return (
     <AdminWrapper>
       <section className="section">
@@ -36,32 +43,17 @@ export default function Page() {
                   <div className="form-group row mb-4">
                     <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Category</label>
                     <div className="col-sm-12 col-md-7">
-                      <select className="form-control selectric">
-                        <option>Tech</option>
-                        <option>News</option>
-                        <option>Political</option>
+                      <select className="form-control select2">
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                        <option>Option 3</option>
                       </select>
                     </div>
                   </div>
                   <div className="form-group row mb-4">
                     <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Content</label>
                     <div className="col-sm-12 col-md-7">
-                      <BundledEditor
-                        initialValue='<p>This is the initial content of the editor.</p>'
-                        init={{
-                          height: 500,
-                          menubar: false,
-                          plugins: [
-                            'advlist', 'anchor', 'autolink', 'help', 'image', 'link', 'lists',
-                            'searchreplace', 'table', 'wordcount'
-                          ],
-                          toolbar: 'undo redo | blocks | ' +
-                            'bold italic forecolor | alignleft aligncenter ' +
-                            'alignright alignjustify | bullist numlist outdent indent | ' +
-                            'removeformat | help',
-                          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-                        }}
-                      />
+                      <textarea name="" id="" cols="30" rows="10" className="summernote-simple"></textarea>
                     </div>
                   </div>
                   <div className="form-group row mb-4">
