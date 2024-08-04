@@ -3,11 +3,12 @@ import AdminSidebar from "./AdminSidebar";
 import AdminFooter from "./AdminFooter";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@fortawesome/fontawesome-free/css/all.css'
-import '../../../public/assets/css/components.css'
 import '../../../public/assets/css/style.css';
+import '../../../public/assets/css/components.css'
 
 if (typeof window !== "undefined") {
   import('jquery/src/jquery');
+  import('jquery-ui-dist/jquery-ui.min')
   import('popper.js/dist/popper');
   import('bootstrap/dist/js/bootstrap');
   import('nicescroll/dist/jquery.nicescroll.min')
@@ -16,7 +17,6 @@ if (typeof window !== "undefined") {
   import('../../../public/assets/js/scripts');
   import('../../../public/assets/js/custom');
 }
-// Dynamically import libraries that depend on window
 
 export default function AdminWrapper({children}) {
   return (

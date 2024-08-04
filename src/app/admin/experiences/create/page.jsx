@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import AdminWrapper from "@/components/admin/AdminWrapper";
 
 
@@ -62,5 +62,5 @@ export default function Page() {
         </div>
       </section>
     </AdminWrapper>
-  )
+  );
 }
