@@ -1,5 +1,6 @@
 "use client";
 import AdminWrapper from "@/components/admin/AdminWrapper";
+import BundledEditor from "@/components/admin/BundledEditor";
 
 
 export default function Page() {
@@ -45,7 +46,22 @@ export default function Page() {
                   <div className="form-group row mb-4">
                     <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Content</label>
                     <div className="col-sm-12 col-md-7">
-                      <textarea className="summernote-simple"></textarea>
+                      <BundledEditor
+                        initialValue='<p>This is the initial content of the editor.</p>'
+                        init={{
+                          height: 500,
+                          menubar: false,
+                          plugins: [
+                            'advlist', 'anchor', 'autolink', 'help', 'image', 'link', 'lists',
+                            'searchreplace', 'table', 'wordcount'
+                          ],
+                          toolbar: 'undo redo | blocks | ' +
+                            'bold italic forecolor | alignleft aligncenter ' +
+                            'alignright alignjustify | bullist numlist outdent indent | ' +
+                            'removeformat | help',
+                          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                        }}
+                      />
                     </div>
                   </div>
                   <div className="form-group row mb-4">
