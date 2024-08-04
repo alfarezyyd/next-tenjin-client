@@ -1,14 +1,23 @@
 "use client";
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import {useEffect} from "react";
+import {CKEditor} from "@ckeditor/ckeditor5-react";
+import {ClassicEditor} from "ckeditor5";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 export default function Page() {
   useEffect(() => {
     const loadAssets = async () => {
       await import('select2/dist/css/select2.min.css');
+      await import('bootstrap-daterangepicker/daterangepicker.css')
+
       await import('select2/dist/js/select2.min')
+      await import('bootstrap-daterangepicker/daterangepicker')
     }
-    loadAssets();
+
+    if (typeof window !== 'undefined') {
+      loadAssets();
+    }
   })
 
   return (
@@ -35,25 +44,45 @@ export default function Page() {
                 </div>
                 <div className="card-body">
                   <div className="form-group row mb-4">
-                    <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Title</label>
+                    <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Posisi</label>
                     <div className="col-sm-12 col-md-7">
                       <input type="text" className="form-control"/>
                     </div>
                   </div>
                   <div className="form-group row mb-4">
-                    <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Category</label>
+                    <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Nama Perusahaan</label>
                     <div className="col-sm-12 col-md-7">
-                      <select className="form-control select2">
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                        <option>Option 3</option>
-                      </select>
+                      <input type="text" className="form-control"/>
                     </div>
                   </div>
                   <div className="form-group row mb-4">
-                    <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Content</label>
+                    <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tipe Employment</label>
                     <div className="col-sm-12 col-md-7">
-                      <textarea name="" id="" cols="30" rows="10" className="summernote-simple"></textarea>
+                      <input type="text" className="form-control"/>
+                    </div>
+                  </div>
+                  <div className="form-group row mb-4">
+                    <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Lokasi</label>
+                    <div className="col-sm-12 col-md-7">
+                      <input type="text" className="form-control"/>
+                    </div>
+                  </div>
+                  <div className="form-group row mb-4">
+                    <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tanggal Mulai</label>
+                    <div className="col-sm-12 col-md-7">
+                      <input type="text" className="form-control datepicker"/>
+                    </div>
+                  </div>
+                  <div className="form-group row mb-4">
+                    <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tanggal Selesai</label>
+                    <div className="col-sm-12 col-md-7">
+                      <input type="text" className="form-control datepicker"/>
+                    </div>
+                  </div>
+                  <div className="form-group row mb-4">
+                    <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Deskripsi</label>
+                    <div className="col-sm-12 col-md-7">
+                      <RichTextEditor/>
                     </div>
                   </div>
                   <div className="form-group row mb-4">
