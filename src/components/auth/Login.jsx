@@ -39,8 +39,7 @@ export default function Login() {
         Cookies.set('accessToken', responseBody['accessToken']);
         push('/');  // Redirect to the dashboard or another protected route
       } else {
-        const data = responseBody;
-        setUserError(data.errors || {general: 'Login failed'});
+        setUserError(responseBody.errors || {general: 'Login failed'});
       }
     } catch (e) {
       console.log(e)
