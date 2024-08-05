@@ -22,6 +22,7 @@ export default function Page() {
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
   const formRef = useRef(null);
+  const [typedText, setTypedText] = useState("");
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -42,11 +43,18 @@ export default function Page() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(formRef.current);
-
+    formData.delete('experienceResources')
     // Append files to formData
     files.forEach((file, index) => {
-      formData.append(`files[${index}]`, file.file);
+      formData.append(`experienceResources`, file);
     });
+
+    formData.append(`description`, typedText);
+
+    // Log each key-value pair for debugging
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
 
     const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/experiences`, {
       method: 'POST',
@@ -70,7 +78,7 @@ export default function Page() {
         errorMessages[error.path[0]] = error.message;
       });
       setErrors(errorMessages);
-      console.log(errorMessages)
+      console.log(errorMessages);
     }
   };
 
@@ -194,7 +202,7 @@ export default function Page() {
                         <div className="form-group row mb-4">
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Deskripsi</label>
                           <div className="col-sm-12 col-md-7">
-                            <RichTextEditor name="description"/>
+                            <RichTextEditor setEditorData={setTypedText}/>
                           </div>
                         </div>
                         <div className="form-group row mb-4">
@@ -224,8 +232,7 @@ export default function Page() {
             </div>
           </section>
         </AdminWrapper>
-      )
-      }
+      )}
     </>
   );
 }

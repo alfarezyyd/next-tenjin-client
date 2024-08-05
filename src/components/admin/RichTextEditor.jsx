@@ -17,9 +17,12 @@ import {
 
 import 'ckeditor5/ckeditor5.css';
 
-export default function RichTextEditor() {
+export default function RichTextEditor({setEditorData}) {
   return (
     <CKEditor
+      onChange={(event, editor) => {
+        setEditorData(editor.getData());
+      }}
       editor={ClassicEditor}
       config={{
         toolbar: [
