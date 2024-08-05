@@ -22,20 +22,11 @@ export default function Register() {
     });
   };
 
-  const fetchCsrf = (async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`, {
-      method: 'GET',
-      headers: {
-        Referer: '127.0.0.1:8000',
-        Accept: 'application/json',
-      },
-    });
-  })
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUserError('');
-    const serverResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/register`, {
+    const serverResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}register`, {
       method: 'POST',
       credentials: "include",
       headers: {
