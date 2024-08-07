@@ -19,6 +19,7 @@ const RichTextEditor = dynamic(() => import('@/components/admin/RichTextEditor')
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
+  const [employmentTypes, setEmploymentTypes] = useState([]);
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
   const [typedText, setTypedText] = useState("");
@@ -39,12 +40,17 @@ export default function Page() {
 
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
-      setLoading(false);
     };
+
+    const initialPage = async () => {
+      await fetchEmploymentTypeEnum()
+    }
 
     if (typeof window !== 'undefined') {
       loadAssets();
     }
+    initialPage();
+    setLoading(false);
   }, []);
 
   const handleChange = (e) => {
@@ -99,6 +105,24 @@ export default function Page() {
       console.log(errorMessages);
     }
   };
+
+  const fetchEmploymentTypeEnum = async () => {
+    const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/experiences/enums/employment-types`, {
+      method: 'GET',
+      includeCredentials: true,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${Cookies.get('accessToken')}`,
+      }
+    });
+
+    const responseBody = await fetchResponse.json();
+    if (fetchResponse.ok) {
+      setEmploymentTypes(responseBody.data)
+    } else {
+      window.location.reload()
+    }
+  }
 
   return (
     <>
@@ -170,16 +194,11 @@ export default function Page() {
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tipe
                             Employment</label>
                           <div className="col-sm-12 col-md-7">
-                            <input
-                              type="text"
-                              className={`form-control ${errors.employmentType ? 'is-invalid' : ''}`}
-                              name="employmentType"
-                              value={formData.employmentType}
-                              onChange={handleChange}
-                            />
-                            {errors.employmentType && (
-                              <div className="invalid-feedback">{errors.employmentType}</div>
-                            )}
+                            <select className="form-control select2" onChange={handleChange} name="employmentType">
+                              {employmentTypes.map((value, index, array) => {
+                                return <option key={index} value={value}>{value}</option>
+                              })}
+                            </select>
                           </div>
                         </div>
                         <div className="form-group row mb-4">
