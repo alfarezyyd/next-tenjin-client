@@ -1,6 +1,6 @@
 "use client";
 import AdminWrapper from "@/components/admin/AdminWrapper";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {FilePond, registerPlugin} from 'react-filepond';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
@@ -21,8 +21,15 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
-  const formRef = useRef(null);
   const [typedText, setTypedText] = useState("");
+  const [formData, setFormData] = useState({
+    positionName: '',
+    companyName: '',
+    employmentType: '',
+    location: '',
+    startDate: '',
+    endDate: ''
+  });
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -40,25 +47,36 @@ export default function Page() {
     }
   }, []);
 
+  const handleChange = (e) => {
+    const {name, value} = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData(formRef.current);
-    formData.delete('experienceResources')
-    // Append files to formData
-    files.forEach((file, index) => {
-      formData.append(`experienceResources`, file);
+    const form = new FormData();
+
+    Object.entries(formData).forEach(([key, value]) => {
+      form.append(key, value);
     });
 
-    formData.append(`description`, typedText);
+    form.delete('experienceResources');
+    files.forEach((file, index) => {
+      form.append(`experienceResources`, file.file);
+    });
 
-    // Log each key-value pair for debugging
-    for (let [key, value] of formData.entries()) {
+    form.append(`description`, typedText);
+
+    for (let [key, value] of form.entries()) {
       console.log(key, value);
     }
 
     const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/experiences`, {
       method: 'POST',
-      body: formData,
+      body: form,
       includeCredentials: true,
       headers: {
         'Accept': 'application/json',
@@ -106,8 +124,7 @@ export default function Page() {
               <h2 className="section-title">Membuat Data Pengalaman Mentor Baru</h2>
               <p className="section-lead col-6">
                 Pada halaman ini, Anda dapat membuat data pengalaman mentor baru dengan mengisi semua field formulir
-                yang
-                telah disediakan. Dengan pengalaman yang menarik, Anda dapat menarik mentee untuk belajar.
+                yang telah disediakan. Dengan pengalaman yang menarik, Anda dapat menarik mentee untuk belajar.
               </p>
 
               <div className="row">
@@ -117,7 +134,7 @@ export default function Page() {
                       <h4>Formulir Menambah Pengalaman Mentor Baru</h4>
                     </div>
                     <div className="card-body">
-                      <form ref={formRef} onSubmit={handleSubmit}>
+                      <form onSubmit={handleSubmit}>
                         <div className="form-group row mb-4">
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Posisi</label>
                           <div className="col-sm-12 col-md-7">
@@ -125,6 +142,8 @@ export default function Page() {
                               type="text"
                               className={`form-control ${errors.positionName ? 'is-invalid' : ''}`}
                               name="positionName"
+                              value={formData.positionName}
+                              onChange={handleChange}
                             />
                             {errors.positionName && (
                               <div className="invalid-feedback">{errors.positionName}</div>
@@ -139,6 +158,8 @@ export default function Page() {
                               type="text"
                               className={`form-control ${errors.companyName ? 'is-invalid' : ''}`}
                               name="companyName"
+                              value={formData.companyName}
+                              onChange={handleChange}
                             />
                             {errors.companyName && (
                               <div className="invalid-feedback">{errors.companyName}</div>
@@ -153,6 +174,8 @@ export default function Page() {
                               type="text"
                               className={`form-control ${errors.employmentType ? 'is-invalid' : ''}`}
                               name="employmentType"
+                              value={formData.employmentType}
+                              onChange={handleChange}
                             />
                             {errors.employmentType && (
                               <div className="invalid-feedback">{errors.employmentType}</div>
@@ -166,6 +189,8 @@ export default function Page() {
                               type="text"
                               className={`form-control ${errors.location ? 'is-invalid' : ''}`}
                               name="location"
+                              value={formData.location}
+                              onChange={handleChange}
                             />
                             {errors.location && (
                               <div className="invalid-feedback">{errors.location}</div>
@@ -179,6 +204,8 @@ export default function Page() {
                               type="text"
                               className={`form-control datepicker ${errors.startDate ? 'is-invalid' : ''}`}
                               name="startDate"
+                              value={formData.startDate}
+                              onChange={handleChange}
                             />
                             {errors.startDate && (
                               <div className="invalid-feedback">{errors.startDate}</div>
@@ -193,6 +220,8 @@ export default function Page() {
                               type="text"
                               className={`form-control datepicker ${errors.endDate ? 'is-invalid' : ''}`}
                               name="endDate"
+                              value={formData.endDate}
+                              onChange={handleChange}
                             />
                             {errors.endDate && (
                               <div className="invalid-feedback">{errors.endDate}</div>
