@@ -1,11 +1,8 @@
-import {FaFireFlameCurved} from "react-icons/fa6";
-import {FaIdBadge} from "react-icons/fa";
 import {usePathname} from "next/navigation";
 
 export default function AdminSidebar() {
   const pathname = usePathname();
   let pathNames = pathname.split("/").filter(segment => segment !== "");
-  console.log(pathNames);
   return (
     <div className="main-sidebar sidebar-style-2">
       <aside id="sidebar-wrapper">
@@ -19,24 +16,42 @@ export default function AdminSidebar() {
           <li className="menu-header">Dashboard</li>
           <li className={`nav-item ${pathNames[0] === 'admin' && pathNames[1] === '' ? 'active' : ''}`}>
             <a className="nav-link" href="blank.html">
-              <i> <FaFireFlameCurved/></i>
+              <i className="fas fa-fire"></i>
               <span>Blank Page</span>
             </a>
           </li>
           <li className="menu-header">Mentor</li>
           <li className={`nav-item ${pathNames[1] === 'experiences' ? 'active' : ''}`}>
             <a href="#" className="nav-link has-dropdown" data-toggle="dropdown">
-              <i><FaIdBadge/></i>
+              <i className="fas fa-id-badge"></i>
               <span>Pengalaman</span>
             </a>
             <ul className="dropdown-menu">
-              <li className={`nav-item ${pathNames[1] === 'experiences' && pathNames[2] === '' ? 'active' : ''}`}>
+              <li
+                className={`nav-item ${pathNames[1] === 'experiences' && pathNames[2] === undefined ? 'active' : ''}`}>
                 <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/experiences`}>Lihat
                   Data</a>
               </li>
               <li
-                className={`nav-item ${pathNames[1] === 'experiences' && pathNames[2] === 'create ' ? 'active' : ''}`}>
+                className={`nav-item ${pathNames[1] === 'experiences' && pathNames[2] === "create" ? 'active' : ''}`}>
                 <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/experiences/create`}>Buat
+                  Data</a>
+              </li>
+            </ul>
+          </li>
+          <li className={`nav-item ${pathNames[1] === 'educations' ? 'active' : ''}`}>
+            <a href="#" className="nav-link has-dropdown" data-toggle="dropdown">
+              <i className="fas fa-university"></i>
+              <span>Pendidikan</span>
+            </a>
+            <ul className="dropdown-menu">
+              <li className={`nav-item ${pathNames[1] === 'educations' && pathNames[2] === undefined ? 'active' : ''}`}>
+                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/educations`}>Lihat
+                  Data</a>
+              </li>
+              <li
+                className={`nav-item ${pathNames[1] === 'educations' && pathNames[2] === "create" ? 'active' : ''}`}>
+                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/educations/create`}>Buat
                   Data</a>
               </li>
             </ul>

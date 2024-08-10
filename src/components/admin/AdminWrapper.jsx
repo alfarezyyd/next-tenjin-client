@@ -1,3 +1,4 @@
+"use client"
 import AdminNavbar from "./AdminNavbar";
 import AdminSidebar from "./AdminSidebar";
 import AdminFooter from "./AdminFooter";
@@ -10,13 +11,11 @@ export default function AdminWrapper({children}) {
 
   useEffect(() => {
     const loadAssets = async () => {
-      // css disini
       await import('../../../public/assets/css/style.css');
       await import('../../../public/assets/css/components.css');
 
 
       const jQueryModule = await import('jquery');
-      // Assign jQuery to $ variable
       window.jQuery = jQueryModule.default; // Also assign jQuery to window object
       await import('jquery-ui-dist/jquery-ui.min');
       await import('popper.js/dist/popper');
@@ -25,7 +24,6 @@ export default function AdminWrapper({children}) {
       await import('moment/moment');
       await import('tooltip.js/dist/tooltip.min');
 
-      // Js disini
       await import('../../../public/assets/js/scripts');
       await import('../../../public/assets/js/custom');
     };
