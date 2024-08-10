@@ -56,10 +56,44 @@ export default function AdminSidebar() {
               </li>
             </ul>
           </li>
+          <li className={`nav-item ${pathNames[1] === 'skills' ? 'active' : ''}`}>
+            <a href="#" className="nav-link has-dropdown" data-toggle="dropdown">
+              <i className="fas fa-medal"></i>
+              <span>Kemampuan</span>
+            </a>
+            <ul className="dropdown-menu">
+              <li className={`nav-item ${pathNames[1] === 'educations' && pathNames[2] === undefined ? 'active' : ''}`}>
+                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/skills`}>Lihat
+                  Data</a>
+              </li>
+              <li
+                className={`nav-item ${pathNames[1] === 'skills' && pathNames[2] === "create" ? 'active' : ''}`}>
+                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/skills/create`}>Buat
+                  Data</a>
+              </li>
+            </ul>
+          </li>
+          <li className={`nav-item ${pathNames[1] === 'assistants' ? 'active' : ''}`}>
+            <a href="#" className="nav-link has-dropdown" data-toggle="dropdown">
+              <i className="fas fa-video"></i>
+              <span>Assistensi</span>
+            </a>
+            <ul className="dropdown-menu">
+              <li className={`nav-item ${pathNames[1] === 'educations' && pathNames[2] === undefined ? 'active' : ''}`}>
+                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/assistants`}>Lihat
+                  Data</a>
+              </li>
+              <li
+                className={`nav-item ${pathNames[1] === 'assistants' && pathNames[2] === "create" ? 'active' : ''}`}>
+                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/assistants/create`}>Buat
+                  Data</a>
+              </li>
+            </ul>
+          </li>
 
           <li className="menu-header">Pengaturan</li>
           <li className="nav-item dropdown">
-            <a href="#" className="nav-link has-dropdown"><i className="fas fa-plug"></i> <span>Modules</span></a>
+            <a href="#" className="nav-link has-dropdown"><i className="fa-solid fa-gears"></i><span>Modules</span></a>
             <ul className="dropdown-menu">
               <li><a className="nav-link" href="modules-calendar.html">Calendar</a></li>
               <li><a className="nav-link" href="modules-chartjs.html">ChartJS</a></li>
@@ -78,7 +112,7 @@ export default function AdminSidebar() {
 
           <li className="menu-header">Keuangan</li>
           <li className="nav-item dropdown">
-            <a href="#" className="nav-link has-dropdown"><i className="fas fa-plug"></i> <span>Modules</span></a>
+            <a href="#" className="nav-link has-dropdown"><i className="fa-solid fa-coins"></i> <span>Modules</span></a>
             <ul className="dropdown-menu">
               <li><a className="nav-link" href="modules-calendar.html">Calendar</a></li>
               <li><a className="nav-link" href="modules-chartjs.html">ChartJS</a></li>
