@@ -7,10 +7,10 @@ export default function AdminSidebar() {
     <div className="main-sidebar sidebar-style-2">
       <aside id="sidebar-wrapper">
         <div className="sidebar-brand">
-          <a href="index.html">TENJIN</a>
+          <a href={`${process.env.NEXT_PUBLIC_BASE_URL}`}>TENJIN</a>
         </div>
         <div className="sidebar-brand sidebar-brand-sm">
-          <a href="index.html">TJN</a>
+          <a href={`${process.env.NEXT_PUBLIC_BASE_URL}`}>TJN</a>
         </div>
         <ul className="sidebar-menu">
           <li className="menu-header">Dashboard</li>
