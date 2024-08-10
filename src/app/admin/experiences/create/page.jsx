@@ -1,4 +1,3 @@
-"use client";
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import {useEffect, useState} from "react";
 import {FilePond, registerPlugin} from 'react-filepond';

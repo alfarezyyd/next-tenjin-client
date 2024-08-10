@@ -1,4 +1,3 @@
-"use client"
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import "../../../../public/assets/css/custom.scss"
 
