@@ -1,5 +1,5 @@
 "use client"
-import {useEffect, useState, useCallback, useMemo} from "react";
+import {useEffect, useState, useCallback, useMemo, useRef} from "react";
 import dynamic from "next/dynamic";
 import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,6 +13,10 @@ export default function Page() {
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
   const [language, setLanguage] = useState([]);
+  // Menggunakan useRef untuk referensi elemen DOM
+  const categorySelectRef = useRef(null);
+  const tagsSelectRef = useRef(null);
+  const languageSelectRef = useRef(null);
   const [formData, setFormData] = useState({
     categoryId: '',
     topic: '',
@@ -33,6 +37,14 @@ export default function Page() {
 
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
+      const $ = window.jQuery;
+      $(categorySelectRef.current).on("change", handleChange);
+      $(tagsSelectRef.current).select2({
+        change: handleSubmit
+      });
+      $(languageSelectRef.current).select2({
+        change: handleSubmit
+      });
     };
 
     const fetchInitialData = async () => {
@@ -56,42 +68,55 @@ export default function Page() {
 
   const fetchAssistanceCategories = async () => {
     if (categories.length === 0) {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`);
-      const data = await response.json();
-      if (response.ok) {
-        setCategories(data.data);
+      const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/categories`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        }
+      });
+      const responseBody = await responseFetch.json();
+      if (responseFetch.ok) {
+        setCategories(responseBody['result']['data']);
+        console.log(responseBody['result']['data']);
       } else {
-        console.error('Failed to fetch categories', data);
+        console.error('Failed to fetch categories', responseBody);
       }
     }
   };
 
   const fetchAssistanceTags = async () => {
     if (tags.length === 0) {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tags`);
-      const data = await response.json();
-      if (response.ok) {
-        setTags(data.data);
+      const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/tags`);
+      const responseBody = await responseFetch.json();
+      if (responseFetch.ok) {
+        setTags(responseBody['result']['data']);
+        console.log(tags)
       } else {
-        console.error('Failed to fetch tags', data);
+        console.error('Failed to fetch tags', responseBody);
       }
     }
   };
 
+  const filteredTags = useMemo(() => {
+    console.log('Filtering tags:', tags, 'with categoryId:', formData.categoryId);
+    return tags.filter(tag => tag.categoryId == formData.categoryId);
+  }, [tags, formData.categoryId]);
+
   const fetchAssistanceLanguage = async () => {
     if (language.length === 0) {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/languages`);
-      const data = await response.json();
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/languages`);
+      const responseBody = await response.json();
       if (response.ok) {
-        setLanguage(data.data);
+        setLanguage(responseBody.data);
       } else {
-        console.error('Failed to fetch languages', data);
+        console.error('Failed to fetch languages', responseBody);
       }
     }
   };
 
   const handleChange = useCallback((e) => {
     const {name, value} = e.target;
+    console.log(`Changing ${name} to ${value}`);
     setFormData(prevFormData => ({
       ...prevFormData,
       [name]: value,
@@ -133,11 +158,14 @@ export default function Page() {
   }, [formData]);
 
   const errorFeedback = useMemo(() => ({
-    name: errors.name ? <div className="invalid-feedback">{errors.name}</div> : null,
     topic: errors.topic ? <div className="invalid-feedback">{errors.topic}</div> : null,
     durationMinutes: errors.durationMinutes ? <div className="invalid-feedback">{errors.durationMinutes}</div> : null,
     price: errors.price ? <div className="invalid-feedback">{errors.price}</div> : null,
     capacity: errors.capacity ? <div className="invalid-feedback">{errors.capacity}</div> : null,
+    language: errors.language ? <div className="invalid-feedback">{errors.language}</div> : null,
+    format: errors.format ? <div className="invalid-feedback">{errors.format}</div> : null,
+    tagId: errors.tagId ? <div className="invalid-feedback">{errors.tagId}</div> : null,
+    description: errors.description ? <small className="text-danger">{errors.description}</small> : null,
   }), [errors]);
 
   return (
@@ -180,9 +208,10 @@ export default function Page() {
                             Kategori Asistensi
                           </label>
                           <div className="col-sm-12 col-md-7">
-                            <select className="form-control select2" onChange={handleChange} name="employmentType">
+                            <select ref={categorySelectRef} className="form-control select2"
+                                    name="employmentType">
                               {categories.map((value, index) => {
-                                return <option key={index} value={value}>{value}</option>
+                                return <option key={index} value={value['id']}>{value['name']}</option>
                               })}
                             </select>
                           </div>
@@ -284,8 +313,8 @@ export default function Page() {
                           <div className="col-sm-12 col-md-7">
                             <select className="form-control select2" multiple="" onChange={handleChange}
                                     name="tags">
-                              {tags.map((value, index) => {
-                                return <option key={index} value={value}>{value}</option>
+                              {filteredTags.map((value, index) => {
+                                return <option key={index} value={value.id}>{value.name}</option>
                               })}
                             </select>
                           </div>
