@@ -5,6 +5,8 @@ import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
 import AdminWrapper from "@/components/admin/AdminWrapper";
+import CommonStyle from "@/components/admin/CommonStyle";
+import CommonScript from "@/components/admin/CommonScript";
 
 const RichTextEditor = dynamic(() => import('@/components/admin/RichTextEditor'), {ssr: false});
 
@@ -13,7 +15,6 @@ export default function Page() {
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
   const [language, setLanguage] = useState([]);
-  // Menggunakan useRef untuk referensi elemen DOM
   const categorySelectRef = useRef(null);
   const tagsSelectRef = useRef(null);
   const languageSelectRef = useRef(null);
@@ -29,16 +30,16 @@ export default function Page() {
     tagId: '',
   });
   const [errors, setErrors] = useState({});
-
   useEffect(() => {
     const loadAssets = async () => {
       await import('select2/dist/css/select2.min.css');
       await import('bootstrap-daterangepicker/daterangepicker.css');
       await import('summernote/dist/summernote-bs4.css')
-
+      CommonStyle()
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
       await import('summernote/dist/summernote-bs4.js')
+      CommonScript()
       const $ = window.jQuery;
       $(categorySelectRef.current).on("change", handleChange);
       $(tagsSelectRef.current).select2({
@@ -101,7 +102,7 @@ export default function Page() {
 
   const filteredTags = useMemo(() => {
     console.log('Filtering tags:', tags, 'with categoryId:', formData.categoryId);
-    return tags.filter(tag => tag.categoryId == formData.categoryId);
+    return tags.filter(tag => tag.categoryId === formData.categoryId);
   }, [tags, formData.categoryId]);
 
   const fetchAssistanceLanguage = async () => {

@@ -11,8 +11,6 @@ export default function AdminWrapper({children}) {
 
   useEffect(() => {
     const loadAssets = async () => {
-      await import('../../../public/assets/css/style.css');
-      await import('../../../public/assets/css/components.css');
 
 
       const jQueryModule = await import('jquery');
@@ -24,8 +22,7 @@ export default function AdminWrapper({children}) {
       await import('moment/moment');
       await import('tooltip.js/dist/tooltip.min');
 
-      await import('../../../public/assets/js/scripts');
-      await import('../../../public/assets/js/custom');
+
     };
 
     if (typeof window !== "undefined") {
