@@ -34,9 +34,11 @@ export default function Page() {
     const loadAssets = async () => {
       await import('select2/dist/css/select2.min.css');
       await import('bootstrap-daterangepicker/daterangepicker.css');
+      await import('summernote/dist/summernote-bs4.css')
 
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
+      await import('summernote/dist/summernote-bs4.js')
       const $ = window.jQuery;
       $(categorySelectRef.current).on("change", handleChange);
       $(tagsSelectRef.current).select2({
@@ -336,10 +338,7 @@ export default function Page() {
 
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Deskripsi</label>
                           <div className="col-sm-12 col-md-7">
-                            <RichTextEditor setEditorData={(data) => setFormData((prevFormData) => ({
-                              ...prevFormData,
-                              description: data
-                            }))}/>
+                            <textarea className="summernote-simple"></textarea>
                           </div>
                         </div>
 
