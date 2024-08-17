@@ -1,6 +1,5 @@
 "use client"
 import {useEffect, useState, useCallback, useMemo, useRef} from "react";
-import dynamic from "next/dynamic";
 import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
@@ -8,13 +7,11 @@ import AdminWrapper from "@/components/admin/AdminWrapper";
 import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
 
-const RichTextEditor = dynamic(() => import('@/components/admin/RichTextEditor'), {ssr: false});
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState([]);
-  const [tags, setTags] = useState([]);
-  const [language, setLanguage] = useState([]);
+  const [assistanceDependency, setAssistanceDependency] = useState([]);
+  const [accessToken, setAccessToken] = useState();
   const categorySelectRef = useRef(null);
   const tagsSelectRef = useRef(null);
   const languageSelectRef = useRef(null);
@@ -31,6 +28,7 @@ export default function Page() {
   });
   const [errors, setErrors] = useState({});
   useEffect(() => {
+    setAccessToken(Cookies.get('accessToken'))
     const loadAssets = async () => {
       await import('select2/dist/css/select2.min.css');
       await import('bootstrap-daterangepicker/daterangepicker.css');
@@ -50,76 +48,42 @@ export default function Page() {
       });
     };
 
-    const fetchInitialData = async () => {
-      try {
-        await Promise.all([
-          fetchAssistanceCategories(),
-          fetchAssistanceTags(),
-          fetchAssistanceLanguage()
-        ]);
-      } catch (error) {
-        console.error('Failed to fetch initial or load libs', error);
-      }
-    };
 
     if (typeof window !== 'undefined') {
-      loadAssets();
+      loadAssets()
     }
-    fetchInitialData();
+    fetchAssistanceDependency();
     setLoading(false);
   }, []);
 
-  const fetchAssistanceCategories = async () => {
+  const fetchAssistanceDependency = async () => {
     if (categories.length === 0) {
-      const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/categories`, {
+      const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
         method: 'GET',
+        includeCredentials: true,
         headers: {
           'Accept': 'application/json',
+          'Authorization': `Bearer: ${accessToken}`
         }
       });
       const responseBody = await responseFetch.json();
       if (responseFetch.ok) {
-        setCategories(responseBody['result']['data']);
+        setAssistanceDependency(responseBody['result']['data']);
         console.log(responseBody['result']['data']);
       } else {
-        console.error('Failed to fetch categories', responseBody);
+        console.error('Failed to fetch assistance dependency', responseBody);
       }
     }
   };
 
-  const fetchAssistanceTags = async () => {
-    if (tags.length === 0) {
-      const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/tags`);
-      const responseBody = await responseFetch.json();
-      if (responseFetch.ok) {
-        setTags(responseBody['result']['data']);
-        console.log(tags)
-      } else {
-        console.error('Failed to fetch tags', responseBody);
-      }
-    }
-  };
 
   const filteredTags = useMemo(() => {
-    console.log('Filtering tags:', tags, 'with categoryId:', formData.categoryId);
-    return tags.filter(tag => tag.categoryId === formData.categoryId);
+    return assistanceDependency['tags'].filter(tag => tag.categoryId === formData.categoryId);
   }, [tags, formData.categoryId]);
 
-  const fetchAssistanceLanguage = async () => {
-    if (language.length === 0) {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/languages`);
-      const responseBody = await response.json();
-      if (response.ok) {
-        setLanguage(responseBody.data);
-      } else {
-        console.error('Failed to fetch languages', responseBody);
-      }
-    }
-  };
 
   const handleChange = useCallback((e) => {
     const {name, value} = e.target;
-    console.log(`Changing ${name} to ${value}`);
     setFormData(prevFormData => ({
       ...prevFormData,
       [name]: value,
@@ -213,7 +177,7 @@ export default function Page() {
                           <div className="col-sm-12 col-md-7">
                             <select ref={categorySelectRef} className="form-control select2"
                                     name="employmentType">
-                              {categories.map((value, index) => {
+                              {assistanceDependency['categories'].map((value, index) => {
                                 return <option key={index} value={value['id']}>{value['name']}</option>
                               })}
                             </select>
@@ -329,7 +293,7 @@ export default function Page() {
                           <div className="col-sm-12 col-md-7">
                             <select className="form-control select2" multiple="" onChange={handleChange}
                                     name="language">
-                              {language.map((value, index) => {
+                              {assistanceDependency['languages'].map((value, index) => {
                                 return <option key={index} value={value}>{value}</option>
                               })}
                             </select>
