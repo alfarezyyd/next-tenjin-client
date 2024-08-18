@@ -74,35 +74,37 @@ export default function Page() {
     const updateSelect2 = async () => {
       if (typeof window !== 'undefined') {
         const $ = (await import('jquery')).default;
+        if (typeof $.fn.select2 === 'function') {
 
-        // Hapus elemen select jika sudah ada
-        if (tagsSelectRef.current) {
-          console.log("removed")
-          tagsSelectRef.current.remove();
+          // Hapus elemen select jika sudah ada
+          if (tagsSelectRef.current) {
+            console.log("removed")
+            tagsSelectRef.current.remove();
+          }
+
+          if ($(tagsSelectRef.current).data('select2')) {
+            $(tagsSelectRef.current).select2('destroy');
+          }
+
+          // Buat elemen select baru
+          const newSelectElement = document.createElement('select');
+          newSelectElement.className = 'form-control select2';
+          newSelectElement.multiple = true;
+          newSelectElement.name = 'tags';
+          document.getElementById('select-container').appendChild(newSelectElement);
+
+          // Set ref ke elemen baru
+          tagsSelectRef.current = newSelectElement;
+
+          // Tambahkan option ke elemen select
+          filteredTags.forEach(tag => {
+            const optionElement = new Option(tag.name, tag.id);
+            newSelectElement.appendChild(optionElement);
+          });
+
+          // Inisialisasi select2
+          $(tagsSelectRef.current).select2()
         }
-
-        if ($(tagsSelectRef.current).data('select2')) {
-          $(tagsSelectRef.current).select2('destroy');
-        }
-
-        // Buat elemen select baru
-        const newSelectElement = document.createElement('select');
-        newSelectElement.className = 'form-control select2';
-        newSelectElement.multiple = true;
-        newSelectElement.name = 'tags';
-        document.getElementById('select-container').appendChild(newSelectElement);
-
-        // Set ref ke elemen baru
-        tagsSelectRef.current = newSelectElement;
-
-        // Tambahkan option ke elemen select
-        filteredTags.forEach(tag => {
-          const optionElement = new Option(tag.name, tag.id);
-          newSelectElement.appendChild(optionElement);
-        });
-
-        // Inisialisasi select2
-        $(tagsSelectRef.current).select2()
       }
     };
 
@@ -335,7 +337,7 @@ export default function Page() {
                           </label>
                           <div className="col-sm-12 col-md-7" id="select-container">
                             <select
-                              ref={tagsSelectRef} className="form-control select2" multiple=""
+                              ref={tagsSelectRef} className="form-control select2" multiple={true}
                               onChange={handleChange}
                               name="tagId">
                               {filteredTags.length !== 0 && filteredTags.map((tag, index) => (
