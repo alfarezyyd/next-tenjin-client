@@ -1,9 +1,7 @@
 "use client"
 import "../globals.css"
 import Banner from "./components/Banner";
-import NFt2 from "../../../public/assets/img/nfts/Nft2.png";
 import NFt4 from "../../../public/assets/img/nfts/Nft4.png";
-import NFt3 from "../../../public/assets/img/nfts/Nft3.png";
 import NFt5 from "../../../public/assets/img/nfts/Nft5.png";
 import NFt6 from "../../../public/assets/img/nfts/Nft6.png";
 import avatar1 from "../../../public/assets/img/avatars/avatar1.png";
@@ -16,8 +14,28 @@ import HistoryCard from "./components/HistoryCard";
 import TopCreatorTable from "./components/TableTopCreators";
 import NftCard from "@/components/card/NftCard";
 import LandingWrapper from "@/components/landing/LandingWrapper";
+import {useEffect, useState} from "react";
+import {Loading} from "@/components/admin/Loading";
 
 const Marketplace = () => {
+  const [assistants, setAssistants] = useState([]);
+  useEffect(() => {
+    fetchAllAssistants()
+  }, []);
+  const fetchAllAssistants = async () => {
+    let responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      }
+    });
+    let responseBody = await responseFetch.json();
+    if (responseFetch.ok) {
+      setAssistants(responseBody['result']['data']);
+    } else {
+      console.error('Failed to fetch assistance dependency', responseBody);
+    }
+  }
   return (
     <LandingWrapper>
       <div className="bg-lightPrimary">
@@ -69,27 +87,19 @@ const Marketplace = () => {
 
             {/* NFTs trending card */}
             <div className="z-20 grid grid-cols-1 gap-5 md:grid-cols-3">
-              <NftCard
-                bidders={[avatar1, avatar2, avatar3]}
-                title="Abstract Colors"
-                author="Esthera Jackson"
-                price="0.91"
-                image={NFt3}
-              />
-              <NftCard
-                bidders={[avatar1, avatar2, avatar3]}
-                title="ETH AI Brain"
-                author="Nick Wilson"
-                price="0.7"
-                image={NFt2}
-              />
-              <NftCard
-                bidders={[avatar1, avatar2, avatar3]}
-                title="Mesh Gradients"
-                author="Will Smith"
-                price="2.91"
-                image={NFt4}
-              />
+              {assistants.length > 0 ?
+                assistants.map((assistant, index) => (
+                  <NftCard
+                    key={`assistants-${index}`}
+                    bidders={[avatar1, avatar2, avatar3]}
+                    title={assistant.topic}
+                    author="Name"
+                    price={assistant.price}
+                    image={NFt4}
+                  />
+                ))
+                : <Loading/>
+              }
             </div>
 
             {/* Recenlty Added setion */}

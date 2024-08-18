@@ -3,7 +3,7 @@ import {useState} from "react";
 import Card from "@/components/card/index";
 import Image from "next/image";
 
-const NftCard = ({title, author, price, image, bidders, extra}) => {
+const NftCard = ({title, author, price, image, extra}) => {
   const [heart, setHeart] = useState(true);
   return (
     <Card
@@ -48,18 +48,6 @@ const NftCard = ({title, author, price, image, bidders, extra}) => {
               className="z-0 ml-px inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-[#E0E5F2] text-xs text-navy-700">
               +5
             </span>
-            {bidders.map((avt, key) => (
-              <span
-                key={key}
-                className="z-10 -mr-3 h-8 w-8 rounded-full border-2 border-white"
-              >
-                <Image
-                  className="h-full w-full rounded-full object-cover"
-                  src={avt}
-                  alt=""
-                />
-              </span>
-            ))}
           </div>
         </div>
 

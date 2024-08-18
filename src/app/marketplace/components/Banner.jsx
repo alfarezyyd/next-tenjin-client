@@ -1,5 +1,3 @@
-import nft1 from "../../../../public/assets/img/nfts/NftBanner1.png";
-
 const Banner1 = () => {
   return (
     <div
