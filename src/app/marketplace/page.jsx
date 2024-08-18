@@ -21,8 +21,8 @@ const Marketplace = () => {
   return (
     <LandingWrapper>
       <div className="bg-lightPrimary">
-        <div className="mt-3 grid h-full grid-cols-1 gap-5 xl:grid-cols-2 2xl:grid-cols-3">
-          <div className="col-span-1 h-fit w-full xl:col-span-1 2xl:col-span-2">
+        <div className="grid h-full grid-cols-1 gap-5 xl:grid-cols-3 2xl:grid-cols-3 mx-12">
+          <div className="mt-12 col-span-1 h-fit w-full xl:col-span-2 2xl:col-span-2">
             {/* NFt Banner */}
             <Banner/>
 
@@ -61,7 +61,7 @@ const Marketplace = () => {
                     className="text-base font-medium text-brand-500 hover:text-brand-500 dark:text-white"
                     href=" "
                   >
-                    <a href=" ">Sports</a>
+                    Sports
                   </a>
                 </li>
               </ul>
@@ -124,10 +124,7 @@ const Marketplace = () => {
               />
             </div>
           </div>
-
-          {/* right side section */}
-
-          <div className="col-span-1 h-full w-full rounded-xl 2xl:col-span-1">
+          <div className="mt-12 col-span-1 h-full w-full rounded-xl 2xl:col-span-1">
             <TopCreatorTable
               extra="mb-5"
               tableData={tableDataTopCreators}
