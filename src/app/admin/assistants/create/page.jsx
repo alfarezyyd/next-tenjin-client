@@ -334,7 +334,7 @@ export default function Page() {
                           <div className="col-sm-12 col-md-7">
                             <select ref={formatSelectRef} className="form-control select2" onChange={handleChange}
                                     name="format">
-                              <option key="INDIVIDUAL" value="INDIVIDUAL">INDIVIDUAL</option>
+                              <option key="INDIVIDUAL" value="INDIVIDUAL" selected>INDIVIDUAL</option>
                               <option key="GROUP" value="GROUP">GROUP</option>
                               <option key="HYBRID" value="HYBRID">HYBRID</option>
                             </select>
