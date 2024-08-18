@@ -26,12 +26,13 @@ export default function Page() {
     format: '',
     capacity: '',
     language: '',
-    tagId: '',
+    tagId: [],
   });
   const [errors, setErrors] = useState({});
   const categorySelectRef = useRef(null);
   const tagsSelectRef = useRef(null);
   const languageSelectRef = useRef(null);
+  const formatSelectRef = useRef(null);
 
   useEffect(() => {
     setAccessToken(Cookies.get('accessToken'));
@@ -56,12 +57,21 @@ export default function Page() {
       $(tagsSelectRef.current).on("change", () => {
         setFormData(prev => ({
           ...prev,
-          tagId: $(tagsSelectRef.current).val()
+          tagId: [...formData['tagId'], Number($(tagsSelectRef.current).val())]
         }));
       });
-      $(languageSelectRef.current).select2({
-        change: handleSubmit
+      $(languageSelectRef.current).on("change", () => {
+        setFormData(prev => ({
+          ...prev,
+          language: $(languageSelectRef.current).val()
+        }));
       });
+      $(formatSelectRef.current).on("change", () => {
+        setFormData(prev => ({
+          ...prev,
+          format: $(formatSelectRef.current).val()
+        }));
+      })
     };
 
     if (typeof window !== 'undefined') {
@@ -150,19 +160,17 @@ export default function Page() {
 
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
-    const form = new FormData();
+    formData['categoryId'] = selectedCategoryId;
+    console.log(formData);
 
-    Object.entries(formData).forEach(([key, value]) => {
-      form.append(key, value);
-    });
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/educations`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
       method: 'POST',
-      body: form,
+      body: JSON.stringify(formData),
       includeCredentials: true,
       headers: {
         'Accept': 'application/json',
-        'Authorization': `Bearer ${Cookies.get('accessToken')}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
       }
     });
 
@@ -234,9 +242,9 @@ export default function Page() {
                           </label>
                           <div className="col-sm-12 col-md-7">
                             <select ref={categorySelectRef} className="form-control select2"
-                                    name="category">
+                                    name="categoryId">
                               {assistanceDependency['categories'].map((value, index) => (
-                                <option key={index} value={value['id']}>{value['name']}</option>
+                                <option key={index} value={Number(value['id'])}>{value['name']}</option>
                               ))}
                             </select>
                           </div>
@@ -263,7 +271,7 @@ export default function Page() {
                           </label>
                           <div className="col-sm-8 col-md-5 input-group">
                             <input
-                              type="text"
+                              type="number"
                               className={`form-control ${errors.durationMinutes ? 'is-invalid' : ''}`}
                               name="durationMinutes"
                               value={formData.durationMinutes}
@@ -289,7 +297,7 @@ export default function Page() {
                               </div>
                             </div>
                             <input
-                              type="text"
+                              type="number"
                               className={`form-control ${errors.price ? 'is-invalid' : ''}`}
                               name="price"
                               value={formData.price}
@@ -305,7 +313,7 @@ export default function Page() {
                           </label>
                           <div className="col-sm-9 col-md-5 input-group">
                             <input
-                              type="text"
+                              type="number"
                               className={`form-control ${errors.capacity ? 'is-invalid' : ''}`}
                               name="capacity"
                               value={formData.capacity}
@@ -324,10 +332,11 @@ export default function Page() {
                             Format Asistensi
                           </label>
                           <div className="col-sm-12 col-md-7">
-                            <select className="form-control select2" onChange={handleChange} name="format">
-                              <option value="INDIVIDUAL">INDIVIDUAL</option>
-                              <option value="GROUP">GROUP</option>
-                              <option value="HYBRID">HYBRID</option>
+                            <select ref={formatSelectRef} className="form-control select2" onChange={handleChange}
+                                    name="format">
+                              <option key="INDIVIDUAL" value="INDIVIDUAL">INDIVIDUAL</option>
+                              <option key="GROUP" value="GROUP">GROUP</option>
+                              <option key="HYBRID" value="HYBRID">HYBRID</option>
                             </select>
                           </div>
                         </div>
@@ -360,9 +369,11 @@ export default function Page() {
                           </div>
                         </div>
                         <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Deskripsi</label>
+                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
+                                 htmlFor="description">Deskripsi</label>
                           <div className="col-sm-12 col-md-7">
-                            <textarea className="summernote-simple"></textarea>
+                            <textarea className={`summernote-simple ${errors.capacity ? 'is-invalid' : ''}`}
+                                      name="description" id="description"></textarea>
                           </div>
                         </div>
                         <div className="form-group row mb-4">
