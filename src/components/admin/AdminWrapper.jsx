@@ -5,10 +5,11 @@ import AdminFooter from "./AdminFooter";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
+import {Loading} from "@/components/admin/Loading";
 
 export default function AdminWrapper({children}) {
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const loadAssets = async () => {
       const jQueryModule = await import('jquery');
@@ -18,29 +19,33 @@ export default function AdminWrapper({children}) {
       await import('bootstrap/dist/js/bootstrap');
       await import('moment/moment');
       await import('tooltip.js/dist/tooltip.min');
-      await import('jquery.nicescroll/dist/jquery.nicescroll.min');
+
     };
 
     if (typeof window !== "undefined") {
       loadAssets();
       setLoading(false)
     }
-  });
+  }, []);
 
 
   return (
     <>
-      <div id="app">
-        <div className="main-wrapper">
-          <div className="navbar-bg"></div>
-          <AdminNavbar/>
-          <AdminSidebar/>
-          <div className="main-content">
-            {children}
+      {loading ? (
+        <Loading/>
+      ) : (
+        <div id="app">
+          <div className="main-wrapper">
+            <div className="navbar-bg"></div>
+            <AdminNavbar/>
+            <AdminSidebar/>
+            <div className="main-content">
+              {children}
+            </div>
+            <AdminFooter/>
           </div>
-          <AdminFooter/>
         </div>
-      </div>
+      )}
     </>
   );
 }

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {useEffect, useState, useCallback, useMemo, useRef} from "react";
 import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,14 +7,16 @@ import AdminWrapper from "@/components/admin/AdminWrapper";
 import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
 
-
 export default function Page() {
   const [loading, setLoading] = useState(true);
-  const [assistanceDependency, setAssistanceDependency] = useState([]);
+  const [assistanceDependency, setAssistanceDependency] = useState({
+    categories: [],
+    tags: [],
+    languages: [],
+  });
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [accessToken, setAccessToken] = useState();
-  const categorySelectRef = useRef(null);
-  const tagsSelectRef = useRef(null);
-  const languageSelectRef = useRef(null);
+  const [filteredTags, setFilteredTags] = useState([]);
   const [formData, setFormData] = useState({
     categoryId: '',
     topic: '',
@@ -27,60 +29,114 @@ export default function Page() {
     tagId: '',
   });
   const [errors, setErrors] = useState({});
+  const categorySelectRef = useRef(null);
+  const tagsSelectRef = useRef(null);
+  const languageSelectRef = useRef(null);
+
   useEffect(() => {
-    setAccessToken(Cookies.get('accessToken'))
+    setAccessToken(Cookies.get('accessToken'));
+    fetchAssistanceDependency();
+  }, [accessToken]);
+
+  useEffect(() => {
     const loadAssets = async () => {
       await import('select2/dist/css/select2.min.css');
       await import('bootstrap-daterangepicker/daterangepicker.css');
-      await import('summernote/dist/summernote-bs4.css')
-      CommonStyle()
+      await import('summernote/dist/summernote-bs4.css');
+      await CommonStyle();
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
-      await import('summernote/dist/summernote-bs4.js')
-      CommonScript()
-      const $ = window.jQuery;
-      $(categorySelectRef.current).on("change", handleChange);
-      $(tagsSelectRef.current).select2({
-        change: handleSubmit
+      await import('summernote/dist/summernote-bs4.js');
+      await CommonScript();
+      const $ = (await import('jquery')).default;
+      $(categorySelectRef.current).on("change", () => {
+        setSelectedCategoryId($(categorySelectRef.current).val());
+
+      });
+      $(tagsSelectRef.current).on("change", () => {
+        setFormData(prev => ({
+          ...prev,
+          tagId: $(tagsSelectRef.current).val()
+        }));
       });
       $(languageSelectRef.current).select2({
         change: handleSubmit
       });
     };
 
-
     if (typeof window !== 'undefined') {
-      loadAssets()
+      loadAssets();
     }
-    fetchAssistanceDependency();
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    const updateSelect2 = async () => {
+      if (typeof window !== 'undefined') {
+        const $ = (await import('jquery')).default;
+
+        // Hapus elemen select jika sudah ada
+        if (tagsSelectRef.current) {
+          console.log("removed")
+          tagsSelectRef.current.remove();
+        }
+
+        if ($(tagsSelectRef.current).data('select2')) {
+          $(tagsSelectRef.current).select2('destroy');
+        }
+
+        // Buat elemen select baru
+        const newSelectElement = document.createElement('select');
+        newSelectElement.className = 'form-control select2';
+        newSelectElement.multiple = true;
+        newSelectElement.name = 'tags';
+        document.getElementById('select-container').appendChild(newSelectElement);
+
+        // Set ref ke elemen baru
+        tagsSelectRef.current = newSelectElement;
+
+        // Tambahkan option ke elemen select
+        filteredTags.forEach(tag => {
+          const optionElement = new Option(tag.name, tag.id);
+          newSelectElement.appendChild(optionElement);
+        });
+
+        // Inisialisasi select2
+        $(tagsSelectRef.current).select2()
+      }
+    };
+
+    updateSelect2();
+  }, [filteredTags]);
+
   const fetchAssistanceDependency = async () => {
-    if (categories.length === 0) {
+    if (accessToken) {
       const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
         method: 'GET',
         includeCredentials: true,
         headers: {
           'Accept': 'application/json',
-          'Authorization': `Bearer: ${accessToken}`
+          'Authorization': `Bearer ${accessToken}`
         }
       });
       const responseBody = await responseFetch.json();
       if (responseFetch.ok) {
         setAssistanceDependency(responseBody['result']['data']);
-        console.log(responseBody['result']['data']);
+        let firstCategoryElementId = responseBody['result']['data']['categories'][0]['id'];
+        setSelectedCategoryId(firstCategoryElementId);
+        setFilteredTags(responseBody['result']['data']['tags'].filter(value => value['categoryId'] === Number(firstCategoryElementId)));
       } else {
         console.error('Failed to fetch assistance dependency', responseBody);
       }
     }
   };
 
-
-  const filteredTags = useMemo(() => {
-    return assistanceDependency['tags'].filter(tag => tag.categoryId === formData.categoryId);
-  }, [tags, formData.categoryId]);
-
+  useEffect(() => {
+    if (selectedCategoryId && assistanceDependency.tags) {
+      const tags = assistanceDependency.tags.filter(tag => tag.categoryId === Number(selectedCategoryId));
+      setFilteredTags(tags);
+    }
+  }, [selectedCategoryId, assistanceDependency.tags]);
 
   const handleChange = useCallback((e) => {
     const {name, value} = e.target;
@@ -176,10 +232,10 @@ export default function Page() {
                           </label>
                           <div className="col-sm-12 col-md-7">
                             <select ref={categorySelectRef} className="form-control select2"
-                                    name="employmentType">
-                              {assistanceDependency['categories'].map((value, index) => {
-                                return <option key={index} value={value['id']}>{value['name']}</option>
-                              })}
+                                    name="category">
+                              {assistanceDependency['categories'].map((value, index) => (
+                                <option key={index} value={value['id']}>{value['name']}</option>
+                              ))}
                             </select>
                           </div>
                         </div>
@@ -221,7 +277,7 @@ export default function Page() {
                         </div>
                         <div className="form-group row mb-4">
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
-                                 htmlFor="durationMinutes">
+                                 htmlFor="price">
                             Harga
                           </label>
                           <div className="col-sm-8 col-md-5 input-group">
@@ -277,12 +333,14 @@ export default function Page() {
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="tags">
                             Tag
                           </label>
-                          <div className="col-sm-12 col-md-7">
-                            <select className="form-control select2" multiple="" onChange={handleChange}
-                                    name="tags">
-                              {filteredTags.map((value, index) => {
-                                return <option key={index} value={value.id}>{value.name}</option>
-                              })}
+                          <div className="col-sm-12 col-md-7" id="select-container">
+                            <select
+                              ref={tagsSelectRef} className="form-control select2" multiple=""
+                              onChange={handleChange}
+                              name="tagId">
+                              {filteredTags.length !== 0 && filteredTags.map((tag, index) => (
+                                <option key={`tags-${index}`} value={tag['id']}>{tag['name']}</option>
+                              ))}
                             </select>
                           </div>
                         </div>
@@ -293,21 +351,18 @@ export default function Page() {
                           <div className="col-sm-12 col-md-7">
                             <select className="form-control select2" multiple="" onChange={handleChange}
                                     name="language">
-                              {assistanceDependency['languages'].map((value, index) => {
-                                return <option key={index} value={value}>{value}</option>
-                              })}
+                              {assistanceDependency['languages'].map((value, index) => (
+                                <option key={"language" + index} value={value['id']}>{value['name']}</option>
+                              ))}
                             </select>
                           </div>
                         </div>
                         <div className="form-group row mb-4">
-
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Deskripsi</label>
                           <div className="col-sm-12 col-md-7">
                             <textarea className="summernote-simple"></textarea>
                           </div>
                         </div>
-
-
                         <div className="form-group row mb-4">
                           <div className="col-sm-12 col-md-7 offset-md-3">
                             <button type="submit" className="btn btn-primary">
@@ -327,5 +382,3 @@ export default function Page() {
     </>
   );
 }
-
-

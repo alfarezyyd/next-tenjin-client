@@ -6,16 +6,12 @@ import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import Cookies from "js-cookie";
-import dynamic from "next/dynamic";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
-const RichTextEditor = dynamic(() => import('@/components/admin/RichTextEditor'), {
-  ssr: false, // Disable server-side rendering for this component
-});
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
