@@ -92,11 +92,19 @@ export default function Login() {
             type="password"
             onChange={handleChange}
             fullWidth
-            className="mb-3"
+            className="mb-3" // Mengatur ukuran font besar dan monospace
             required
             isInvalid={!!userError.password}
             errorMessage={userError.password ? userError.password[0] : ""}
+            classNames={{
+              input: [
+                "bg-transparent",
+                "text-black/90 dark:text-white/90",
+                "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+              ]
+            }}
           />
+
 
           <div className="mb-4 flex items-center justify-between px-2 dark:text-white">
             <div className="flex items-center">
