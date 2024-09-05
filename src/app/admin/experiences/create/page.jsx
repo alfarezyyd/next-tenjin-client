@@ -8,6 +8,8 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
+import CommonStyle from "@/components/admin/CommonStyle";
+import CommonScript from "@/components/admin/CommonScript";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -33,9 +35,13 @@ export default function Page() {
       await import('select2/dist/css/select2.min.css');
       await import('bootstrap-daterangepicker/daterangepicker.css');
       await import('filepond/dist/filepond.min.css');
+      await import('summernote/dist/summernote-bs4.css');
+      await CommonStyle();
 
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
+      await import('summernote/dist/summernote-bs4.js');
+      await CommonScript();
     };
 
     const initialPage = async () => {
@@ -244,9 +250,11 @@ export default function Page() {
                           </div>
                         </div>
                         <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Deskripsi</label>
+                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
+                                 htmlFor="description">Deskripsi</label>
                           <div className="col-sm-12 col-md-7">
-                            <RichTextEditor setEditorData={setTypedText}/>
+                            <textarea className={`summernote-simple ${errors.capacity ? 'is-invalid' : ''}`}
+                                      name="description" id="description"></textarea>
                           </div>
                         </div>
                         <div className="form-group row mb-4">
