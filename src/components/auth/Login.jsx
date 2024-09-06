@@ -36,7 +36,7 @@ export default function Login() {
 
       const responseBody = await response.json();
       if (response.ok) {
-        Cookies.set('accessToken', responseBody['accessToken']);
+        Cookies.set('accessToken', responseBody['result']['data']['accessToken']);
         push('/');  // Redirect to the dashboard or another protected route
       } else {
         setUserError(responseBody.errors || {general: 'Login failed'});

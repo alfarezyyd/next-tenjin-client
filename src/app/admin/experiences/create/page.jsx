@@ -1,6 +1,6 @@
 "use client"
 import AdminWrapper from "@/components/admin/AdminWrapper";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {FilePond, registerPlugin} from 'react-filepond';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
@@ -20,14 +20,17 @@ export default function Page() {
   const [employmentTypes, setEmploymentTypes] = useState([]);
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
-  const [typedText, setTypedText] = useState("");
+  const employmentTypeRef = useRef(null)
+  const [selectedEmploymentType, setSelectedEmploymentType] = useState(null);
+
   const [formData, setFormData] = useState({
     positionName: '',
     companyName: '',
     employmentType: '',
     location: '',
     startDate: '',
-    endDate: ''
+    endDate: '',
+    description: '',
   });
 
   useEffect(() => {
@@ -42,6 +45,11 @@ export default function Page() {
       await import('bootstrap-daterangepicker/daterangepicker');
       await import('summernote/dist/summernote-bs4.js');
       await CommonScript();
+      const $ = (await import('jquery')).default;
+
+      $(employmentTypeRef.current).on("change", () => {
+        setSelectedEmploymentType($(employmentTypeRef.current).val());
+      });
     };
 
     const initialPage = async () => {
@@ -76,7 +84,7 @@ export default function Page() {
       form.append(`experienceResources`, file.file);
     });
 
-    form.append(`description`, typedText);
+    form.append(`employmentType`, selectedEmploymentType)
 
     for (let [key, value] of form.entries()) {
       console.log(key, value);
@@ -117,12 +125,12 @@ export default function Page() {
         'Authorization': `Bearer ${Cookies.get('accessToken')}`,
       }
     });
-
     const responseBody = await fetchResponse.json();
+    console.log(responseBody, fetchResponse);
     if (fetchResponse.ok) {
-      setEmploymentTypes(responseBody.data)
+      setEmploymentTypes(responseBody['result']['data'])
     } else {
-      window.location.reload()
+      console.error(responseBody);
     }
   }
 
@@ -196,11 +204,15 @@ export default function Page() {
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tipe
                             Employment</label>
                           <div className="col-sm-12 col-md-7">
-                            <select className="form-control select2" onChange={handleChange} name="employmentType">
-                              {employmentTypes.map((value, index, array) => {
+                            <select className={`form-control select2 ${errors.employmentType ? 'is-invalid' : ''}`}
+                                    ref={employmentTypeRef} name="employmentType">
+                              {employmentTypes !== undefined && employmentTypes.map((value, index, array) => {
                                 return <option key={index} value={value}>{value}</option>
                               })}
                             </select>
+                            {errors.employmentType && (
+                              <small className="invalid-feedback text-danger">{errors.employmentType}</small>
+                            )}
                           </div>
                         </div>
                         <div className="form-group row mb-4">
