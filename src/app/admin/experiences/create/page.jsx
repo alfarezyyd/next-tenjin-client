@@ -21,15 +21,20 @@ export default function Page() {
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
   const employmentTypeRef = useRef(null)
-  const [selectedEmploymentType, setSelectedEmploymentType] = useState(null);
+  const startDateRef = useRef(null)
+  const endDateRef = useRef(null)
+  const descriptionRef = useRef(null)
 
   const [formData, setFormData] = useState({
     positionName: '',
     companyName: '',
-    employmentType: '',
     location: '',
-    startDate: '',
-    endDate: '',
+  });
+
+  const [formDataRef, setFormDataRef] = useState({
+    employmentType: '',
+    startDate: new Date().toISOString().split('T')[0],
+    endDate: new Date().toISOString().split('T')[0],
     description: '',
   });
 
@@ -48,7 +53,39 @@ export default function Page() {
       const $ = (await import('jquery')).default;
 
       $(employmentTypeRef.current).on("change", () => {
-        setSelectedEmploymentType($(employmentTypeRef.current).val());
+        console.log($(employmentTypeRef.current).val())
+        setFormDataRef((prevFormDataRef) => ({
+          ...prevFormDataRef,
+          employmentType: ($(employmentTypeRef.current).val()),
+        }));
+      });
+
+      function updateSelectedStartDate() {
+        setFormDataRef((prevFormDataRef) => ({
+          ...prevFormDataRef,
+          startDate: ($(startDateRef.current).val()),
+        }));
+      }
+
+      function updateSelectedEndDate() {
+        setFormDataRef((prevFormDataRef) => ({
+          ...prevFormDataRef,
+          endDate: ($(endDateRef.current).val()),
+        }));
+      }
+
+      $(startDateRef.current).on("apply.daterangepicker", updateSelectedStartDate);
+      $(startDateRef.current).on("input", updateSelectedStartDate);
+
+      $(endDateRef.current).on("apply.daterangepicker", updateSelectedEndDate);
+      $(endDateRef.current).on("input", updateSelectedEndDate);
+
+      $(descriptionRef.current).on("summernote.change", () => {
+        console.log($(descriptionRef.current).val())
+        setFormDataRef((prevFormDataRef) => ({
+          ...prevFormDataRef,
+          description: ($(descriptionRef.current).val()),
+        }));
       });
     };
 
@@ -65,6 +102,7 @@ export default function Page() {
 
   const handleChange = (e) => {
     const {name, value} = e.target;
+    console.log(name, value);
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -79,13 +117,16 @@ export default function Page() {
       form.append(key, value);
     });
 
+    Object.entries(formDataRef).forEach(([key, value]) => {
+      form.append(key, value);
+    });
+
     form.delete('experienceResources');
     files.forEach((file, index) => {
       form.append(`experienceResources`, file.file);
     });
 
-    form.append(`employmentType`, selectedEmploymentType)
-
+    console.log(form);
     for (let [key, value] of form.entries()) {
       console.log(key, value);
     }
@@ -235,10 +276,10 @@ export default function Page() {
                           <div className="col-sm-12 col-md-7">
                             <input
                               type="text"
+                              ref={startDateRef}
                               className={`form-control datepicker ${errors.startDate ? 'is-invalid' : ''}`}
                               name="startDate"
                               value={formData.startDate}
-                              onChange={handleChange}
                             />
                             {errors.startDate && (
                               <div className="invalid-feedback">{errors.startDate}</div>
@@ -251,10 +292,10 @@ export default function Page() {
                           <div className="col-sm-12 col-md-7">
                             <input
                               type="text"
+                              ref={endDateRef}
                               className={`form-control datepicker ${errors.endDate ? 'is-invalid' : ''}`}
                               name="endDate"
                               value={formData.endDate}
-                              onChange={handleChange}
                             />
                             {errors.endDate && (
                               <div className="invalid-feedback">{errors.endDate}</div>
@@ -265,7 +306,8 @@ export default function Page() {
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
                                  htmlFor="description">Deskripsi</label>
                           <div className="col-sm-12 col-md-7">
-                            <textarea className={`summernote-simple ${errors.capacity ? 'is-invalid' : ''}`}
+                            <textarea ref={descriptionRef}
+                                      className={`summernote-simple ${errors.capacity ? 'is-invalid' : ''}`}
                                       name="description" id="description"></textarea>
                           </div>
                         </div>
