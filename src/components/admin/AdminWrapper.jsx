@@ -19,7 +19,6 @@ export default function AdminWrapper({children}) {
       await import('bootstrap/dist/js/bootstrap');
       await import('moment/moment');
       await import('tooltip.js/dist/tooltip.min');
-
     };
 
     if (typeof window !== "undefined") {

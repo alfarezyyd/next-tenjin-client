@@ -1,5 +1,4 @@
 import './fonts.css'
-import {NextUIProvider} from "@nextui-org/react";
 
 export const metadata = {
   title: "Create Next App",
