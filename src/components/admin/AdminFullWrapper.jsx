@@ -4,15 +4,12 @@ import {Loading} from "@/components/admin/Loading";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import "../../../public/assets/css/custom.scss"
-import CommonScript from "@/components/admin/CommonScript";
-import CommonStyle from "@/components/admin/CommonStyle";
 
 export default function AdminFullWrapper({children}) {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     document.body.classList.add('layout-3'); // Tambahkan class layout-3
     const loadAssets = async () => {
-      await CommonStyle()
       const jQueryModule = await import('jquery');
       window.jQuery = jQueryModule.default; // Also assign jQuery to window object
       await import('jquery-ui-dist/jquery-ui.min');
@@ -20,7 +17,6 @@ export default function AdminFullWrapper({children}) {
       await import('bootstrap/dist/js/bootstrap');
       await import('moment/moment');
       await import('tooltip.js/dist/tooltip.min');
-      await CommonScript()
     };
 
     if (typeof window !== "undefined") {
@@ -214,39 +210,9 @@ export default function AdminFullWrapper({children}) {
                 </li>
               </ul>
             </nav>
-            
-            <div className="main-content">
-              <section className="section">
-                <div className="section-header">
-                  <h1>Top Navigation</h1>
-                  <div className="section-header-breadcrumb">
-                    <div className="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                    <div className="breadcrumb-item"><a href="#">Layout</a></div>
-                    <div className="breadcrumb-item">Top Navigation</div>
-                  </div>
-                </div>
 
-                <div className="section-body">
-                  <h2 className="section-title">This is Example Page</h2>
-                  <p className="section-lead">This page is just an example for you to create your own page.</p>
-                  <div className="card">
-                    <div className="card-header">
-                      <h4>Example Card</h4>
-                    </div>
-                    <div className="card-body">
-                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                    </div>
-                    <div className="card-footer bg-whitesmoke">
-                      This is card footer
-                    </div>
-                  </div>
-                </div>
-              </section>
+            <div className="main-content">
+              {children}
             </div>
             <footer className="main-footer">
               <div className="footer-left">
