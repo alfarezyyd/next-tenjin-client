@@ -12,26 +12,26 @@ export default function Page() {
   const [currentStep, setCurrentStep] = useState(1); // State untuk mengelola langkah wizard
   const [loggedUser, setLoggedUser] = useState({});
   const [formData, setFormData] = useState({
-    full_name: "",
-    email: "",
-    telephone: "",
-    gender: "",
+    mentorAddresses: {
+      street: "",
+      village: "",
+      neighbourhoodNumber: "",
+      hamletNumber: "",
+      urbanVillage: "",
+      subDistrict: "",
+      district: "",
+      province: "",
+    },
     pin: "",
-    street: "",
-    village: "",
-    neighbourhood_number: "",
-    hamlet_number: "",
-    urban_village: "",
-    sub_district: "",
-    district: "",
-    province: "",
     photo: null,
-    identity_card: null,
-    curriculum_vitae: null,
-    account_holder_name: "",
-    bank_name: "",
-    account_number: "",
-    payment_recipient_email: "",
+    identityCard: null,
+    curriculumVitae: null,
+    mentorBankAccount: {
+      accountHolderName: "",
+      bankName: "",
+      accountNumber: "",
+      paymentRecipientEmail: "",
+    }
   });
   const [errors, setErrors] = useState({});
 
@@ -52,15 +52,6 @@ export default function Page() {
     let accessToken = Cookies.get("accessToken");
     const user = CommonUtil.parseJwt(accessToken);
     setLoggedUser(user);
-
-    // Update initial form data
-    setFormData((prevData) => ({
-      ...prevData,
-      full_name: user.name || "",
-      email: user.email || "",
-      telephone: user.telephone || "",
-      gender: user.gender || "",
-    }));
   };
 
   // Fungsi untuk mengubah nilai form
@@ -268,59 +259,59 @@ export default function Page() {
 
                             <div className="row col-md-9 mx-auto">
                               <div className="form-group col-6">
-                                <label htmlFor="neighbourhood_number">RT</label>
+                                <label htmlFor="neighbourhoodNumber">RT</label>
                                 <input
                                   type="text"
                                   className="form-control"
-                                  id="neighbourhood_number"
-                                  name="neighbourhood_number"
+                                  id="neighbourhoodNumber"
+                                  name="neighbourhoodNumber"
                                   placeholder="Nomor RT"
-                                  value={formData.neighbourhood_number}
+                                  value={formData.neighbourhoodNumber}
                                   onChange={handleChange}
                                 />
-                                <div className="invalid-feedback">{errors.neighbourhood_number}</div>
+                                <div className="invalid-feedback">{errors.neighbourhoodNumber}</div>
                               </div>
                               <div className="form-group col-6">
-                                <label htmlFor="hamlet_number">RW</label>
+                                <label htmlFor="hamletNumber">RW</label>
                                 <input
                                   type="text"
                                   className="form-control"
-                                  id="hamlet_number"
-                                  name="hamlet_number"
+                                  id="hamletNumber"
+                                  name="hamletNumber"
                                   placeholder="Nomor RW"
-                                  value={formData.hamlet_number}
+                                  value={formData.hamletNumber}
                                   onChange={handleChange}
                                 />
-                                <div className="invalid-feedback">{errors.hamlet_number}</div>
+                                <div className="invalid-feedback">{errors.hamletNumber}</div>
                               </div>
                             </div>
 
                             <div className="row col-md-9 mx-auto">
                               <div className="form-group col-6">
-                                <label htmlFor="urban_village">Kelurahan</label>
+                                <label htmlFor="urbanVillage">Kelurahan</label>
                                 <input
                                   type="text"
                                   className="form-control"
-                                  id="urban_village"
-                                  name="urban_village"
+                                  id="urbanVillage"
+                                  name="urbanVillage"
                                   placeholder="Nama Kelurahan"
-                                  value={formData.urban_village}
+                                  value={formData.urbanVillage}
                                   onChange={handleChange}
                                 />
-                                <div className="invalid-feedback">{errors.urban_village}</div>
+                                <div className="invalid-feedback">{errors.urbanVillage}</div>
                               </div>
                               <div className="form-group col-6">
-                                <label htmlFor="sub_district">Kecamatan</label>
+                                <label htmlFor="subDistrict">Kecamatan</label>
                                 <input
                                   type="text"
                                   className="form-control"
-                                  id="sub_district"
-                                  name="sub_district"
+                                  id="subDistrict"
+                                  name="subDistrict"
                                   placeholder="Nama Kecamatan"
-                                  value={formData.sub_district}
+                                  value={formData.subDistrict}
                                   onChange={handleChange}
                                 />
-                                <div className="invalid-feedback">{errors.sub_district}</div>
+                                <div className="invalid-feedback">{errors.subDistrict}</div>
                               </div>
                             </div>
 
@@ -374,36 +365,34 @@ export default function Page() {
                           <>
                             <div className="row col-md-9 mx-auto">
                               <div className="form-group col-lg-6 col-md-6 col-sm-12">
-                                <label htmlFor="identity_card">KTP (Kartu Tanda Penduduk)</label>
+                                <label htmlFor="identityCard">KTP (Kartu Tanda Penduduk)</label>
                                 <div className="custom-file">
-                                  <input type="file" className="custom-file-input" id="identity_card"/>
-                                  <label className="custom-file-label" htmlFor="identity_card">Choose file</label>
+                                  <input type="file" className="custom-file-input" id="identityCard"/>
+                                  <label className="custom-file-label" htmlFor="identityCard">Choose file</label>
                                 </div>
                                 <div className="invalid-feedback">
                                 </div>
                               </div>
                               <div className="form-group col-lg-6 col-md-6 col-sm-12">
-                                <label htmlFor="identity_card_number">Action</label>
+                                <label htmlFor="identityCardAction">Action</label>
                                 <div className="d-flex flex-row">
                                   <a href="#" className="btn btn-icon icon-left btn-primary"><i
                                     className="far fa-edit"></i> Lihat</a>
-                                </div>
-                                <div className="invalid-feedback">
                                 </div>
                               </div>
                             </div>
                             <div className="row col-md-9 mx-auto">
                               <div className="form-group col-6">
-                                <label htmlFor="curriculum_vitae">CV (Curriculum Vitae)</label>
+                                <label htmlFor="curriculumVitae">CV (Curriculum Vitae)</label>
                                 <div className="custom-file">
-                                  <input type="file" className="custom-file-input" id="curriculum_vitae"/>
-                                  <label className="custom-file-label" htmlFor="curriculum_vitae">Choose file</label>
+                                  <input type="file" className="custom-file-input" id="curriculumVitae"/>
+                                  <label className="custom-file-label" htmlFor="curriculumVitae">Choose file</label>
                                 </div>
                                 <div className="invalid-feedback">
                                 </div>
                               </div>
                               <div className="form-group col-6">
-                                <label htmlFor="curriculum_vitae_action">Action</label>
+                                <label htmlFor="curriculumVitae_action">Action</label>
                                 <div className="d-flex flex-row">
                                   <a href="#" className="btn btn-icon icon-left btn-primary"><i
                                     className="far fa-edit"></i> Lihat</a>
@@ -418,59 +407,59 @@ export default function Page() {
                           <>
                             <div className="row col-md-9 mx-auto">
                               <div className="form-group col-6">
-                                <label htmlFor="account_holder_name">Nama Pemilik Rekening</label>
+                                <label htmlFor="accountHolderName">Nama Pemilik Rekening</label>
                                 <input
                                   type="text"
                                   className="form-control"
-                                  id="account_holder_name"
-                                  name="account_holder_name"
+                                  id="accountHolderName"
+                                  name="accountHolderName"
                                   placeholder="Nama Pemilik Rekening"
-                                  value={formData.account_holder_name}
+                                  value={formData.accountHolderName}
                                   onChange={handleChange}
                                 />
-                                <div className="invalid-feedback">{errors.account_holder_name}</div>
+                                <div className="invalid-feedback">{errors.accountHolderName}</div>
                               </div>
                               <div className="form-group col-6">
-                                <label htmlFor="bank_name">Nama Bank</label>
+                                <label htmlFor="bankName">Nama Bank</label>
                                 <input
                                   type="text"
                                   className="form-control"
-                                  id="bank_name"
-                                  name="bank_name"
+                                  id="bankName"
+                                  name="bankName"
                                   placeholder="Nama Bank"
-                                  value={formData.bank_name}
+                                  value={formData.bankName}
                                   onChange={handleChange}
                                 />
-                                <div className="invalid-feedback">{errors.bank_name}</div>
+                                <div className="invalid-feedback">{errors.bankName}</div>
                               </div>
                             </div>
 
                             <div className="row col-md-9 mx-auto">
                               <div className="form-group col-6">
-                                <label htmlFor="account_number">Nomor Rekening</label>
+                                <label htmlFor="accountNumber">Nomor Rekening</label>
                                 <input
                                   type="text"
                                   className="form-control"
-                                  id="account_number"
-                                  name="account_number"
+                                  id="accountNumber"
+                                  name="accountNumber"
                                   placeholder="Nomor Rekening"
-                                  value={formData.account_number}
+                                  value={formData.accountNumber}
                                   onChange={handleChange}
                                 />
-                                <div className="invalid-feedback">{errors.account_number}</div>
+                                <div className="invalid-feedback">{errors.accountNumber}</div>
                               </div>
                               <div className="form-group col-6">
-                                <label htmlFor="payment_recipient_email">Email Penerima Pembayaran</label>
+                                <label htmlFor="paymentRecipientEmail">Email Penerima Pembayaran</label>
                                 <input
                                   type="text"
                                   className="form-control"
-                                  id="payment_recipient_email"
-                                  name="payment_recipient_email"
+                                  id="paymentRecipientEmail"
+                                  name="paymentRecipientEmail"
                                   placeholder="Email Penerima Pembayaran"
-                                  value={formData.payment_recipient_email}
+                                  value={formData.paymentRecipientEmail}
                                   onChange={handleChange}
                                 />
-                                <div className="invalid-feedback">{errors.payment_recipient_email}</div>
+                                <div className="invalid-feedback">{errors.paymentRecipientEmail}</div>
                               </div>
                             </div>
                           </>
