@@ -12,7 +12,7 @@ export default function Page() {
   const [currentStep, setCurrentStep] = useState(1); // State untuk mengelola langkah wizard
   const [loggedUser, setLoggedUser] = useState({});
   const [formData, setFormData] = useState({
-    mentorAddresses: {
+    mentorAddress: {
       street: "",
       village: "",
       neighbourhoodNumber: "",
@@ -39,6 +39,8 @@ export default function Page() {
     const loadAssets = async () => {
       const $ = (await import("jquery")).default;
       await CommonStyle();
+      await import('jquery_upload_preview/assets/js/jquery.uploadPreview.min')
+      CommonUtil.uploadPreview($)
       await CommonScript();
     };
     if (typeof window !== "undefined") {
@@ -55,20 +57,50 @@ export default function Page() {
   };
 
   // Fungsi untuk mengubah nilai form
-  const handleChange = (e) => {
+  const handleChange = (e, objectName) => {
     const {name, value, files} = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: files ? files[0] : value,
-    }));
+    console.log(name, value, files, objectName)
+    const setInner = () => {
+      setFormData((prevData) => ({
+        ...prevData,
+        [objectName]: {
+          [name]: files ? files[0] : value,
+        }
+      }));
+    }
+
+    function setOuter() {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: files ? files[0] : value,
+      }));
+    }
+
+    objectName !== undefined ? setInner() : setOuter();
   };
 
   // Fungsi untuk mengirim form
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formDataPayload = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      formDataPayload.append(key, value)
+      console.log(key, value)
+    })
     try {
-      // Proses submit data
-      // Contoh: await api.submitForm(formData);
+      const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/mentors`, {
+        method: 'POST',
+        body: formDataPayload,
+        includeCredentials: true,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${Cookies.get('accessToken')}`,
+        }
+      })
+      const responseBody = await fetchResponse.json();
+      if (responseBody.ok) {
+        console.log('Data submitted successfully', responseBody);
+      }
 
       // Reset errors jika berhasil
       setErrors({});
@@ -152,7 +184,7 @@ export default function Page() {
                         </div>
                       </div>
                     </div>
-                    <form className="wizard-content mt-2">
+                    <form className="wizard-content mt-2" onSubmit={handleSubmit}>
                       <div className="wizard-pane">
                         {currentStep === 1 && (
                           <>
@@ -173,8 +205,6 @@ export default function Page() {
                                        className="form-control"
                                        id="email" disabled value={loggedUser.email}
                                        name="email"/>
-                                <div className="invalid-feedback">
-                                </div>
                                 <small>Anda harus memverifikasi e-mail terlebih <br/> dahulu apabila belum pada
                                   halaman <a
                                     href="">Verifikasi
@@ -215,7 +245,8 @@ export default function Page() {
                                 <input type="text"
                                        className="form-control"
                                        id="pin" placeholder="Nomor PIN"
-                                       name="pin"/>
+                                       name="pin"
+                                       onChange={handleChange}/>
                                 <div className="invalid-feedback">
                                 </div>
                               </div>
@@ -237,7 +268,9 @@ export default function Page() {
                                   placeholder="Nama Jalan"
                                   name="street"
                                   value={formData.street}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e, "mentorAddress")
+                                  }}
                                 />
                                 {errors.street && <div className="invalid-feedback">{errors.street}</div>}
                               </div>
@@ -251,8 +284,9 @@ export default function Page() {
                                   placeholder="Nama Desa"
                                   name="village"
                                   value={formData.village}
-                                  onChange={handleChange}
-                                />
+                                  onChange={(e) => {
+                                    handleChange(e, "mentorAddress")
+                                  }}/>
                                 <div className="invalid-feedback">{errors.village}</div>
                               </div>
                             </div>
@@ -267,7 +301,9 @@ export default function Page() {
                                   name="neighbourhoodNumber"
                                   placeholder="Nomor RT"
                                   value={formData.neighbourhoodNumber}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e, "mentorAddress")
+                                  }}
                                 />
                                 <div className="invalid-feedback">{errors.neighbourhoodNumber}</div>
                               </div>
@@ -280,7 +316,9 @@ export default function Page() {
                                   name="hamletNumber"
                                   placeholder="Nomor RW"
                                   value={formData.hamletNumber}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e, "mentorAddress")
+                                  }}
                                 />
                                 <div className="invalid-feedback">{errors.hamletNumber}</div>
                               </div>
@@ -296,7 +334,9 @@ export default function Page() {
                                   name="urbanVillage"
                                   placeholder="Nama Kelurahan"
                                   value={formData.urbanVillage}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e, "mentorAddress")
+                                  }}
                                 />
                                 <div className="invalid-feedback">{errors.urbanVillage}</div>
                               </div>
@@ -309,7 +349,9 @@ export default function Page() {
                                   name="subDistrict"
                                   placeholder="Nama Kecamatan"
                                   value={formData.subDistrict}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e, "mentorAddress")
+                                  }}
                                 />
                                 <div className="invalid-feedback">{errors.subDistrict}</div>
                               </div>
@@ -325,7 +367,9 @@ export default function Page() {
                                   name="district"
                                   placeholder="Nama Kota/Kabupaten"
                                   value={formData.district}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e, "mentorAddress")
+                                  }}
                                 />
                                 <div className="invalid-feedback">{errors.district}</div>
                               </div>
@@ -338,7 +382,9 @@ export default function Page() {
                                   name="province"
                                   placeholder="Nama Provinsi"
                                   value={formData.province}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e, "mentorAddress")
+                                  }}
                                 />
                                 <div className="invalid-feedback">{errors.province}</div>
                               </div>
@@ -415,7 +461,9 @@ export default function Page() {
                                   name="accountHolderName"
                                   placeholder="Nama Pemilik Rekening"
                                   value={formData.accountHolderName}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e, "mentorBankAccount")
+                                  }}
                                 />
                                 <div className="invalid-feedback">{errors.accountHolderName}</div>
                               </div>
@@ -428,7 +476,9 @@ export default function Page() {
                                   name="bankName"
                                   placeholder="Nama Bank"
                                   value={formData.bankName}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e, "mentorBankAccount")
+                                  }}
                                 />
                                 <div className="invalid-feedback">{errors.bankName}</div>
                               </div>
@@ -444,7 +494,9 @@ export default function Page() {
                                   name="accountNumber"
                                   placeholder="Nomor Rekening"
                                   value={formData.accountNumber}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e, "mentorBankAccount")
+                                  }}
                                 />
                                 <div className="invalid-feedback">{errors.accountNumber}</div>
                               </div>
@@ -457,7 +509,9 @@ export default function Page() {
                                   name="paymentRecipientEmail"
                                   placeholder="Email Penerima Pembayaran"
                                   value={formData.paymentRecipientEmail}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e, "mentorBankAccount")
+                                  }}
                                 />
                                 <div className="invalid-feedback">{errors.paymentRecipientEmail}</div>
                               </div>
