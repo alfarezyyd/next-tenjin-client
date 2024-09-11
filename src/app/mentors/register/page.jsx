@@ -1,11 +1,12 @@
 "use client";
 import AdminFullWrapper from "@/components/admin/AdminFullWrapper";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import CommonStyle from "@/components/admin/CommonStyle";
 import {Loading} from "@/components/admin/Loading";
 import CommonScript from "@/components/admin/CommonScript";
 import {CommonUtil} from "@/common/utils/common-util";
 import Cookies from "js-cookie";
+
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
@@ -43,11 +44,13 @@ export default function Page() {
       CommonUtil.uploadPreview($)
       await CommonScript();
     };
+
     if (typeof window !== "undefined") {
       loadAssets();
       fetchCurrentUser();
       setLoading(false);
     }
+
   }, []);
 
   const fetchCurrentUser = async () => {
@@ -55,6 +58,17 @@ export default function Page() {
     const user = CommonUtil.parseJwt(accessToken);
     setLoggedUser(user);
   };
+
+  function handleFileBrowser(event) {
+    let fieldVal = event.target.value;
+    fieldVal = fieldVal.replace("C:\\fakepath\\", "");
+
+    if (fieldVal) {
+      // Set the label's text using the DOM API
+      event.target.nextSibling.setAttribute('data-content', fieldVal);
+      event.target.nextSibling.textContent = fieldVal;
+    }
+  }
 
   // Fungsi untuk mengubah nilai form
   const handleChange = (e, objectName) => {
@@ -413,7 +427,12 @@ export default function Page() {
                               <div className="form-group col-lg-6 col-md-6 col-sm-12">
                                 <label htmlFor="identityCard">KTP (Kartu Tanda Penduduk)</label>
                                 <div className="custom-file">
-                                  <input type="file" className="custom-file-input" id="identityCard"/>
+                                  <input type="file" className="custom-file-input"
+                                         onChange={(e) => {
+                                           handleChange(e)
+                                           handleFileBrowser(e)
+                                         }}
+                                         id="identityCard"/>
                                   <label className="custom-file-label" htmlFor="identityCard">Choose file</label>
                                 </div>
                                 <div className="invalid-feedback">
@@ -431,7 +450,11 @@ export default function Page() {
                               <div className="form-group col-6">
                                 <label htmlFor="curriculumVitae">CV (Curriculum Vitae)</label>
                                 <div className="custom-file">
-                                  <input type="file" className="custom-file-input" id="curriculumVitae"/>
+                                  <input type="file" className="custom-file-input" id="curriculumVitae"
+                                         onChange={(e) => {
+                                           handleChange(e)
+                                           handleFileBrowser(e)
+                                         }}/>
                                   <label className="custom-file-label" htmlFor="curriculumVitae">Choose file</label>
                                 </div>
                                 <div className="invalid-feedback">
