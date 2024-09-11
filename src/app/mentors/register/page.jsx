@@ -419,7 +419,6 @@ export default function Page() {
                               </div>
                             </div>
                           </>
-
                         )}
                         {currentStep === 2 && (
                           <>
@@ -541,6 +540,18 @@ export default function Page() {
                             </div>
                           </>
                         )}
+                        {currentStep === 4 && (
+                          <div className="row col-md-9 mx-auto">
+                            <div className="card card-primary">
+                              <div className="card-header">
+                                <h4 className="mx-auto">Summary</h4>
+                              </div>
+                              <div className="card-body">
+                                <p>Card <code>.card-primary</code></p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                         <div className="row col-md-9 mx-auto">
                           <div className="col-lg-6 col-md-8">
                             {currentStep > 1 && (
@@ -550,7 +561,7 @@ export default function Page() {
                             )}
                           </div>
                           <div className="col-lg-6 col-md-8 text-right">
-                            {currentStep < 4 ? (
+                            {currentStep <= 4 ? (
                               <a onClick={nextStep} className="btn btn-icon icon-right btn-primary">Next <i
                                 className="fas fa-arrow-right"></i></a>
                             ) : (
