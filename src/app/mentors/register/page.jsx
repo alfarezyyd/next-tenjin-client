@@ -73,7 +73,7 @@ export default function Page() {
   // Fungsi untuk mengubah nilai form
   const handleChange = (e, objectName) => {
     const {name, value, files} = e.target;
-    console.log(name, value, files, objectName)
+    console.log(objectName, name);
     const setInner = () => {
       setFormData((prevData) => ({
         ...prevData,
@@ -98,11 +98,16 @@ export default function Page() {
     e.preventDefault();
     const formDataPayload = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
-      formDataPayload.append(key, value)
-      console.log(key, value)
+      if (typeof value === 'object') {
+        Object.entries(value).forEach(([key, value]) => {
+          formDataPayload.append(key, value)
+        })
+      } else {
+        formDataPayload.append(key, value)
+      }
     })
     try {
-      const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/mentors`, {
+      const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors`, {
         method: 'POST',
         body: formDataPayload,
         includeCredentials: true,
@@ -235,16 +240,16 @@ export default function Page() {
                               </div>
 
                               <div className="form-group col-6">
-                                <label htmlFor="gender">Jenis Kelamin</label>
+                                <label>Jenis Kelamin</label>
                                 <div className="selectgroup w-100">
-                                  <label className="selectgroup-item">
-                                    <input type="radio" name="gender" value="MAN" disabled
+                                  <label className="selectgroup-item" htmlFor="MAN">
+                                    <input type="radio" name="gender" id="MAN" value="MAN" disabled
                                            className="selectgroup-input"
                                            checked={loggedUser.gender === 'MAN'}/>
                                     <span className="selectgroup-button">Laki-Laki</span>
                                   </label>
-                                  <label className="selectgroup-item">
-                                    <input type="radio" name="gender" value="100" disabled
+                                  <label className="selectgroup-item" htmlFor="WOMAN">
+                                    <input type="radio" name="gender" id="WOMAN" value="100" disabled
                                            className="selectgroup-input"
                                            checked={loggedUser.gender === 'WOMAN'}/>
                                     <span className="selectgroup-button">Wanita</span>
@@ -405,7 +410,7 @@ export default function Page() {
                             </div>
                             <div className="row col-md-9 mx-auto">
                               <div className="form-group col-6">
-                                <label htmlFor="photo">Foto Formal 3x4</label>
+                                <label htmlFor="image-upload">Foto Formal 3x4</label>
                                 <div id="image-preview" className="image-preview">
                                   <label htmlFor="image-upload" id="image-label">Choose File</label>
                                   <input
@@ -561,7 +566,7 @@ export default function Page() {
                             )}
                           </div>
                           <div className="col-lg-6 col-md-8 text-right">
-                            {currentStep <= 4 ? (
+                            {currentStep < 4 ? (
                               <a onClick={nextStep} className="btn btn-icon icon-right btn-primary">Next <i
                                 className="fas fa-arrow-right"></i></a>
                             ) : (
