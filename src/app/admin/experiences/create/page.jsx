@@ -189,6 +189,10 @@ export default function Page() {
     console.log(responseBody, fetchResponse);
     if (fetchResponse.ok) {
       setEmploymentTypes(responseBody['result']['data'])
+      setFormDataRef((prevFormDataRef) => ({
+        ...prevFormDataRef,
+        employmentType: responseBody['result']['data'][0],
+      }))
     } else {
       console.error(responseBody);
     }
