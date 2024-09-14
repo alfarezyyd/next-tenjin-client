@@ -73,11 +73,11 @@ export default function Page() {
   // Fungsi untuk mengubah nilai form
   const handleChange = (e, objectName) => {
     const {name, value, files} = e.target;
-    console.log(objectName, name);
     const setInner = () => {
       setFormData((prevData) => ({
         ...prevData,
         [objectName]: {
+          ...prevData[objectName],
           [name]: files ? files[0] : value,
         }
       }));
@@ -96,41 +96,53 @@ export default function Page() {
   // Fungsi untuk mengirim form
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataPayload = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (typeof value === 'object') {
-        Object.entries(value).forEach(([key, value]) => {
-          formDataPayload.append(key, value)
-        })
-      } else {
-        formDataPayload.append(key, value)
-      }
-    })
-    try {
-      const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors`, {
-        method: 'POST',
-        body: formDataPayload,
-        includeCredentials: true,
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${Cookies.get('accessToken')}`,
+    // Looping untuk setiap properti dalam object
+    const convertIntoFormData = (data, form = new FormData(), parentKey = '') => {
+      // Looping untuk setiap properti dalam object
+      for (const formDataKey in data) {
+        if (data.hasOwnProperty(formDataKey)) {
+          const value = data[formDataKey];
+
+          // Cek apakah value adalah object (dan bukan file atau null)
+          if (typeof value === 'object' && value !== null && !(value instanceof File)) {
+            // Jika object, maka lakukan rekursif dengan parentKey
+            convertIntoFormData(value, form, parentKey ? `${parentKey}[${formDataKey}]` : formDataKey);
+          } else {
+            // Jika bukan object (atau berupa file), langsung append ke FormData
+            const finalKey = parentKey ? `${parentKey}[${formDataKey}]` : formDataKey;
+            form.append(finalKey, value);
+          }
         }
-      })
-      const responseBody = await fetchResponse.json();
-      if (responseBody.ok) {
-        console.log('Data submitted successfully', responseBody);
       }
 
-      // Reset errors jika berhasil
-      setErrors({});
-    } catch (error) {
-      if (error.response?.data?.errors) {
-        const errorData = {};
-        error.response.data.errors.forEach((err) => {
-          errorData[err.path[0]] = err.message;
-        });
-        setErrors(errorData);
+      return form;
+    };
+    const formDataPayload = convertIntoFormData(formData);
+
+    const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors`, {
+      method: 'POST',
+      body: formDataPayload,
+      includeCredentials: true,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${Cookies.get('accessToken')}`,
       }
+    })
+    const responseBody = await fetchResponse.json();
+    if (responseBody.ok) {
+      console.log('Data submitted successfully', responseBody);
+      setErrors({});
+    } else {
+      setCurrentStep(1);
+      const errorMessages = {};
+      setFormData((prevData) => ({
+        ...prevData,
+        photo: null,
+      }));
+      responseBody.errors.message.forEach((error) => {
+        errorMessages[error.path[0]] = error.message;
+      });
+      setErrors(errorMessages);
     }
   };
 
@@ -286,7 +298,7 @@ export default function Page() {
                                   id="street"
                                   placeholder="Nama Jalan"
                                   name="street"
-                                  value={formData.street}
+                                  value={formData.mentorAddress.street}
                                   onChange={(e) => {
                                     handleChange(e, "mentorAddress")
                                   }}
@@ -302,7 +314,7 @@ export default function Page() {
                                   id="village"
                                   placeholder="Nama Desa"
                                   name="village"
-                                  value={formData.village}
+                                  value={formData.mentorAddress.village}
                                   onChange={(e) => {
                                     handleChange(e, "mentorAddress")
                                   }}/>
@@ -319,7 +331,7 @@ export default function Page() {
                                   id="neighbourhoodNumber"
                                   name="neighbourhoodNumber"
                                   placeholder="Nomor RT"
-                                  value={formData.neighbourhoodNumber}
+                                  value={formData.mentorAddress.neighbourhoodNumber}
                                   onChange={(e) => {
                                     handleChange(e, "mentorAddress")
                                   }}
@@ -334,7 +346,7 @@ export default function Page() {
                                   id="hamletNumber"
                                   name="hamletNumber"
                                   placeholder="Nomor RW"
-                                  value={formData.hamletNumber}
+                                  value={formData.mentorAddress.hamletNumber}
                                   onChange={(e) => {
                                     handleChange(e, "mentorAddress")
                                   }}
@@ -352,7 +364,7 @@ export default function Page() {
                                   id="urbanVillage"
                                   name="urbanVillage"
                                   placeholder="Nama Kelurahan"
-                                  value={formData.urbanVillage}
+                                  value={formData.mentorAddress.urbanVillage}
                                   onChange={(e) => {
                                     handleChange(e, "mentorAddress")
                                   }}
@@ -367,7 +379,7 @@ export default function Page() {
                                   id="subDistrict"
                                   name="subDistrict"
                                   placeholder="Nama Kecamatan"
-                                  value={formData.subDistrict}
+                                  value={formData.mentorAddress.subDistrict}
                                   onChange={(e) => {
                                     handleChange(e, "mentorAddress")
                                   }}
@@ -385,7 +397,7 @@ export default function Page() {
                                   id="district"
                                   name="district"
                                   placeholder="Nama Kota/Kabupaten"
-                                  value={formData.district}
+                                  value={formData.mentorAddress.district}
                                   onChange={(e) => {
                                     handleChange(e, "mentorAddress")
                                   }}
@@ -400,7 +412,7 @@ export default function Page() {
                                   id="province"
                                   name="province"
                                   placeholder="Nama Provinsi"
-                                  value={formData.province}
+                                  value={formData.mentorAddress.province}
                                   onChange={(e) => {
                                     handleChange(e, "mentorAddress")
                                   }}
@@ -431,7 +443,7 @@ export default function Page() {
                               <div className="form-group col-lg-6 col-md-6 col-sm-12">
                                 <label htmlFor="identityCard">KTP (Kartu Tanda Penduduk)</label>
                                 <div className="custom-file">
-                                  <input type="file" className="custom-file-input"
+                                  <input type="file" className="custom-file-input" name="identityCard"
                                          onChange={(e) => {
                                            handleChange(e)
                                            handleFileBrowser(e)
@@ -455,6 +467,7 @@ export default function Page() {
                                 <label htmlFor="curriculumVitae">CV (Curriculum Vitae)</label>
                                 <div className="custom-file">
                                   <input type="file" className="custom-file-input" id="curriculumVitae"
+                                         name="curriculumVitae"
                                          onChange={(e) => {
                                            handleChange(e)
                                            handleFileBrowser(e)
@@ -487,7 +500,7 @@ export default function Page() {
                                   id="accountHolderName"
                                   name="accountHolderName"
                                   placeholder="Nama Pemilik Rekening"
-                                  value={formData.accountHolderName}
+                                  value={formData.mentorBankAccount.accountHolderName}
                                   onChange={(e) => {
                                     handleChange(e, "mentorBankAccount")
                                   }}
@@ -502,7 +515,7 @@ export default function Page() {
                                   id="bankName"
                                   name="bankName"
                                   placeholder="Nama Bank"
-                                  value={formData.bankName}
+                                  value={formData.mentorBankAccount.bankName}
                                   onChange={(e) => {
                                     handleChange(e, "mentorBankAccount")
                                   }}
@@ -520,7 +533,7 @@ export default function Page() {
                                   id="accountNumber"
                                   name="accountNumber"
                                   placeholder="Nomor Rekening"
-                                  value={formData.accountNumber}
+                                  value={formData.mentorBankAccount.accountNumber}
                                   onChange={(e) => {
                                     handleChange(e, "mentorBankAccount")
                                   }}
@@ -535,7 +548,7 @@ export default function Page() {
                                   id="paymentRecipientEmail"
                                   name="paymentRecipientEmail"
                                   placeholder="Email Penerima Pembayaran"
-                                  value={formData.paymentRecipientEmail}
+                                  value={formData.mentorBankAccount.paymentRecipientEmail}
                                   onChange={(e) => {
                                     handleChange(e, "mentorBankAccount")
                                   }}
