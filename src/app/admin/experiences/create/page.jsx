@@ -24,6 +24,7 @@ export default function Page() {
   const startDateRef = useRef(null)
   const endDateRef = useRef(null)
   const descriptionRef = useRef(null)
+  const jQueryRef = useRef(null);
 
   const [formData, setFormData] = useState({
     positionName: '',
@@ -50,7 +51,9 @@ export default function Page() {
       await import('bootstrap-daterangepicker/daterangepicker');
       await import('summernote/dist/summernote-bs4.js');
       await CommonScript();
+      // Import jQuery
       const $ = (await import('jquery')).default;
+      jQueryRef.current = $;
 
       $(employmentTypeRef.current).on("change", () => {
         console.log($(employmentTypeRef.current).val())
@@ -98,7 +101,23 @@ export default function Page() {
     }
     initialPage();
     setLoading(false);
+
+    return () => {
+      // Cleanup: Destroy select2 when component unmounts or before reinitializing
+      if (employmentTypeRef.current && jQueryRef.current) {
+        jQueryRef.current(employmentTypeRef.current).select2('destroy'); // Hancurkan select2
+      }
+    };
   }, []);
+
+  useEffect(() => {
+    if (jQueryRef.current && employmentTypeRef.current) {
+      const $ = jQueryRef.current;
+
+      // Re-initialize select2 whenever component updates
+      $(employmentTypeRef.current).select2(); // Pastikan hanya satu instance select2 yang aktif
+    }
+  });
 
   const handleChange = (e) => {
     const {name, value} = e.target;
@@ -248,7 +267,7 @@ export default function Page() {
                             <select className={`form-control select2 ${errors.employmentType ? 'is-invalid' : ''}`}
                                     ref={employmentTypeRef} name="employmentType">
                               {employmentTypes !== undefined && employmentTypes.map((value, index, array) => {
-                                return <option key={index} value={value}>{value}</option>
+                                return <option key={`employmentType-${index}`} value={value}>{value}</option>
                               })}
                             </select>
                             {errors.employmentType && (

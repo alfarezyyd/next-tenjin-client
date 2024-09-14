@@ -40,7 +40,6 @@ export default function Page() {
     const loadAssets = async () => {
       const $ = (await import("jquery")).default;
       await CommonStyle();
-      await import('jquery_upload_preview/assets/js/jquery.uploadPreview.min')
       CommonUtil.uploadPreview($)
       await CommonScript();
     };
