@@ -1,7 +1,7 @@
 export default function AdminTopbar() {
   return (
     <nav className="navbar navbar-expand-lg main-navbar">
-      <a href="index.html" className="navbar-brand sidebar-gone-hide">Stisla</a>
+      <a href={`${process.env.NEXT_PUBLIC_BASE_URL}`} className="navbar-brand sidebar-gone-hide">TENJIN</a>
       <div className="navbar-nav">
         <a href="#" className="nav-link sidebar-gone-show" data-toggle="sidebar"><i className="fas fa-bars"></i></a>
       </div>
@@ -9,11 +9,6 @@ export default function AdminTopbar() {
         <a className="sidebar-gone-show nav-collapse-toggle nav-link" href="#">
           <i className="fas fa-ellipsis-v"></i>
         </a>
-        <ul className="navbar-nav">
-          <li className="nav-item active"><a href="#" className="nav-link">Application</a></li>
-          <li className="nav-item"><a href="#" className="nav-link">Report Something</a></li>
-          <li className="nav-item"><a href="#" className="nav-link">Server Status</a></li>
-        </ul>
       </div>
       <form className="form-inline ml-auto">
       </form>
