@@ -39,7 +39,7 @@ export default function AdminFullWrapper({children}) {
       ) : (
         <div id="app">
           <div className="main-wrapper container">
-            <div className="navbar-bg"></div>
+            <div className="navbar-bg-full"></div>
             <AdminTopbar/>
             <div className="main-content">
               {children}
