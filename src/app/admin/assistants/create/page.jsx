@@ -6,6 +6,13 @@ import {Loading} from "@/components/admin/Loading";
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
+import {FilePond, registerPlugin} from "react-filepond";
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+
+
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
@@ -14,16 +21,16 @@ export default function Page() {
     tags: [],
     languages: [],
   });
+  const [files, setFiles] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [accessToken, setAccessToken] = useState();
   const [filteredTags, setFilteredTags] = useState([]);
   const [formData, setFormData] = useState({
-    categoryId: '',
     topic: '',
     description: '',
     durationMinutes: '',
     price: '',
-    format: '',
+    format: 'INDIVIDUAL',
     capacity: '',
     language: '',
     tagId: [],
@@ -44,6 +51,7 @@ export default function Page() {
       await import('select2/dist/css/select2.min.css');
       await import('bootstrap-daterangepicker/daterangepicker.css');
       await import('summernote/dist/summernote-bs4.css');
+      await import('filepond/dist/filepond.min.css');
       await CommonStyle();
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
@@ -52,7 +60,6 @@ export default function Page() {
       const $ = (await import('jquery')).default;
       $(categorySelectRef.current).on("change", () => {
         setSelectedCategoryId($(categorySelectRef.current).val());
-
       });
       $(tagsSelectRef.current).on("change", () => {
         setFormData(prev => ({
@@ -123,7 +130,7 @@ export default function Page() {
 
   const fetchAssistanceDependency = async () => {
     if (accessToken) {
-      const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
+      const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/create`, {
         method: 'GET',
         includeCredentials: true,
         headers: {
@@ -135,6 +142,7 @@ export default function Page() {
       if (responseFetch.ok) {
         setAssistanceDependency(responseBody['result']['data']);
         let firstCategoryElementId = responseBody['result']['data']['categories'][0]['id'];
+        console.log(firstCategoryElementId)
         setSelectedCategoryId(firstCategoryElementId);
         setFilteredTags(responseBody['result']['data']['tags'].filter(value => value['categoryId'] === Number(firstCategoryElementId)));
       } else {
@@ -160,16 +168,31 @@ export default function Page() {
 
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
-    formData['categoryId'] = selectedCategoryId;
-    console.log(formData);
+    const formDataPayload = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        // Jika value adalah array, iterasi dan append setiap elemennya
+        value.forEach((item) => {
+          formDataPayload.append(`${key}[]`, item); // Tambahkan [] untuk array format
+        });
+      } else {
+        // Jika value bukan array, langsung append
+        formDataPayload.append(key, value);
+      }
+    })
+    console.log(selectedCategoryId)
+    formDataPayload.append('categoryId', selectedCategoryId);
+    files.forEach((file, index) => {
+      formDataPayload.append(`images`, file.file);
+    });
+    console.log(formDataPayload);
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
       method: 'POST',
-      body: JSON.stringify(formData),
+      body: formDataPayload,
       includeCredentials: true,
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
       }
     });
@@ -237,12 +260,12 @@ export default function Page() {
                     <div className="card-body">
                       <form onSubmit={handleSubmit}>
                         <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="category">
+                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="categoryId">
                             Kategori Asistensi
                           </label>
                           <div className="col-sm-12 col-md-7">
                             <select ref={categorySelectRef} className="form-control select2"
-                                    name="categoryId">
+                                    name="categoryId" id="categoryId">
                               {assistanceDependency['categories'].map((value, index) => (
                                 <option key={index} value={Number(value['id'])}>{value['name']}</option>
                               ))}
@@ -258,6 +281,7 @@ export default function Page() {
                               type="text"
                               className={`form-control ${errors.topic ? 'is-invalid' : ''}`}
                               name="topic"
+                              id="topic"
                               value={formData.topic}
                               onChange={handleChange}
                             />
@@ -274,6 +298,7 @@ export default function Page() {
                               type="number"
                               className={`form-control ${errors.durationMinutes ? 'is-invalid' : ''}`}
                               name="durationMinutes"
+                              id="durationMinutes"
                               value={formData.durationMinutes}
                               onChange={handleChange}
                             />
@@ -300,6 +325,7 @@ export default function Page() {
                               type="number"
                               className={`form-control ${errors.price ? 'is-invalid' : ''}`}
                               name="price"
+                              id="price"
                               value={formData.price}
                               onChange={handleChange}
                             />
@@ -316,6 +342,7 @@ export default function Page() {
                               type="number"
                               className={`form-control ${errors.capacity ? 'is-invalid' : ''}`}
                               name="capacity"
+                              id="capacity"
                               value={formData.capacity}
                               onChange={handleChange}
                             />
@@ -332,9 +359,10 @@ export default function Page() {
                             Format Asistensi
                           </label>
                           <div className="col-sm-12 col-md-7">
-                            <select ref={formatSelectRef} className="form-control select2" onChange={handleChange}
-                                    name="format">
-                              <option key="INDIVIDUAL" value="INDIVIDUAL" selected>INDIVIDUAL</option>
+                            <select ref={formatSelectRef} className="form-control select2"
+                                    name="format" id="format" defaultValue={"INDIVIDUAL"}>
+                              <option key="INDIVIDUAL" value="INDIVIDUAL">INDIVIDUAL
+                              </option>
                               <option key="GROUP" value="GROUP">GROUP</option>
                               <option key="HYBRID" value="HYBRID">HYBRID</option>
                             </select>
@@ -348,7 +376,7 @@ export default function Page() {
                             <select
                               ref={tagsSelectRef} className="form-control select2" multiple={true}
                               onChange={handleChange}
-                              name="tagId">
+                              name="tagId" id="tags">
                               {filteredTags.length !== 0 && filteredTags.map((tag, index) => (
                                 <option key={`tags-${index}`} value={tag['id']}>{tag['name']}</option>
                               ))}
@@ -361,7 +389,7 @@ export default function Page() {
                           </label>
                           <div className="col-sm-12 col-md-7">
                             <select className="form-control select2" multiple="" onChange={handleChange}
-                                    name="language">
+                                    name="language" id="language">
                               {assistanceDependency['languages'].map((value, index) => (
                                 <option key={"language" + index} value={value['id']}>{value['name']}</option>
                               ))}
@@ -374,6 +402,19 @@ export default function Page() {
                           <div className="col-sm-12 col-md-7">
                             <textarea className={`summernote-simple ${errors.capacity ? 'is-invalid' : ''}`}
                                       name="description" id="description"></textarea>
+                          </div>
+                        </div>
+                        <div className="form-group row mb-4">
+                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Gambar</label>
+                          <div className="col-sm-12 col-md-7">
+                            <FilePond
+                              files={files}
+                              onupdatefiles={setFiles}
+                              allowMultiple={true}
+                              maxFiles={3}
+                              name="images"
+                              labelIdle='Seret & Letakkan Gambar Anda atau <span class="filepond--label-action">Browse</span>'
+                            />
                           </div>
                         </div>
                         <div className="form-group row mb-4">
