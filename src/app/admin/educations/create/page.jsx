@@ -16,17 +16,21 @@ export default function Page() {
     name: '',
     degree: '',
     studyField: '',
-    startDate: '',
-    endDate: '',
+  });
+
+  const [formDataRef, setFormDataRef] = useState({
+    startDate: new Date().toISOString().split('T')[0],
+    endDate: new Date().toISOString().split('T')[0],
     activity: '',
     society: '',
     description: '',
-  });
+  })
   const [errors, setErrors] = useState({});
   const activityRef = useRef(null);
   const societyRef = useRef(null);
   const descriptionRef = useRef(null);
-
+  const startDateRef = useRef(null);
+  const endDateRef = useRef(null);
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -35,26 +39,47 @@ export default function Page() {
       await import('summernote/dist/summernote-bs4.css');
       await CommonStyle()
       const $ = (await import('jquery')).default;
+
+      function updateSelectedStartDate() {
+        setFormDataRef((prevFormDataRef) => ({
+          ...prevFormDataRef,
+          startDate: ($(startDateRef.current).val()),
+        }));
+      }
+
+      function updateSelectedEndDate() {
+        setFormDataRef((prevFormDataRef) => ({
+          ...prevFormDataRef,
+          endDate: ($(endDateRef.current).val()),
+        }));
+      }
+
+      $(startDateRef.current).on("apply.daterangepicker", updateSelectedStartDate);
+      $(startDateRef.current).on("input", updateSelectedStartDate);
+
+      $(endDateRef.current).on("apply.daterangepicker", updateSelectedEndDate);
+      $(endDateRef.current).on("input", updateSelectedEndDate);
+
       $(descriptionRef.current).on("summernote.change", () => {
         console.log($(descriptionRef.current).val())
-        setFormData((prevFormData) => ({
-          ...prevFormData,
+        setFormDataRef((prevFormDataRef) => ({
+          ...prevFormDataRef,
           description: ($(descriptionRef.current).val()),
         }));
       });
 
       $(activityRef.current).on("summernote.change", () => {
         console.log($(activityRef.current).val())
-        setFormData((prevFormData) => ({
-          ...prevFormData,
+        setFormDataRef((prevFormDataRef) => ({
+          ...prevFormDataRef,
           activity: ($(activityRef.current).val()),
         }));
       });
 
       $(societyRef.current).on("summernote.change", () => {
         console.log($(societyRef.current).val())
-        setFormData((prevFormData) => ({
-          ...prevFormData,
+        setFormDataRef((prevFormDataRef) => ({
+          ...prevFormDataRef,
           society: ($(societyRef.current).val()),
         }));
       });
@@ -83,19 +108,17 @@ export default function Page() {
   // useCallback to memoize handleSubmit function
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
-    const form = new FormData();
-
-    // Append form data
-    Object.entries(formData).forEach(([key, value]) => {
-      form.append(key, value);
-    });
 
     const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/educations`, {
       method: 'POST',
-      body: form,
+      body: JSON.stringify({
+        ...formData,
+        ...formDataRef
+      }),
       includeCredentials: true,
       headers: {
         'Accept': 'application/json',
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${Cookies.get('accessToken')}`,
       }
     });
@@ -114,7 +137,7 @@ export default function Page() {
       setErrors(errorMessages);
       console.log(errorMessages);
     }
-  }, [formData]);
+  }, [formData, formDataRef]);
 
   // useMemo to memoize validation errors display logic
   const errorFeedback = useMemo(() => {
@@ -171,6 +194,7 @@ export default function Page() {
                               type="text"
                               className={`form-control ${errors.name ? 'is-invalid' : ''}`}
                               name="name"
+                              id="name"
                               value={formData.name}
                               onChange={handleChange}
                             />
@@ -186,6 +210,7 @@ export default function Page() {
                               type="text"
                               className={`form-control ${errors.degree ? 'is-invalid' : ''}`}
                               name="degree"
+                              id="degree"
                               value={formData.degree}
                               onChange={handleChange}
                             />
@@ -201,6 +226,7 @@ export default function Page() {
                               type="text"
                               className={`form-control ${errors.studyField ? 'is-invalid' : ''}`}
                               name="studyField"
+                              id="studyField"
                               value={formData.studyField}
                               onChange={handleChange}
                             />
@@ -211,11 +237,11 @@ export default function Page() {
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tanggal Mulai</label>
                           <div className="col-sm-12 col-md-7">
                             <input
+                              ref={startDateRef}
                               type="text"
                               className={`form-control datepicker ${errors.startDate ? 'is-invalid' : ''}`}
                               name="startDate"
                               value={formData.startDate}
-                              onChange={handleChange}
                             />
                             {errorFeedback.startDate}
                           </div>
@@ -225,29 +251,31 @@ export default function Page() {
                             Selesai</label>
                           <div className="col-sm-12 col-md-7">
                             <input
+                              ref={endDateRef}
                               type="text"
                               className={`form-control datepicker ${errors.endDate ? 'is-invalid' : ''}`}
                               name="endDate"
                               value={formData.endDate}
-                              onChange={handleChange}
                             />
                             {errorFeedback.endDate}
                           </div>
                         </div>
                         <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Aktivitas</label>
+                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
+                                 htmlFor="activity">Aktivitas</label>
                           <div className="col-sm-12 col-md-7">
                             <textarea ref={activityRef}
                                       className={`summernote-simple ${errors.activity ? 'is-invalid' : ''}`}
-                                      name="description" id="description"></textarea>
+                                      name="activity" id="activity"></textarea>
                           </div>
                         </div>
                         <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Perkumpulan</label>
+                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
+                                 htmlFor="society">Perkumpulan</label>
                           <div className="col-sm-12 col-md-7">
                            <textarea ref={societyRef}
                                      className={`summernote-simple ${errors.society ? 'is-invalid' : ''}`}
-                                     name="description" id="description"></textarea>
+                                     name="society" id="society"></textarea>
                           </div>
                         </div>
                         <div className="form-group row mb-4">

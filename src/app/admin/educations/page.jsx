@@ -76,16 +76,18 @@ export default function Page() {
                 <Loading/>
               ) : (
                 allMentorEducation.length > 0 ? (
-                  <Loading/>
+                  allMentorEducation.map((mentorEducation) => (
+                    <a key={`education-${mentorEducation.id}`} className="card" href="#">
+                      <div className="card__background"
+                           style={{backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL})`}}></div>
+                      <div className="card__content">
+                        <p className="card__category">{mentorEducation.name}</p>
+                        <h3 className="card__heading">{mentorEducation.degree}</h3>
+                      </div>
+                    </a>
+                  ))
                 ) : (
-                  <a className="card" href="#">
-                    <div className="card__background"
-                         style={{backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL})`}}></div>
-                    <div className="card__content">
-                      <p className="card__category">Category</p>
-                      <h3 className="card__heading">Example Card Heading</h3>
-                    </div>
-                  </a>
+                  <p>No educations available.</p>
                 ))
               }
             </div>
