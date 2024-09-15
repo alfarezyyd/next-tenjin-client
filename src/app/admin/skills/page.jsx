@@ -8,6 +8,7 @@ import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/post
 import {Loading} from "@/components/admin/Loading";
 
 export default function Page() {
+  const buttonColors = ['primary', 'danger', 'warning', 'success', 'dark']
   const [accessToken, setAccessToken] = useState(null);
   const [allMentorSkill, setAllMentorSkill] = useState({});
   const [loading, setLoading] = useState(true);
@@ -60,7 +61,7 @@ export default function Page() {
     <AdminWrapper>
       <section className="section">
         <div className="section-header">
-          <h1>Pendidikan Mentor</h1>
+          <h1>Kemampuan Mentor</h1>
           <div className="section-header-breadcrumb">
             <div className="breadcrumb-item active"><a href="#">Admin</a></div>
             <div className="breadcrumb-item"><a href="#">Mentor</a></div>
@@ -71,19 +72,25 @@ export default function Page() {
         <div className="section-body">
           <section className="hero-section p-1">
             <div className="card-grid">
-              {loading ? (  // Tampilkan loading selama data belum tersedia
-                <Loading/>
-              ) : (
-                allMentorSkill.length > 0 ? (
-                  allMentorSkill.map((mentorSkill) => (
-                    <button key={`mentorSkill-${mentorSkill.id}`} type="button" className="btn btn-primary">
-                      {mentorSkill.name}
-                    </button>
-                  ))
-                ) : (
-                  <p>No skills available.</p>
-                ))
-              }
+              <div className="col-6 col-md-6 col-sm-12 col-lg-6">
+                <div className="d-flex flex-row flex-wrap" style={{gap: 5 + "px"}}>
+                  {loading ? (  // Tampilkan loading selama data belum tersedia
+                    <Loading/>
+                  ) : (
+                    allMentorSkill.length > 0 ? (
+                      allMentorSkill.map((mentorSkill, index) => (
+
+                        <button key={`mentorSkill-${mentorSkill.id}`} type="button"
+                                className={`btn btn-${buttonColors[index % buttonColors.length]}`}>
+                          {mentorSkill.name}
+                        </button>
+                      ))
+                    ) : (
+                      <p>No skills available.</p>
+                    ))
+                  }
+                </div>
+              </div>
             </div>
           </section>
         </div>
