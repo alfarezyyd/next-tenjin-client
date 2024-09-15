@@ -330,7 +330,7 @@ export default function Page() {
                                  htmlFor="description">Deskripsi</label>
                           <div className="col-sm-12 col-md-7">
                             <textarea ref={descriptionRef}
-                                      className={`summernote-simple ${errors.capacity ? 'is-invalid' : ''}`}
+                                      className={`summernote-simple ${errors.description ? 'is-invalid' : ''}`}
                                       name="description" id="description"></textarea>
                           </div>
                         </div>
