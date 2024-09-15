@@ -1,18 +1,18 @@
 "use client";
 import AdminWrapper from "@/components/admin/AdminWrapper";
-import {useEffect, useState, useCallback, useMemo} from "react";
+import {useEffect, useState, useCallback, useMemo, useRef} from "react";
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import Cookies from "js-cookie";
 import dynamic from "next/dynamic";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
+import CommonStyle from "@/components/admin/CommonStyle";
+import CommonScript from "@/components/admin/CommonScript";
 
-const RichTextEditor = dynamic(() => import('@/components/admin/RichTextEditor'), {
-  ssr: false, // Disable server-side rendering for this component
-});
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
+  const descriptionRef = useRef(null);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -22,8 +22,20 @@ export default function Page() {
   useEffect(() => {
     const loadAssets = async () => {
       await import('select2/dist/css/select2.min.css');
-
+      await import('summernote/dist/summernote-bs4.css');
+      await CommonStyle();
       await import('select2/dist/js/select2.min');
+      await import('summernote/dist/summernote-bs4.js');
+      await CommonScript()
+      const $ = (await import('jquery')).default;
+
+      $(descriptionRef.current).on("summernote.change", () => {
+        console.log($(descriptionRef.current).val())
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          description: ($(descriptionRef.current).val()),
+        }));
+      });
     };
 
     if (typeof window !== 'undefined') {
@@ -44,19 +56,14 @@ export default function Page() {
   // useCallback to memoize handleSubmit function
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
-    const form = new FormData();
 
-    // Append form data
-    Object.entries(formData).forEach(([key, value]) => {
-      form.append(key, value);
-    });
-
-    const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/educations`, {
+    const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/skills`, {
       method: 'POST',
-      body: form,
+      body: JSON.stringify(formData),
       includeCredentials: true,
       headers: {
         'Accept': 'application/json',
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${Cookies.get('accessToken')}`,
       }
     });
@@ -137,12 +144,11 @@ export default function Page() {
                         </div>
                         <div className="form-group row mb-4">
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
-                                 form="description">Deskripsi</label>
+                                 htmlFor="description">Deskripsi</label>
                           <div className="col-sm-12 col-md-7">
-                            <RichTextEditor setEditorData={(data) => setFormData((prevFormData) => ({
-                              ...prevFormData,
-                              description: data
-                            }))}/>
+                                <textarea ref={descriptionRef}
+                                          className={`summernote-simple ${errors.description ? 'is-invalid' : ''}`}
+                                          name="description" id="description"></textarea>
                             {errorFeedback.description}
                           </div>
                         </div>
