@@ -1,11 +1,13 @@
 "use client";
 import AdminWrapper from "@/components/admin/AdminWrapper";
-import {useEffect, useState, useCallback, useMemo} from "react";
+import {useEffect, useState, useCallback, useMemo, useRef} from "react";
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import Cookies from "js-cookie";
 import dynamic from "next/dynamic";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
+import CommonStyle from "@/components/admin/CommonStyle";
+import CommonScript from "@/components/admin/CommonScript";
 
 
 export default function Page() {
@@ -21,19 +23,51 @@ export default function Page() {
     description: '',
   });
   const [errors, setErrors] = useState({});
+  const activityRef = useRef(null);
+  const societyRef = useRef(null);
+  const descriptionRef = useRef(null);
+
 
   useEffect(() => {
     const loadAssets = async () => {
       await import('select2/dist/css/select2.min.css');
       await import('bootstrap-daterangepicker/daterangepicker.css');
+      await import('summernote/dist/summernote-bs4.css');
+      await CommonStyle()
+      const $ = (await import('jquery')).default;
+      $(descriptionRef.current).on("summernote.change", () => {
+        console.log($(descriptionRef.current).val())
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          description: ($(descriptionRef.current).val()),
+        }));
+      });
 
+      $(activityRef.current).on("summernote.change", () => {
+        console.log($(activityRef.current).val())
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          activity: ($(activityRef.current).val()),
+        }));
+      });
+
+      $(societyRef.current).on("summernote.change", () => {
+        console.log($(societyRef.current).val())
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          society: ($(societyRef.current).val()),
+        }));
+      });
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
+      await import('summernote/dist/summernote-bs4.js');
+      await CommonScript()
     };
 
     if (typeof window !== 'undefined') {
       loadAssets();
     }
+
     setLoading(false);
   }, []);
 
@@ -203,28 +237,25 @@ export default function Page() {
                         <div className="form-group row mb-4">
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Aktivitas</label>
                           <div className="col-sm-12 col-md-7">
-                            <RichTextEditor setEditorData={(data) => setFormData((prevFormData) => ({
-                              ...prevFormData,
-                              activity: data
-                            }))}/>
+                            <textarea ref={activityRef}
+                                      className={`summernote-simple ${errors.activity ? 'is-invalid' : ''}`}
+                                      name="description" id="description"></textarea>
                           </div>
                         </div>
                         <div className="form-group row mb-4">
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Perkumpulan</label>
                           <div className="col-sm-12 col-md-7">
-                            <RichTextEditor setEditorData={(data) => setFormData((prevFormData) => ({
-                              ...prevFormData,
-                              society: data
-                            }))}/>
+                           <textarea ref={societyRef}
+                                     className={`summernote-simple ${errors.society ? 'is-invalid' : ''}`}
+                                     name="description" id="description"></textarea>
                           </div>
                         </div>
                         <div className="form-group row mb-4">
                           <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Deskripsi</label>
                           <div className="col-sm-12 col-md-7">
-                            <RichTextEditor setEditorData={(data) => setFormData((prevFormData) => ({
-                              ...prevFormData,
-                              description: data
-                            }))}/>
+                            <textarea ref={descriptionRef}
+                                      className={`summernote-simple ${errors.description ? 'is-invalid' : ''}`}
+                                      name="description" id="description"></textarea>
                           </div>
                         </div>
 
