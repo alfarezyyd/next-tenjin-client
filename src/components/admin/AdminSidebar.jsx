@@ -15,9 +15,9 @@ export default function AdminSidebar() {
         <ul className="sidebar-menu">
           <li className="menu-header">Dashboard</li>
           <li className={`nav-item ${pathNames[0] === 'admin' && pathNames[1] === '' ? 'active' : ''}`}>
-            <a className="nav-link" href="blank.html">
+            <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/dashboard`}>
               <i className="fas fa-fire"></i>
-              <span>Blank Page</span>
+              <span>Dashboard</span>
             </a>
           </li>
           <li className="menu-header">Mentor</li>
