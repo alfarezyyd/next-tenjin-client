@@ -33,7 +33,8 @@ const Navbar = () => {
               {/* LOGO */}
 
               <div className="flex flex-shrink-0 items-center border-right">
-                <Link href="/public" className='text-2xl sm:text-4xl font-semibold text-black'>
+                <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}`}
+                      className='text-2xl sm:text-4xl font-semibold text-black'>
                   Tenjin
                 </Link>
               </div>

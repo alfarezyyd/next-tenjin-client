@@ -220,7 +220,9 @@ export default function Page(props) {
                           </div>
                         </div>
                         <div className="flex flex-row gap-3 mt-5">
-                          <Button color="primary" variant="ghost" size="lg" radius="full" className="w-48 h-16">
+                          <Button as={Link} href={`${process.env.NEXT_PUBLIC_BASE_URL}order`} color="primary"
+                                  variant="ghost" size="lg" radius="full"
+                                  className="w-48 h-16">
                             <span className="font-bold text-2xl">Order</span>
                           </Button>
                           <Button variant="solid" size="lg" radius="full"
