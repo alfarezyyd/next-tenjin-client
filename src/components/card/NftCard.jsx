@@ -4,10 +4,10 @@ import Card from "@/components/card/index";
 import Image from "next/image";
 import Link from "next/link";
 
-const NftCard = ({title, author, price, image, extra}) => {
+const NftCard = ({title, author, price, image, mentorId, assistantId, extra}) => {
   const [heart, setHeart] = useState(true);
   return (
-    <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/mentors`}>
+    <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/mentors/${mentorId}/assistants/${assistantId}`}>
       <Card
         extra={`flex flex-col w-full h-full !p-4 3xl:p-![18px] bg-white ${extra}`}
       >
@@ -44,20 +44,13 @@ const NftCard = ({title, author, price, image, extra}) => {
                 By {author}{" "}
               </p>
             </div>
-
-            <div className="flex flex-row-reverse md:mt-2 lg:mt-0">
-            <span
-              className="z-0 ml-px inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-[#E0E5F2] text-xs text-navy-700">
-              +5
-            </span>
-            </div>
           </div>
 
           <div
             className="flex items-center justify-between md:flex-col md:items-start lg:flex-row lg:justify-between xl:flex-col 2xl:items-start 3xl:flex-row 3xl:items-center 3xl:justify-between">
             <div className="flex">
               <p className="mb-2 text-sm font-bold text-brand-500 ">
-                Current Bid: {price} <span>ETH</span>
+                Price per Hour: Rp {price} <span></span>
               </p>
             </div>
             <button

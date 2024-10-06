@@ -32,6 +32,7 @@ const Marketplace = () => {
     let responseBody = await responseFetch.json();
     if (responseFetch.ok) {
       setAssistants(responseBody['result']['data']);
+      console.log(responseBody['result']['data']);
     } else {
       console.error('Failed to fetch assistance dependency', responseBody);
     }
@@ -91,11 +92,12 @@ const Marketplace = () => {
                 assistants.map((assistant, index) => (
                   <NftCard
                     key={`assistants-${index}`}
-                    bidders={[avatar1, avatar2, avatar3]}
                     title={assistant.topic}
-                    author="Name"
+                    author={assistant.mentorName}
                     price={assistant.price}
                     image={NFt4}
+                    mentorId={assistant.mentorId}
+                    assistantId={assistant.id}
                   />
                 ))
                 : <Loading/>

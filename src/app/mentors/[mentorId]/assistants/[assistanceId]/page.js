@@ -14,8 +14,12 @@ import {
   Tabs
 } from "@nextui-org/react";
 import Link from "next/link";
+import {useEffect, useState} from "react";
+import Cookies from "js-cookie";
 
-export default function Page(props) {
+export default function Page({params}) {
+  const [accessToken, setAccessToken] = useState();
+  const [assistanceData, setAssistanceData] = useState({});
   const list = [
     {
       title: "Orange",
@@ -58,6 +62,31 @@ export default function Page(props) {
       price: "$12.20",
     },
   ];
+  useEffect(() => {
+    setAccessToken(Cookies.get("accessToken"));
+  }, [])
+  useEffect(() => {
+    console.log(accessToken)
+    if (accessToken) {
+      fetchAssistantData()
+    }
+  }, [accessToken])
+  const fetchAssistantData = async () => {
+    let responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/${params.assistanceId}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      }
+    });
+    let responseBody = await responseFetch.json();
+    if (responseFetch.ok) {
+      console.log(responseBody)
+      setAssistanceData(responseBody['result']['data']);
+    } else {
+      console.error('Failed to fetch assistance dependency', responseBody);
+    }
+  }
   return (
     <LandingWrapper>
       <div id="upper-mentor"
@@ -253,11 +282,7 @@ export default function Page(props) {
                       </div>
                       <Divider/>
                       <CardFooter>
-                        <Link
-                          isExternal
-                          showAnchorIcon
-                          href="https://github.com/nextui-org/nextui"
-                        >
+                        <Link href="https://github.com/nextui-org/nextui">
                           Visit source code on GitHub.
                         </Link>
                       </CardFooter>
