@@ -25,7 +25,7 @@ export default function Login() {
     e.preventDefault();
     setUserError({});
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}authentication/login`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}authentication/self/login`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
