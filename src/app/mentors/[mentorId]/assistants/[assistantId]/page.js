@@ -16,10 +16,14 @@ import {
 import Link from "next/link";
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
+import {redirect, useRouter} from "next/navigation";
+
 
 export default function Page({params}) {
   const [accessToken, setAccessToken] = useState();
   const [assistanceData, setAssistanceData] = useState({});
+  const {push} = useRouter();
+
   const list = [
     {
       title: "Orange",
@@ -66,13 +70,26 @@ export default function Page({params}) {
     setAccessToken(Cookies.get("accessToken"));
   }, [])
   useEffect(() => {
-    console.log(accessToken)
     if (accessToken) {
       fetchAssistantData()
     }
   }, [accessToken])
+
+  async function initiateCheckout() {
+    localStorage.setItem("checkoutItem", "");
+    localStorage.setItem("checkoutItem", JSON.stringify({
+      topic: assistanceData['topic'],
+      assistantId: assistanceData['id'],
+      mentorId: assistanceData['mentorId'],
+      sessionTimestamp: "2024-10-10",
+      minutesDurations: 29,
+      note: "Testing",
+    }));
+    push(`${process.env.NEXT_PUBLIC_BASE_URL}/checkout`)
+  }
+
   const fetchAssistantData = async () => {
-    let responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/${params.assistanceId}`, {
+    let responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/${params.assistantId}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -230,7 +247,7 @@ export default function Page({params}) {
                             className="w-32 h-40"
                           />
                           <div className="flex flex-col ml-5 gap-4">
-                            <h1 className="text-4xl font-bold">Mobile Legend</h1>
+                            <h1 className="text-4xl font-bold">{assistanceData['topic']}</h1>
                             <div className="flex flex-row gap-3">
                               <Image src={"/assets/star.svg"} alt="Star" width={25}/>
                               <span className="text-xl font-bold">5.00</span>
@@ -249,7 +266,7 @@ export default function Page({params}) {
                           </div>
                         </div>
                         <div className="flex flex-row gap-3 mt-5">
-                          <Button as={Link} href={`${process.env.NEXT_PUBLIC_BASE_URL}order`} color="primary"
+                          <Button onClick={initiateCheckout} color="primary"
                                   variant="ghost" size="lg" radius="full"
                                   className="w-48 h-16">
                             <span className="font-bold text-2xl">Order</span>
