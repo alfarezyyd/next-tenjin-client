@@ -20,6 +20,15 @@ export default function AdminSidebar() {
               <span>Dashboard</span>
             </a>
           </li>
+          <li className="menu-header">PENGGUNA</li>
+          <li className={`nav-item ${pathNames[1] === 'order' ? 'active' : ''}`}>
+            <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/order`}>
+              <i className="fas fa-receipt"></i>
+              <span>Order</span>
+            </a>
+          </li>
+
+
           <li className="menu-header">Mentor</li>
           <li className={`nav-item ${pathNames[1] === 'experiences' ? 'active' : ''}`}>
             <a href="#" className="nav-link has-dropdown" data-toggle="dropdown">
