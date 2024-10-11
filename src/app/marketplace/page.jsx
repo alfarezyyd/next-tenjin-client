@@ -1,7 +1,7 @@
 "use client"
 import "../globals.css"
 import Banner from "./components/Banner";
-import NFt4 from "../../../public/assets/img/nfts/Nft4.png";
+import NFt4 from "@/../public/assets/img/nfts/Nft1.png";
 import NFt5 from "../../../public/assets/img/nfts/Nft5.png";
 import NFt6 from "../../../public/assets/img/nfts/Nft6.png";
 import avatar1 from "../../../public/assets/img/avatars/avatar1.png";
