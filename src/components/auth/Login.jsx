@@ -92,7 +92,7 @@ export default function Login() {
           <p className="text-base text-gray-600 dark:text-white"> or </p>
           <div className="h-px w-full bg-gray-200 dark:bg-navy-700"/>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={mit}>
           {/* Email */}
 
           <Input
