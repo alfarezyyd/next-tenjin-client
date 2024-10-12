@@ -45,7 +45,20 @@ export default function Login() {
         Cookies.set('accessToken', responseBody['result']['data']['accessToken']);
         push('/');  // Redirect to the dashboard or another protected route
       } else {
-        setUserError(responseBody.errors || {general: 'Login failed'});
+        switch (response.status) {
+          case 404: {
+            setUserError({
+              email: "User with this email not found"
+            })
+            break;
+          }
+          default: {
+            setUserError({
+              email: "User with this email not valid",
+              password: "User password incorrect"
+            })
+          }
+        }
       }
     } catch (e) {
       console.log(e)
@@ -90,7 +103,7 @@ export default function Login() {
             className="mb-3"
             required
             isInvalid={!!userError.email}
-            errorMessage={userError.email ? userError.email[0] : ""}
+            errorMessage={userError.email ? userError.email : ""}
           />
           <Input
             label="Password"
@@ -101,7 +114,7 @@ export default function Login() {
             className="mb-3" // Mengatur ukuran font besar dan monospace
             required
             isInvalid={!!userError.password}
-            errorMessage={userError.password ? userError.password[0] : ""}
+            errorMessage={userError.password ? userError.password : ""}
             classNames={{
               input: [
                 "tracking-wide",
