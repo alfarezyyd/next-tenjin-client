@@ -4,6 +4,8 @@ import {useRouter} from "next/navigation";
 import {FcGoogle} from "react-icons/fc";
 import {Button, Input} from "@nextui-org/react";
 import Cookies from "js-cookie";
+import {EyeSlashFilledIcon} from "@/components/auth/EyeSlashFilledIcon";
+import {EyeFilledIcon} from "@/components/auth/EyeFilledIcon";
 
 export default function Login() {
   const [loginRequest, setLoginRequest] = useState({
@@ -11,6 +13,10 @@ export default function Login() {
     password: '',
   });
   const [userError, setUserError] = useState({});
+  const [isVisible, setIsVisible] = useState(false);
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
+
   const {push} = useRouter();
 
   const handleChange = (e) => {
@@ -89,7 +95,7 @@ export default function Login() {
           <Input
             label="Password"
             name="password"
-            type="password"
+            type={isVisible ? "text" : "password"}
             onChange={handleChange}
             fullWidth
             className="mb-3" // Mengatur ukuran font besar dan monospace
@@ -98,13 +104,21 @@ export default function Login() {
             errorMessage={userError.password ? userError.password[0] : ""}
             classNames={{
               input: [
-                "bg-transparent",
-                "text-black/90 dark:text-white/90",
-                "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+                "tracking-wide",
+                "leading-tight"
               ]
             }}
+            endContent={
+              <button className="focus:outline-none" type="button" onClick={toggleVisibility}
+                      aria-label="toggle password visibility">
+                {isVisible ? (
+                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none"/>
+                ) : (
+                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none"/>
+                )}
+              </button>
+            }
           />
-
 
           <div className="mb-4 flex items-center justify-between px-2 dark:text-white">
             <div className="flex items-center">
