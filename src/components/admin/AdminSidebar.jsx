@@ -21,9 +21,15 @@ export default function AdminSidebar() {
             </a>
           </li>
           <li className="menu-header">PENGGUNA</li>
-          <li className={`nav-item ${pathNames[1] === 'order' ? 'active' : ''}`}>
-            <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/order`}>
+          <li className={`nav-item ${pathNames[1] === 'orders' ? 'active' : ''}`}>
+            <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/orders`}>
               <i className="fas fa-receipt"></i>
+              <span>Order</span>
+            </a>
+          </li>
+          <li className={`nav-item ${pathNames[1] === 'settings' ? 'active' : ''}`}>
+            <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/settings`}>
+              <i className="fas fa-cogs"></i>
               <span>Order</span>
             </a>
           </li>
