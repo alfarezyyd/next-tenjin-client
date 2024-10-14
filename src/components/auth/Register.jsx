@@ -11,7 +11,7 @@ export default function Register() {
     name: '',
     email: '',
     password: '',
-    password_confirmation: '',
+    confirm_password: '',
   });
   const [userError, setUserError] = useState('');
 
@@ -26,9 +26,8 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUserError('');
-    const serverResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}register`, {
+    const serverResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}authentication/self/register`, {
       method: 'POST',
-      credentials: "include",
       headers: {
         Referer: '127.0.0.1:8000',
         Accept: 'application/json',
@@ -39,14 +38,17 @@ export default function Register() {
 
     if (serverResponse.ok) {
       await push(process.env.NEXT_PUBLIC_BASE_URL + '/auth/login')
+      console.log(serverResponse)
     } else {
-      const errorPayload = await serverResponse.json();
-      setUserError(errorPayload.errors || 'Registration failed');
+      const errorMessages = {};
+      const userError = await serverResponse.json()
+      userError.errors.message.forEach((error) => {
+        errorMessages[error.path[0]] = error.message;
+      });
+      setUserError(errorMessages);
+      console.log(errorMessages);
     }
   };
-  useEffect(() => {
-    fetchCsrf()
-  }, []);
 
 
   return (
@@ -66,7 +68,7 @@ export default function Register() {
             <FcGoogle/>
           </div>
           <h5 className="text-sm font-medium text-navy-700 dark:text-white">
-            Sign In with Google
+            Sign Up with Google
           </h5>
         </Button>
         <div className="mb-6 flex items-center  gap-3">
@@ -84,7 +86,7 @@ export default function Register() {
             className="mb-3"
             required
             isInvalid={!!userError.name}
-            errorMessage={userError.name ? userError.name[0] : ""}
+            errorMessage={userError.name ? userError.name : ""}
           />
           <Input
             label="Email"
@@ -94,7 +96,7 @@ export default function Register() {
             className="mb-3"
             required
             isInvalid={!!userError.email}
-            errorMessage={userError.email ? userError.email[0] : ""}
+            errorMessage={userError.email ? userError.email : ""}
           />
           <Input
             label="Password"
@@ -107,19 +109,19 @@ export default function Register() {
             className="mb-3"
             required
             isInvalid={!!userError.password}
-            errorMessage={userError.password ? userError.password[0] : ""}
+            errorMessage={userError.password ? userError.password : ""}
           />
           <Input
             label="Confirm Password"
-            name="password_confirmation"
+            name="confirm_password"
             type="password"
 
             onChange={handleChange}
             fullWidth
             className="mb-3"
             required
-            isInvalid={!!userError.password_confirmation}
-            errorMessage={userError.password_confirmation ? userError.password_confirmation[0] : ""}
+            isInvalid={!!userError.confirm_password}
+            errorMessage={userError.confirm_password ? userError.confirm_password : ""}
           />
 
           <div className="mb-4 flex items-center justify-between px-2">
