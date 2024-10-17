@@ -30,7 +30,7 @@ export default function AdminSidebar() {
           <li className={`nav-item ${pathNames[1] === 'settings' ? 'active' : ''}`}>
             <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/settings`}>
               <i className="fas fa-cogs"></i>
-              <span>Order</span>
+              <span>Pengaturan</span>
             </a>
           </li>
 
