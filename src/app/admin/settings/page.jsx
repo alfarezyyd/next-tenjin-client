@@ -9,6 +9,8 @@ export default function Page() {
     const loadAssets = async () => {
       await CommonStyle();
       await CommonScript();
+      const $ = (await import('jquery')).default;
+
     }
     if (typeof window !== 'undefined') {
       loadAssets();
