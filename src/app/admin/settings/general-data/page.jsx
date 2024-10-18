@@ -23,6 +23,7 @@ export default function Page() {
   const [currentUser, setCurrentUser] = useState(null);
   useEffect(() => {
     const loadAssets = async () => {
+      const $ = (await import('jquery')).default;
       await import('filepond/dist/filepond.min.css');
       await CommonStyle();
       await CommonScript();
@@ -61,6 +62,29 @@ export default function Page() {
     }
   }
 
+  async function handleGeneralData() {
+    if (accessToken) {
+      const parsedAccessToken = CommonUtil.parseJwt(accessToken);
+      const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/users/${parsedAccessToken.uniqueId}`, {
+        method: 'GET',
+        includeCredentials: true,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${Cookies.get('accessToken')}`,
+        }
+      });
+      const responseBody = await fetchResponse.json();
+      console.log(responseBody, fetchResponse);
+      if (fetchResponse.ok) {
+        setCurrentUser(responseBody.result.data);
+        console.log(responseBody.result.data);
+        setLoadingData(false);
+      } else {
+        console.error(responseBody);
+      }
+    }
+
+  }
 
   return (
     <>
@@ -107,7 +131,7 @@ export default function Page() {
                   </div>
                 </div>
                 <div className="col-md-8">
-                  <form id="setting-form">
+                  <form id="general-data-form" onSubmit={handleGeneralData}>
                     <div className="card" id="settings-card">
                       <div className="card-header">
                         <h4>General Settings</h4>
@@ -134,21 +158,29 @@ export default function Page() {
                               </div>
                             </div>
                             <div className="form-group row align-items-center">
+                              <label htmlFor="site-title"
+                                     className="form-control-label col-sm-3 text-md-right">Nama Lengkap</label>
+                              <div className="col-sm-6 col-md-9">
+                                <input type="text" name="name" className="form-control" id="site-title"
+                                       value={currentUser.name}/>
+                              </div>
+                            </div>
+
+                            <div className="form-group row align-items-center">
                               <label className="form-control-label col-sm-3 text-md-right">
                                 Jenis Kelamin
                               </label>
                               <div className="col-sm-6 col-md-9">
                                 <div className="selectgroup w-100">
                                   <label className="selectgroup-item">
-                                    <input type="radio" name="transportation" value="MAN"
+                                    <input type="radio" name="gender" value="MAN" id="gender"
                                            className="selectgroup-input"/>
                                     <span className="selectgroup-button selectgroup-button-icon"><i
                                       className="fas fa-male mr-2"></i> Laki Laki</span>
                                   </label>
                                   <label className="selectgroup-item">
-                                    <input type="radio" name="transportation" value="WOMAN"
-                                           className="selectgroup-input"
-                                           checked=""/>
+                                    <input type="radio" name="gender" value="WOMAN" id="gender"
+                                           className="selectgroup-input"/>
                                     <span className="selectgroup-button selectgroup-button-icon"><i
                                       className="fas fa-female mr-2"></i> Perempuan</span>
                                   </label>
@@ -183,7 +215,7 @@ export default function Page() {
 
                       </div>
                       <div className="card-footer bg-whitesmoke text-md-right">
-                        <button className="btn btn-primary" id="save-btn">Save Changes</button>
+                        <button className="btn btn-primary mr-2" id="save-btn">Save Changes</button>
                         <button className="btn btn-secondary" type="button">Reset</button>
                       </div>
                     </div>

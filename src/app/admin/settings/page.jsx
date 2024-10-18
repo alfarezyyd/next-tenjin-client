@@ -7,10 +7,9 @@ import CommonScript from "@/components/admin/CommonScript";
 export default function Page() {
   useEffect(() => {
     const loadAssets = async () => {
+      const $ = (await import('jquery')).default;
       await CommonStyle();
       await CommonScript();
-      const $ = (await import('jquery')).default;
-
     }
     if (typeof window !== 'undefined') {
       loadAssets();
