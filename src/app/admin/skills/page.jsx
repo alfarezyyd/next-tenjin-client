@@ -6,12 +6,30 @@ import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import {Loading} from "@/components/admin/Loading";
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {useRouter, useSearchParams} from "next/navigation";
 
 export default function Page() {
   const buttonColors = ['primary', 'danger', 'warning', 'success', 'dark']
   const [accessToken, setAccessToken] = useState(null);
   const [allMentorSkill, setAllMentorSkill] = useState({});
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // Cek jika ada `notify=success` di query param
+    if (searchParams.get('notify') === 'success') {
+      toast.success('Data submitted successfully!', {
+        position: 'top-right', autoClose: 3000,
+      });
+
+      // Bersihkan query param setelah menampilkan toast
+      router.replace('/admin/skills');
+    }
+  }, [searchParams, router]);
+
   useEffect(() => {
     async function loadAssets() {
       const $ = (await import('jquery')).default;
@@ -35,11 +53,8 @@ export default function Page() {
     if (accessToken) {
       try {
         const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/skills`, {
-          method: 'GET',
-          includeCredentials: true,
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
+          method: 'GET', includeCredentials: true, headers: {
+            'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
           },
         });
         const responseBody = await responseFetch.json();
@@ -57,44 +72,34 @@ export default function Page() {
       }
     }
   }
-  return (
-    <AdminWrapper>
-      <section className="section">
-        <div className="section-header">
-          <h1>Kemampuan Mentor</h1>
-          <div className="section-header-breadcrumb">
-            <div className="breadcrumb-item active"><a href="#">Admin</a></div>
-            <div className="breadcrumb-item"><a href="#">Mentor</a></div>
-            <div className="breadcrumb-item">Pendidikan</div>
-          </div>
+  return (<AdminWrapper>
+    <section className="section">
+      <div className="section-header">
+        <h1>Kemampuan Mentor</h1>
+        <div className="section-header-breadcrumb">
+          <div className="breadcrumb-item active"><a href="#">Admin</a></div>
+          <div className="breadcrumb-item"><a href="#">Mentor</a></div>
+          <div className="breadcrumb-item">Pendidikan</div>
         </div>
+      </div>
 
-        <div className="section-body">
-          <section className="hero-section p-1">
-            <div className="card-grid">
-              <div className="col-6 col-md-6 col-sm-12 col-lg-6">
-                <div className="d-flex flex-row flex-wrap" style={{gap: 5 + "px"}}>
-                  {loading ? (  // Tampilkan loading selama data belum tersedia
-                    <Loading/>
-                  ) : (
-                    allMentorSkill.length > 0 ? (
-                      allMentorSkill.map((mentorSkill, index) => (
+      <div className="section-body">
+        <section className="hero-section p-1">
+          <div className="card-grid">
+            <div className="col-6 col-md-6 col-sm-12 col-lg-6">
+              <div className="d-flex flex-row flex-wrap" style={{gap: 5 + "px"}}>
+                {loading ? (  // Tampilkan loading selama data belum tersedia
+                  <Loading/>) : (allMentorSkill.length > 0 ? (allMentorSkill.map((mentorSkill, index) => (
 
-                        <button key={`mentorSkill-${mentorSkill.id}`} type="button"
-                                className={`btn btn-${buttonColors[index % buttonColors.length]}`}>
-                          {mentorSkill.name}
-                        </button>
-                      ))
-                    ) : (
-                      <p>No skills available.</p>
-                    ))
-                  }
-                </div>
+                  <button key={`mentorSkill-${mentorSkill.id}`} type="button"
+                          className={`btn btn-${buttonColors[index % buttonColors.length]}`}>
+                    {mentorSkill.name}
+                  </button>))) : (<p>No skills available.</p>))}
               </div>
             </div>
-          </section>
-        </div>
-      </section>
-    </AdminWrapper>
-  )
+          </div>
+        </section>
+      </div>
+    </section>
+  </AdminWrapper>)
 }

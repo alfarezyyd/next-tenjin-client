@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
 import {useRouter, useSearchParams} from "next/navigation";
 
-import {ToastContainer, toast} from 'react-toastify';
+import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Page() {
