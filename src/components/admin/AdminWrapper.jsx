@@ -7,6 +7,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 
 import {useEffect, useState} from 'react';
 import {Loading} from "@/components/admin/Loading";
+import {ToastContainer} from "react-toastify";
 
 export default function AdminWrapper({children}) {
   const [loading, setLoading] = useState(false);
@@ -35,6 +36,7 @@ export default function AdminWrapper({children}) {
       ) : (
         <div id="app">
           <div className="main-wrapper">
+            <ToastContainer style={{zIndex: 9999}}/>
             <div className="navbar-bg"></div>
             <AdminNavbar/>
             <AdminSidebar/>

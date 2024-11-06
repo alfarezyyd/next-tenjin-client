@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
 import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
+import {useRouter} from "next/navigation";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -17,6 +18,8 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
+  const router = useRouter()
+
   const [employmentTypes, setEmploymentTypes] = useState([]);
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
@@ -165,6 +168,7 @@ export default function Page() {
     if (fetchResponse.ok) {
       console.log('Data submitted successfully', responseBody);
       setErrors({});
+      router.push('/admin/experiences?notify=success'); // Tambahkan query param
     } else {
       console.error('Failed to submit data', responseBody);
       const errorMessages = {};
