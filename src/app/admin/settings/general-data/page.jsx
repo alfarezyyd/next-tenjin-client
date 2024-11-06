@@ -31,8 +31,7 @@ export default function Page() {
 
     // Update payloadRequest state
     setPayloadRequest((prevPayloadRequest) => ({
-      ...prevPayloadRequest,
-      [name]: value,
+      ...prevPayloadRequest, [name]: value,
     }));
   }
 
@@ -53,6 +52,14 @@ export default function Page() {
   useEffect(() => {
     fetchCurrentUser()
   }, [accessToken]);
+
+  useEffect(() => {
+    // Set default image URL
+    const defaultImageUrl = 'http://localhost:3001/public/assets/user-resources/2c713d41-ff54-4f13-95ec-9747675b02bc-cancer-1.png';
+
+    // Set default file object
+    setFile([{source: defaultImageUrl, options: {type: 'input'}}]);
+  }, []);
 
   const fetchCurrentUser = async () => {
     if (accessToken) {
@@ -99,12 +106,9 @@ export default function Page() {
         console.log(key, value);
       })
       const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/users/settings/general-data`, {
-        method: 'PUT', includeCredentials: true,
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: form,
+        method: 'PUT', includeCredentials: true, headers: {
+          'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
+        }, body: form,
       });
       const responseBody = await fetchResponse.json();
       console.log(responseBody, fetchResponse);
@@ -231,6 +235,7 @@ export default function Page() {
                               allowMultiple={false}
                               name="experienceResources"
                               labelIdle='Seret & Letakkan Gambar Anda atau <span class="filepond--label-action">Browse</span>'
+                              // Konfigurasi server hanya untuk endpoint upload, tidak untuk default image
                             />
                           </div>
                         </div>

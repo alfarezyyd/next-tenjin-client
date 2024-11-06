@@ -6,3 +6,6 @@
  */
 
 /*# sourceMappingURL=custom.css.map */
+.filepond--file {
+  width: 150px; /* Set lebar tampilan */
+}
