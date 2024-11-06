@@ -6,11 +6,29 @@ import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import {Loading} from "@/components/admin/Loading";
+import {useRouter, useSearchParams} from "next/navigation";
+import 'react-toastify/dist/ReactToastify.css';
+import {toast} from "react-toastify";
 
 export default function Page() {
   const [accessToken, setAccessToken] = useState(null);
   const [allMentorAssistance, setAllMentorAssistance] = useState({});
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    // Cek jika ada `notify=success` di query param
+    if (searchParams.get('notify') === 'success') {
+      toast.success('Data submitted successfully!', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+
+      // Bersihkan query param setelah menampilkan toast
+      router.replace('/admin/assistants');
+    }
+  }, [searchParams, router]);
+
   useEffect(() => {
     async function loadAssets() {
       const $ = (await import('jquery')).default;

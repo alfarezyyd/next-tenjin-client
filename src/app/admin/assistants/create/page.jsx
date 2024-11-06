@@ -10,6 +10,7 @@ import {FilePond, registerPlugin} from "react-filepond";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+import {useRouter} from "next/navigation";
 
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -40,6 +41,7 @@ export default function Page() {
   const tagsSelectRef = useRef(null);
   const languageSelectRef = useRef(null);
   const formatSelectRef = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
     setAccessToken(Cookies.get('accessToken'));
@@ -202,6 +204,7 @@ export default function Page() {
     if (response.ok) {
       console.log('Data submitted successfully', responseBody);
       setErrors({});
+      router.push('/admin/assistants?notify=success'); // Tambahkan query param
     } else {
       console.error('Failed to submit data', responseBody);
       const errorMessages = {};
