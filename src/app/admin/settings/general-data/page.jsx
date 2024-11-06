@@ -53,13 +53,6 @@ export default function Page() {
     fetchCurrentUser()
   }, [accessToken]);
 
-  useEffect(() => {
-    // Set default image URL
-    const defaultImageUrl = 'http://localhost:3001/public/assets/user-resources/2c713d41-ff54-4f13-95ec-9747675b02bc-cancer-1.png';
-
-    // Set default file object
-    setFile([{source: defaultImageUrl, options: {type: 'input'}}]);
-  }, []);
 
   const fetchCurrentUser = async () => {
     if (accessToken) {
@@ -81,6 +74,15 @@ export default function Page() {
           telephone: currentUser.telephone,
           emailVerifiedAt: currentUser.emailVerifiedAt,
         })
+        // Set default file object
+        console.log(currentUser)
+        setFile([
+          {
+            source: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${currentUser.photoPath}`,
+            options: {type: 'input'}
+          }
+        ]);
+
         console.log(responseBody.result.data);
         setLoadingData(false);
       } else {
