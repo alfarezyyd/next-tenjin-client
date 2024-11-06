@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
 import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
+import {useRouter} from "next/navigation";
 
 
 export default function Page() {
@@ -31,6 +32,7 @@ export default function Page() {
   const descriptionRef = useRef(null);
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
+  const router = useRouter()
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -128,6 +130,7 @@ export default function Page() {
     if (fetchResponse.ok) {
       console.log('Data submitted successfully', responseBody);
       setErrors({});
+      router.push('/admin/educations?notify=success'); // Tambahkan query param
     } else {
       console.error('Failed to submit data', responseBody);
       const errorMessages = {};
