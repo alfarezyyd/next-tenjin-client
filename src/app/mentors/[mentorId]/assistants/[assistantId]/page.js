@@ -116,10 +116,10 @@ export default function Page({params}) {
               <div className="flex flex-col">
                 <h1 className="text-xl font-semibold">Alia Teresea</h1>
                 <div className="flex flex-row gap-2">
-                  <Chip className="text-white text-rose-500" size="sm">Laki-Laki</Chip>
+                  <Chip className="text-white bg-rose-500" size="sm">Laki-Laki</Chip>
                   <Chip color="success" className="text-white" size="sm">Online</Chip>
                 </div>
-                <h6 className="text-zinc-100 font-medium">192321</h6>
+                <h6 className="text-gray-600 font-medium">192321</h6>
               </div>
             </div>
             <div className="flex flex-row justify-content-center gap-3">
