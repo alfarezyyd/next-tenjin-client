@@ -1,5 +1,5 @@
 "use client"
-import '../../../../public/assets/css/educations.scss'
+import '../../../../../public/assets/css/educations.scss'
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import {useEffect, useState} from "react";
 import CommonStyle from "@/components/admin/CommonStyle";

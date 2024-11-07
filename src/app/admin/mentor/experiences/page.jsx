@@ -1,6 +1,6 @@
 "use client"
 import AdminWrapper from "@/components/admin/AdminWrapper";
-import "../../../../public/assets/css/custom.scss"
+import "../../../../../public/assets/css/custom.scss"
 import {useEffect, useState} from "react";
 import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
