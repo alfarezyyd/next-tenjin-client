@@ -34,7 +34,7 @@ export default function AdminSidebar({parsedJwt}) {
             <span>Pengaturan</span>
           </a>
         </li>
-        {parsedJwt && parsedJwt.mentorId && (<>
+        {(parsedJwt && parsedJwt.mentorId) ? (<>
           <li className="menu-header">Mentor</li>
           <li className={`nav-item ${pathNames[1] === 'experiences' ? 'active' : ''}`}>
             <a href="#" className="nav-link has-dropdown" data-toggle="dropdown">
@@ -108,55 +108,26 @@ export default function AdminSidebar({parsedJwt}) {
               </li>
             </ul>
           </li>
-        </>)}
+        </>) : (<div className="p-3 hide-sidebar-mini">
+          <a href="/mentors/register" className="btn btn-primary btn-lg btn-block btn-icon-split">
+            <i className="fas fa-rocket"></i> Daftar Mentor
+          </a>
+        </div>)}
 
-        <li className="menu-header">Pengaturan</li>
-        <li className="nav-item dropdown">
-          <a href="#" className="nav-link has-dropdown"><i className="fa-solid fa-gears"></i><span>Modules</span></a>
-          <ul className="dropdown-menu">
-            <li><a className="nav-link" href="modules-calendar.html">Calendar</a></li>
-            <li><a className="nav-link" href="modules-chartjs.html">ChartJS</a></li>
-            <li><a className="nav-link" href="modules-datatables.html">DataTables</a></li>
-            <li><a className="nav-link" href="modules-flag.html">Flag</a></li>
-            <li><a className="nav-link" href="modules-font-awesome.html">Font Awesome</a></li>
-            <li><a className="nav-link" href="modules-ion-icons.html">Ion Icons</a></li>
-            <li><a className="nav-link" href="modules-owl-carousel.html">Owl Carousel</a></li>
-            <li><a className="nav-link" href="modules-sparkline.html">Sparkline</a></li>
-            <li><a className="nav-link" href="modules-sweet-alert.html">Sweet Alert</a></li>
-            <li><a className="nav-link" href="modules-toastr.html">Toastr</a></li>
-            <li><a className="nav-link" href="modules-vector-map.html">Vector Map</a></li>
-            <li><a className="nav-link" href="modules-weather-icon.html">Weather Icon</a></li>
-          </ul>
-        </li>
 
         <li className="menu-header">Keuangan</li>
         <li className="nav-item dropdown">
-          <a href="#" className="nav-link has-dropdown"><i className="fa-solid fa-coins"></i> <span>Modules</span></a>
+          <a href="#" className="nav-link has-dropdown"><i className="fa-solid fa-coins"></i> <span>Keuangan</span></a>
           <ul className="dropdown-menu">
-            <li><a className="nav-link" href="modules-calendar.html">Calendar</a></li>
-            <li><a className="nav-link" href="modules-chartjs.html">ChartJS</a></li>
-            <li><a className="nav-link" href="modules-datatables.html">DataTables</a></li>
-            <li><a className="nav-link" href="modules-flag.html">Flag</a></li>
-            <li><a className="nav-link" href="modules-font-awesome.html">Font Awesome</a></li>
-            <li><a className="nav-link" href="modules-ion-icons.html">Ion Icons</a></li>
-            <li><a className="nav-link" href="modules-owl-carousel.html">Owl Carousel</a></li>
-            <li><a className="nav-link" href="modules-sparkline.html">Sparkline</a></li>
-            <li><a className="nav-link" href="modules-sweet-alert.html">Sweet Alert</a></li>
-            <li><a className="nav-link" href="modules-toastr.html">Toastr</a></li>
-            <li><a className="nav-link" href="modules-vector-map.html">Vector Map</a></li>
-            <li><a className="nav-link" href="modules-weather-icon.html">Weather Icon</a></li>
+            <li><a className="nav-link" href="modules-calendar.html">Isi Saldo Koin</a></li>
+            <li><a className="nav-link" href="modules-chartjs.html">Menarik Saldo</a></li>
           </ul>
         </li>
 
-        <li><a className="nav-link" href="credits.html"><i className="fas fa-pencil-ruler"></i>
-          <span>Credits</span></a></li>
+
       </ul>
 
-      <div className="mt-4 mb-4 p-3 hide-sidebar-mini">
-        <a href="https://getstisla.com/docs" className="btn btn-primary btn-lg btn-block btn-icon-split">
-          <i className="fas fa-rocket"></i> Documentation
-        </a>
-      </div>
+
     </aside>
   </div>)
 }
