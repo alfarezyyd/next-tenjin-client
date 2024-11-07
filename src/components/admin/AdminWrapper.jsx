@@ -8,9 +8,13 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import {useEffect, useState} from 'react';
 import {Loading} from "@/components/admin/Loading";
 import {ToastContainer} from "react-toastify";
+import {CommonUtil} from "@/common/utils/common-util";
+import Cookies from "js-cookie";
 
 export default function AdminWrapper({children}) {
   const [loading, setLoading] = useState(false);
+  const [accessToken, setAccessToken] = useState(null);
+  const [parsedAccessToken, setParsedAccessToken] = useState(null);
   useEffect(() => {
     const loadAssets = async () => {
       const jQueryModule = await import('jquery');
@@ -26,27 +30,25 @@ export default function AdminWrapper({children}) {
       loadAssets();
       setLoading(false)
     }
+    setAccessToken(Cookies.get('accessToken'));
   }, []);
+  useEffect(() => {
+    setParsedAccessToken(CommonUtil.parseJwt(accessToken));
+  }, [accessToken]);
 
 
-  return (
-    <>
-      {loading ? (
-        <Loading/>
-      ) : (
-        <div id="app">
-          <div className="main-wrapper">
-            <ToastContainer style={{zIndex: 9999}}/>
-            <div className="navbar-bg"></div>
-            <AdminNavbar/>
-            <AdminSidebar/>
-            <div className="main-content">
-              {children}
-            </div>
-            <AdminFooter/>
-          </div>
+  return (<>
+    {loading ? (<Loading/>) : (<div id="app">
+      <div className="main-wrapper">
+        <ToastContainer style={{zIndex: 9999}}/>
+        <div className="navbar-bg"></div>
+        <AdminNavbar/>
+        {accessToken && <AdminSidebar parsedJwt={parsedAccessToken}/>}
+        <div className="main-content">
+          {children}
         </div>
-      )}
-    </>
-  );
+        <AdminFooter/>
+      </div>
+    </div>)}
+  </>);
 }
