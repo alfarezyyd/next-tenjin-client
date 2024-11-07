@@ -43,7 +43,7 @@ export default function Login() {
       const responseBody = await response.json();
       if (response.ok) {
         Cookies.set('accessToken', responseBody['result']['data']['accessToken']);
-        push('/');  // Redirect to the dashboard or another protected route
+        push('/admin/dashboard');  // Redirect to the dashboard or another protected route
       } else {
         switch (response.status) {
           case 404: {

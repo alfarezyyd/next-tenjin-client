@@ -3,6 +3,7 @@ import {FcGoogle} from "react-icons/fc";
 import {Button, Input} from "@nextui-org/react";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
+import Cookies from "js-cookie";
 
 export default function Register() {
   const {push} = useRouter();
@@ -35,10 +36,11 @@ export default function Register() {
       },
       body: JSON.stringify(registerRequest),
     });
+    const responseBody = await serverResponse.json();
 
     if (serverResponse.ok) {
-      await push(process.env.NEXT_PUBLIC_BASE_URL + '/auth/login')
-      console.log(serverResponse)
+      Cookies.set('accessToken', responseBody['result']['data']['accessToken']);
+      push('/admin/dashboard');  // Redirect to the dashboard or another protected route
     } else {
       const errorMessages = {};
       const userError = await serverResponse.json()
