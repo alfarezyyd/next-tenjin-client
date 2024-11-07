@@ -1,17 +1,18 @@
 // middleware.js
 import {NextResponse} from 'next/server';
-import Cookies from "js-cookie";
 
 export function middleware(request) {
   const {pathname} = request.nextUrl;
 
   // Hanya melindungi path yang dimulai dengan '/admin'
   if (pathname.startsWith('/admin')) {
-    const token = Cookies.get('accessToken')?.value;
+    // Ambil token dari cookies menggunakan request.cookies
+    const token = request.cookies.get('accessToken');
+    console.log(token);
 
     // Jika tidak ada token, arahkan ke halaman login
     if (!token) {
-      const loginUrl = new URL('/auth/login', request.url);  // Ganti '/login' dengan path login Anda
+      const loginUrl = new URL('/auth/login', request.url);
       return NextResponse.redirect(loginUrl);
     }
 
@@ -22,7 +23,6 @@ export function middleware(request) {
   // Untuk path lainnya, lanjutkan request tanpa modifikasi
   return NextResponse.next();
 }
-
 
 // middleware.js
 export const config = {
