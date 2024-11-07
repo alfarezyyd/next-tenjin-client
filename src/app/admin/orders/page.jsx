@@ -62,14 +62,12 @@ export default function Page() {
     if (accessToken) {
       try {
         const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/orders`, {
-          method: 'GET',
-          includeCredentials: true,
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
+          method: 'GET', includeCredentials: true, headers: {
+            'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
           },
         });
         const responseBody = await responseFetch.json();
+        console.log(responseBody);
         if (responseFetch.ok) {
           setAllOrder(responseBody.result.data);
         } else {
@@ -83,72 +81,77 @@ export default function Page() {
     }
   }
 
-  return (
-    <AdminWrapper>
-      <section className="section">
-        <div className="section-header">
-          <h1>Pendidikan Mentor</h1>
-          <div className="section-header-breadcrumb">
-            <div className="breadcrumb-item active"><a href="#">Admin</a></div>
-            <div className="breadcrumb-item"><a href="#">Mentor</a></div>
-            <div className="breadcrumb-item">Pendidikan</div>
-          </div>
+  const isOrderExpired = (createdAt) => {
+    const orderTime = new Date(createdAt).getTime();
+    const currentTime = Date.now();
+
+    // 24 jam dalam milidetik
+    const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
+
+    // Periksa apakah waktu sekarang lebih dari 24 jam dari createdAt
+    return currentTime - orderTime > twentyFourHoursInMs;
+  };
+
+  return (<AdminWrapper>
+    <section className="section">
+      <div className="section-header">
+        <h1>Pendidikan Mentor</h1>
+        <div className="section-header-breadcrumb">
+          <div className="breadcrumb-item active"><a href="#">Admin</a></div>
+          <div className="breadcrumb-item"><a href="#">Mentor</a></div>
+          <div className="breadcrumb-item">Pendidikan</div>
         </div>
+      </div>
 
-        <div className="section-body">
+      <div className="section-body">
 
-          <h2 className="section-title">Articles</h2>
-          <p className="section-lead">This article component is based on card and flexbox.</p>
-          <div className="row">
-            {loading ? (  // Tampilkan loading selama data belum tersedia
-              <Loading/>
-            ) : (
-              allOrder.length > 0 ? (
-                allOrder.map((mentorAssistance) => (
-                  <div className="col-12 col-md-12 col-lg-12" key={`mentorAssistance-${mentorAssistance.id}`}>
-                    <article className="article article-style-c d-flex flex-row">
-                      <div className="col-sm-12 col-md-5 col-lg-4 p-0">
-                        <Image src={`/images/authentication/login.jpg`} alt=""
-                               className="w-100 h-100 m-0 p-0 object-cover" width={500}
-                               height={500}/>
-                      </div>
-                      <div className="col-8">
-                        <div className="article-details">
-                          <div className="article-category"><a href="#">News</a>
-                            <div className="bullet"></div>
-                            <a href="#">5 Days</a></div>
-                          <div className="article-title">
-                            <h2><a href="#">{mentorAssistance.assistance.topic}</a></h2>
-                          </div>
-                          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse
-                            cillum dolore eu fugiat nulla pariatur. </p>
-                          <div className="article-user">
-                            <img alt="image" src="../assets/img/avatar/avatar-1.png"/>
-                            <div className="article-user-details float-left">
-                              <div className="user-detail-name">
-                                <a href="#">Hasan Basri</a>
-                              </div>
-                              <div className="text-job">Web Developer</div>
-                            </div>
-                            <a href="#" className="btn btn-outline-primary float-right mt-1 ml-2">Cancel</a>
-                            <a href="#" onClick={() => {
-                              initiatePayment(mentorAssistance['id'])
-                            }}
-                               className="btn  btn-primary float-right mt-1">Continue</a>
-                          </div>
+        <h2 className="section-title">Articles</h2>
+        <p className="section-lead">This article component is based on card and flexbox.</p>
+        <div className="row">
+          {loading ? (  // Tampilkan loading selama data belum tersedia
+            <Loading/>) : (allOrder.length > 0 ? (allOrder.map((mentorAssistance) => (
+            <div className="col-12 col-md-12 col-lg-12" key={`mentorAssistance-${mentorAssistance.id}`}>
+              <article className="article article-style-c d-flex flex-row">
+                <div className="col-sm-12 col-md-5 col-lg-4 p-0">
+                  <Image src={`/images/authentication/login.jpg`} alt=""
+                         className="w-100 h-100 m-0 p-0 object-cover" width={500}
+                         height={500}/>
+                  {/* Overlay muncul jika order expired */}
+                  {isOrderExpired(mentorAssistance.createdAt) && (<div className="expired-overlay">
+                    <span className="expired-text">Expired</span>
+                  </div>)}
+                </div>
+                <div className="col-8">
+                  <div className="article-details">
+                    <div className="article-category"><a href="#">News</a>
+                      <div className="bullet"></div>
+                      <a href="#">5 Days</a></div>
+                    <div className="article-title">
+                      <h2><a href="#">{mentorAssistance.assistance.topic}</a></h2>
+                    </div>
+                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse
+                      cillum dolore eu fugiat nulla pariatur. </p>
+                    <div className="article-user">
+                      <img alt="image" src="../assets/img/avatar/avatar-1.png"/>
+                      <div className="article-user-details float-left">
+                        <div className="user-detail-name">
+                          <a href="#">Hasan Basri</a>
                         </div>
+                        <div className="text-job">Web Developer</div>
                       </div>
-                    </article>
+                      {!isOrderExpired(mentorAssistance.createdAt) && (<>
+                        <a href="#" className="btn btn-outline-primary float-right mt-1 ml-2">Cancel</a>
+                        <a href="#" onClick={() => {
+                          initiatePayment(mentorAssistance['transactionToken'])
+                        }} className="btn  btn-primary float-right mt-1">Continue</a>
+                      </>)}
+                    </div>
                   </div>
-                ))
-              ) : (
-                <Loading/>
-              )
-            )
-            }
-          </div>
+                </div>
+              </article>
+            </div>))) : (<Loading/>))}
         </div>
-      </section>
-    </AdminWrapper>
-  )
+      </div>
+    </section>
+  </AdminWrapper>)
 }
