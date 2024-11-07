@@ -81,6 +81,7 @@ export default function Page({params}) {
       topic: assistanceData['topic'],
       assistantId: assistanceData['id'],
       mentorId: assistanceData['mentorId'],
+      price: assistanceData['price'],
       sessionTimestamp: "2024-10-10",
       minutesDurations: 29,
       note: "Testing",
