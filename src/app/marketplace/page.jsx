@@ -23,7 +23,7 @@ const Marketplace = () => {
     fetchAllAssistants()
   }, []);
   const fetchAllAssistants = async () => {
-    let responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
+    let responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/categories/mentors`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -98,43 +98,43 @@ const Marketplace = () => {
                     image={NFt4}
                     mentorId={assistant.mentorId}
                     assistantId={assistant.id}
+                    durationMinutes={assistant.durationMinutes}
                   />
                 ))
                 : <Loading/>
               }
             </div>
 
-            {/* Recenlty Added setion */}
-            <div className="mb-5 mt-5 flex items-center justify-between px-[26px]">
-              <h4 className="text-2xl font-bold text-navy-700 dark:text-white">
-                Recently Added
-              </h4>
-            </div>
+            {assistants.length > 0 ? (
 
-            {/* Recently Add NFTs */}
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-              <NftCard
-                bidders={[avatar1, avatar2, avatar3]}
-                title="Abstract Colors"
-                author="Esthera Jackson"
-                price="0.91"
-                image={NFt4}
-              />
-              <NftCard
-                bidders={[avatar1, avatar2, avatar3]}
-                title="ETH AI Brain"
-                author="Nick Wilson"
-                price="0.7"
-                image={NFt5}
-              />
-              <NftCard
-                bidders={[avatar1, avatar2, avatar3]}
-                title="Mesh Gradients"
-                author="Will Smith"
-                price="2.91"
-                image={NFt6}
-              />
-            </div>
+              assistants.map((assistant, index) => (
+                <>
+                  {/* Recenlty Added setion */}
+                  <div className="mb-5 mt-5 flex items-center justify-between px-[26px]">
+                    <h4 className="text-2xl font-bold text-navy-700 dark:text-white">
+                      {assistant.name}
+                    </h4>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+                    {assistant.Assistance.map((assistant, index) => (
+                      <NftCard
+                        bidders={[avatar1, avatar2, avatar3]}
+                        title={assistant.topic}
+                        author={assistant.mentor.user.name}
+                        price="0.91"
+                        mentorId={assistant.mentor.id}
+                        assistantId={assistant.id}
+                        image={NFt4}
+                      />
+                    ))}
+
+                  </div>
+                </>
+              ))
+
+            ) : <Loading/>}
+
           </div>
           <div className="mt-12 col-span-1 h-full w-full rounded-xl 2xl:col-span-1">
             <TopCreatorTable
