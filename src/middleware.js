@@ -1,30 +1,38 @@
-// middleware.js
 import {NextResponse} from 'next/server';
+import {CommonUtil} from '@/common/utils/common-util';
 
 export function middleware(request) {
   const {pathname} = request.nextUrl;
+  const token = request.cookies.get('accessToken');
 
-  // Hanya melindungi path yang dimulai dengan '/admin'
-  if (pathname.startsWith('/admin')) {
-    // Ambil token dari cookies menggunakan request.cookies
-    const token = request.cookies.get('accessToken');
-    console.log(token);
-
-    // Jika tidak ada token, arahkan ke halaman login
-    if (!token) {
+  // Pastikan token berupa string
+  if (pathname.startsWith('/admin/mentor')) {
+    if (!token || typeof token !== 'string') {
       const loginUrl = new URL('/auth/login', request.url);
       return NextResponse.redirect(loginUrl);
     }
 
-    // Jika ada token, lanjutkan ke halaman yang diminta
+    const parsedJwt = CommonUtil.parseJwt(token);
+    if (!parsedJwt || !parsedJwt.mentorId) {
+      const dashboardUrl = new URL('/admin/dashboard', request.url);
+      return NextResponse.redirect(dashboardUrl);
+    }
     return NextResponse.next();
   }
 
-  // Untuk path lainnya, lanjutkan request tanpa modifikasi
+  // Lainnya
+  if (pathname.startsWith('/admin')) {
+    if (!token || typeof token !== 'string') {
+      const loginUrl = new URL('/auth/login', request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+    return NextResponse.next();
+  }
+
   return NextResponse.next();
 }
 
-// middleware.js
+// Middleware config
 export const config = {
-  matcher: ['/admin/:path*'],  // Terapkan middleware hanya di /admin dan sub-pathnya
+  matcher: ['/admin/:path*', '/admin/mentor/:path*'],
 };
