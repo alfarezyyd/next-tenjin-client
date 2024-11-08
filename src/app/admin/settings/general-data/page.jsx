@@ -6,11 +6,16 @@ import CommonScript from "@/components/admin/CommonScript";
 import {Loading} from "@/components/admin/Loading";
 import Cookies from "js-cookie";
 import {CommonUtil} from "@/common/utils/common-util";
+import {toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import {useRouter, useSearchParams} from "next/navigation";
+
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import {FilePond, registerPlugin} from 'react-filepond';
 
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -23,6 +28,21 @@ export default function Page() {
   const [payloadRequest, setPayloadRequest] = useState();
   const [errors, setErrors] = useState({});
   const [file, setFile] = useState();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    // Cek jika ada `notify=success` di query param
+    if (searchParams.get('notify') === 'success') {
+      console.log("ada")
+      toast.success('Data submitted successfully!', {
+        position: 'top-right', autoClose: 100000,
+      });
+
+      router.replace('/admin/settings/general-data');
+
+      // Bersihkan query param setelah menampilkan toast
+    }
+  }, [searchParams, router]);
 
 
   function handleChange(e) {
@@ -34,6 +54,7 @@ export default function Page() {
       ...prevPayloadRequest, [name]: value,
     }));
   }
+
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -74,16 +95,14 @@ export default function Page() {
           telephone: currentUser.telephone,
           emailVerifiedAt: currentUser.emailVerifiedAt,
         })
-        // Set default file object
-        console.log(currentUser)
-        setFile([
-          {
+        if (currentUser.photoPath !== null) {
+          setFile([{
             source: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${currentUser.photoPath}`,
             options: {type: 'input'}
-          }
-        ]);
+          }]);
+        }
 
-        console.log(responseBody.result.data);
+        console.log(file)
         setLoadingData(false);
       } else {
         console.error(responseBody);
@@ -224,7 +243,7 @@ export default function Page() {
                                  className="form-control-label col-sm-3 text-md-right">Nomor Telepon</label>
                           <div className="col-sm-6 col-md-9">
                             <input type="text" name="telephone" className="form-control" id="site-title"
-                                   value={payloadRequest.telephone} onChange={handleChange}/>
+                                   value={payloadRequest.telephone ?? ''} onChange={handleChange}/>
                           </div>
                         </div>
                         <div className="form-group row align-items-center">
