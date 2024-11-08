@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import "../../../public/assets/css/custom.scss"
 import AdminTopbar from "@/components/admin/AdminTopbar";
+import {ToastContainer} from "react-toastify";
 
 export default function AdminFullWrapper({children}) {
   const [loading, setLoading] = useState(false);
@@ -40,6 +41,7 @@ export default function AdminFullWrapper({children}) {
         <div id="app">
           <div className="main-wrapper container">
             <div className="navbar-bg-full"></div>
+            <ToastContainer style={{zIndex: 9999}}/>
             <AdminTopbar/>
             <div className="main-content">
               {children}
