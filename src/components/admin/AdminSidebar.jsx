@@ -34,6 +34,14 @@ export default function AdminSidebar({parsedJwt}) {
             <span>Pengaturan</span>
           </a>
         </li>
+        <li className="nav-item dropdown">
+          <a href="#" className="nav-link has-dropdown"><i className="fa-solid fa-coins"></i> <span>Keuangan</span></a>
+          <ul className="dropdown-menu">
+            <li><a className="nav-link" href="/admin/coins/top-up">Isi Saldo Koin</a></li>
+            <li><a className="nav-link" href="/admin/coins/withdraw">Menarik Saldo</a></li>
+          </ul>
+        </li>
+
         {(parsedJwt && parsedJwt.mentorId) ? (<>
           <li className="menu-header">Mentor</li>
           <li className={`nav-item ${pathNames[1] === 'experiences' ? 'active' : ''}`}>
@@ -113,17 +121,6 @@ export default function AdminSidebar({parsedJwt}) {
             <i className="fas fa-rocket"></i> Daftar Mentor
           </a>
         </div>)}
-
-
-        <li className="menu-header">Keuangan</li>
-        <li className="nav-item dropdown">
-          <a href="#" className="nav-link has-dropdown"><i className="fa-solid fa-coins"></i> <span>Keuangan</span></a>
-          <ul className="dropdown-menu">
-            <li><a className="nav-link" href="modules-calendar.html">Isi Saldo Koin</a></li>
-            <li><a className="nav-link" href="modules-chartjs.html">Menarik Saldo</a></li>
-          </ul>
-        </li>
-
 
       </ul>
 
