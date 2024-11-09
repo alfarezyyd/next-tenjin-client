@@ -4,7 +4,6 @@ import {CommonUtil} from "@/common/utils/common-util";
 export default function AdminSidebar({parsedJwt}) {
   const pathname = usePathname();
   let pathNames = pathname.split("/").filter(segment => segment !== "");
-  console.log(pathNames);
   return (<div className="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
       <div className="sidebar-brand">
