@@ -5,7 +5,8 @@ import {Button, Input} from "@nextui-org/react";
 import Cookies from "js-cookie";
 import {EyeSlashFilledIcon} from "@/components/auth/EyeSlashFilledIcon";
 import {EyeFilledIcon} from "@/components/auth/EyeFilledIcon";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
+import Link from "next/link";
 
 
 export default function Login() {
@@ -25,6 +26,58 @@ export default function Login() {
     });
   };
 
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // Ambil token dari URL
+    const token = searchParams.get('token');
+
+    if (token) {
+      // Simpan token di cookie
+      Cookies.set('accessToken', token);
+
+      // Redirect ke halaman dashboard setelah login
+      router.push('/admin/dashboard');
+    } else {
+      // Jika tidak ada token, redirect ke halaman login
+      router.push('/auth/login');
+    }
+  }, [searchParams, router]);
+
+  const handleGoogleAuthentication = async () => {
+    console.log("Ada");
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}authentication/google`, {
+        method: 'GET', headers: {
+          Accept: 'application/json',
+        }
+      })
+
+      const responseBody = await response.json();
+      if (response.ok) {
+        Cookies.set('accessToken', responseBody['result']['data']['accessToken']);
+        push(`${process.env.NEXT_PUBLIC_BASE_URL}/admin/dashboard`);  // Redirect to the dashboard or another protected route
+      } else {
+        switch (response.status) {
+          case 404: {
+            setUserError({
+              email: "User with this email not found"
+            })
+            break;
+          }
+          default: {
+            setUserError({
+              email: "User with this email not valid", password: "User password incorrect"
+            })
+          }
+        }
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,8 +125,8 @@ export default function Login() {
       <p className="mb-9 ml-1 font-light text-base text-black">
         Enter your email and password to sign in!
       </p>
-      <Button
-        className="mb-6 flex h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-[#F4F7FE] hover:cursor-pointer">
+      <Button as={Link} href={`${process.env.NEXT_PUBLIC_BACKEND_URL}authentication/google`} type="button"
+              className="mb-6 flex h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-[#F4F7FE] hover:cursor-pointer">
         <div className="rounded-full text-xl">
           <FcGoogle/>
         </div>
