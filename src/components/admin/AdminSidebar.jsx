@@ -4,7 +4,7 @@ import {CommonUtil} from "@/common/utils/common-util";
 export default function AdminSidebar({parsedJwt}) {
   const pathname = usePathname();
   let pathNames = pathname.split("/").filter(segment => segment !== "");
-
+  console.log(pathNames);
   return (<div className="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
       <div className="sidebar-brand">
@@ -44,20 +44,20 @@ export default function AdminSidebar({parsedJwt}) {
 
         {(parsedJwt && parsedJwt.mentorId) ? (<>
           <li className="menu-header">Mentor</li>
-          <li className={`nav-item ${pathNames[1] === 'experiences' ? 'active' : ''}`}>
+          <li className={`nav-item ${pathNames[2] === 'experiences' ? 'active' : ''}`}>
             <a href="#" className="nav-link has-dropdown" data-toggle="dropdown">
               <i className="fas fa-id-badge"></i>
               <span>Pengalaman</span>
             </a>
             <ul className="dropdown-menu">
               <li
-                className={`nav-item ${pathNames[1] === 'experiences' && pathNames[2] === undefined ? 'active' : ''}`}>
-                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/experiences`}>Lihat
+                className={`nav-item ${pathNames[2] === 'experiences' && pathNames[3] === undefined ? 'active' : ''}`}>
+                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/experiences`}>Lihat
                   Data</a>
               </li>
               <li
-                className={`nav-item ${pathNames[1] === 'experiences' && pathNames[2] === "create" ? 'active' : ''}`}>
-                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/experiences/create`}>Buat
+                className={`nav-item ${pathNames[2] === 'experiences' && pathNames[3] === "create" ? 'active' : ''}`}>
+                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/experiences/create`}>Buat
                   Data</a>
               </li>
             </ul>
