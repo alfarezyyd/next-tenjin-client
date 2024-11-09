@@ -7,7 +7,7 @@ export function middleware(request) {
 
   // Pastikan token berupa string
   if (pathname.startsWith('/admin/mentor')) {
-    if (!token) {
+    if (!token || CommonUtil.isTokenExpired(token)) {
       const loginUrl = new URL('/admin/dashboard', request.url);
       return NextResponse.redirect(loginUrl);
     }
@@ -22,7 +22,7 @@ export function middleware(request) {
 
   // Lainnya
   if (pathname.startsWith('/admin')) {
-    if (!token) {
+    if (!token || CommonUtil.isTokenExpired(token)) {
       const loginUrl = new URL('/auth/login', request.url);
       return NextResponse.redirect(loginUrl);
     }
