@@ -3,9 +3,15 @@ export class CommonUtil {
     if (!token) {
       return;
     }
+    console.log(token)
+
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace('-', '+').replace('_', '/');
-    return JSON.parse(window.atob(base64));
+    try {
+      return JSON.parse(window.atob(base64));
+    } catch (e) {
+      return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    }
   }
 
   static uploadPreview($) {

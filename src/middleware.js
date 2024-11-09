@@ -7,12 +7,12 @@ export function middleware(request) {
 
   // Pastikan token berupa string
   if (pathname.startsWith('/admin/mentor')) {
-    if (!token || typeof token !== 'string') {
+    if (!token) {
       const loginUrl = new URL('/admin/dashboard', request.url);
       return NextResponse.redirect(loginUrl);
     }
 
-    const parsedJwt = CommonUtil.parseJwt(token);
+    const parsedJwt = CommonUtil.parseJwt(token.value);
     if (!parsedJwt || !parsedJwt.mentorId) {
       const dashboardUrl = new URL('/admin/dashboard', request.url);
       return NextResponse.redirect(dashboardUrl);
