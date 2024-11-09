@@ -10,6 +10,7 @@ import {Loading} from "@/components/admin/Loading";
 import CommonScript from "@/components/admin/CommonScript";
 import {CommonUtil} from "@/common/utils/common-util";
 import Cookies from "js-cookie";
+import {useRouter} from "next/navigation";
 
 
 // Register the plugins
@@ -37,6 +38,7 @@ export default function Page() {
     }
   });
   const [errors, setErrors] = useState({});
+  const router = useRouter()
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -129,17 +131,15 @@ export default function Page() {
       }
     })
     const responseBody = await fetchResponse.json();
-    if (responseBody.ok) {
-      console.log('Data submitted successfully', responseBody);
-      setErrors({});
+    if (fetchResponse.ok) {
+      router.push('/admin/educations?notify=success'); // Tambahkan query param
     } else {
       setCurrentStep(1);
       const errorMessages = {};
       setFormData((prevData) => ({
         ...prevData, photo: null,
       }));
-      console.log(responseBody);
-      
+
       responseBody.errors.message.forEach((error) => {
         errorMessages[error.path[0]] = error.message;
       });
@@ -244,8 +244,9 @@ export default function Page() {
                         <label htmlFor="telephone">Nomor Telepon</label>
                         <input type="text"
                                className="form-control"
-                               id="telephone" disabled value={loggedUser.telephone}
+                               id="telephone" disabled value={loggedUser.telephone ?? '+62 '}
                                name="telephone"/>
+                        <small>Jika nomor kosong, silahkan tambahkan pada settings</small>
                       </div>
 
                       <div className="form-group col-6">
@@ -567,9 +568,8 @@ export default function Page() {
                         className="fas fa-arrow-left"></i> Previous</a>)}
                     </div>
                     <div className="col-lg-6 col-md-8 text-right">
-                      {currentStep < 4 ? (
-                        <a onClick={nextStep} className="btn btn-icon icon-right btn-primary">Next <i
-                          className="fas fa-arrow-right"></i></a>) : (
+                      {currentStep < 4 ? (<a onClick={nextStep} className="btn btn-icon icon-right btn-primary">Next <i
+                        className="fas fa-arrow-right"></i></a>) : (
                         <button type="submit" className="btn btn-success">Submit</button>)}
                     </div>
                   </div>
