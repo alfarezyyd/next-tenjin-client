@@ -344,24 +344,25 @@ $(function () {
     });
   }
 
-  $(".notification-toggle").dropdown();
-  $(".notification-toggle").parent().on('shown.bs.dropdown', function () {
-    $(".dropdown-list-icons").niceScroll({
-      cursoropacitymin: .3,
-      cursoropacitymax: .8,
-      cursorwidth: 7
+  if (jQuery.dropdown) {
+    $(".notification-toggle").dropdown();
+    $(".notification-toggle").parent().on('shown.bs.dropdown', function () {
+      $(".dropdown-list-icons").niceScroll({
+        cursoropacitymin: .3,
+        cursoropacitymax: .8,
+        cursorwidth: 7
+      });
     });
-  });
 
-  $(".message-toggle").dropdown();
-  $(".message-toggle").parent().on('shown.bs.dropdown', function () {
-    $(".dropdown-list-message").niceScroll({
-      cursoropacitymin: .3,
-      cursoropacitymax: .8,
-      cursorwidth: 7
+    $(".message-toggle").dropdown();
+    $(".message-toggle").parent().on('shown.bs.dropdown', function () {
+      $(".dropdown-list-message").niceScroll({
+        cursoropacitymin: .3,
+        cursoropacitymax: .8,
+        cursorwidth: 7
+      });
     });
-  });
-
+  }
   if ($(".chat-content").length) {
     $(".chat-content").niceScroll({
       cursoropacitymin: .3,
