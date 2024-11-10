@@ -75,7 +75,7 @@ export default function Page() {
     if (fetchResponse.ok) {
       console.log('Data submitted successfully', responseBody);
       setErrors({});
-      router.push('/admin/skills?notify=success');
+      router.push('/admin/mentor/skills?notify=success');
     } else {
       console.error('Failed to submit data', responseBody);
       const errorMessages = {};
