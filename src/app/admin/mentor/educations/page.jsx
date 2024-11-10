@@ -5,7 +5,6 @@ import {useEffect, useState} from "react";
 import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
-import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import {Loading} from "@/components/admin/Loading";
 import {toast} from "react-toastify";
 import {useRouter, useSearchParams} from "next/navigation";
@@ -21,12 +20,11 @@ export default function Page() {
     // Cek jika ada `notify=success` di query param
     if (searchParams.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
-        position: 'top-right',
-        autoClose: 3000,
+        position: 'top-right', autoClose: 3000,
       });
 
       // Bersihkan query param setelah menampilkan toast
-      router.replace('/admin/educations');
+      router.replace('/admin/mentor/educations');
     }
   }, [searchParams, router]);
 
@@ -53,11 +51,8 @@ export default function Page() {
     if (accessToken) {
       try {
         const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/educations`, {
-          method: 'GET',
-          includeCredentials: true,
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
+          method: 'GET', includeCredentials: true, headers: {
+            'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
           },
         });
         const responseBody = await responseFetch.json();
@@ -75,8 +70,7 @@ export default function Page() {
       }
     }
   }
-  return (
-    <AdminWrapper>
+  return (<AdminWrapper>
       <section className="section">
         <div className="section-header">
           <h1>Pendidikan Mentor</h1>
@@ -88,28 +82,69 @@ export default function Page() {
         </div>
 
         <div className="section-body">
-          <section className="hero-section p-1">
-            <div className="card-grid">
+          <div className="container">
+            <div className="row">
               {loading ? (  // Tampilkan loading selama data belum tersedia
-                <Loading/>
-              ) : (
-                allMentorEducation.length > 0 ? (
-                  allMentorEducation.map((mentorEducation) => (
-                    <a key={`education-${mentorEducation.id}`} className="card" href="#">
-                      <div className="card__background"
-                           style={{backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL})`}}></div>
-                      <div className="card__content">
-                        <p className="card__category">{mentorEducation.name}</p>
-                        <h3 className="card__heading">{mentorEducation.degree}</h3>
+                <Loading/>) : (allMentorEducation.length > 0 ? (allMentorEducation.map((mentorEducation) => (
+                <div className="col-sm-12 col-md-6 col-lg-4 mb-4 p-0" key={mentorEducation.id}>
+                  <div className="card-custom text-dark card-has-bg click-col"
+                       style={{backgroundImage: `url(https://source.unsplash.com/600x900/?tech,street)`}}>
+                    <img className="card-img d-none" src="https://source.unsplash.com/600x900/?tech,street"
+                         alt=" Lorem Ipsum Sit Amet Consectetur dipisi?"/>
+                    <div className="card-img-overlay d-flex flex-column">
+                      <div className="card-body">
+                        <small
+                          className="card-meta mb-2">{mentorEducation.degree} | {mentorEducation.studyField}</small>
+                        <h4 className="card-title mt-0 "><a className="text-dark"
+                                                            href="https://creativemanner.com">{mentorEducation.name}</a>
+                        </h4>
+                        <small><i
+                          className="far fa-clock"></i> {mentorEducation.startDate.substring(0, 10)} hingga {mentorEducation.endDate.substring(0, 10)}
+                        </small>
+                        <div id="accordion" className="pt-3">
+                          <div className="accordion">
+                            <div className="accordion-header" role="button" data-toggle="collapse"
+                                 data-target="#panel-body-1"
+                                 aria-expanded="true">
+                              <h4>Description</h4>
+                            </div>
+                            <div className="accordion-body collapse show" id="panel-body-1" data-parent="#accordion">
+                              <p className="mb-0" dangerouslySetInnerHTML={{__html: mentorEducation.description}}/>
+                            </div>
+                          </div>
+                          <div className="accordion">
+                            <div className="accordion-header" role="button" data-toggle="collapse"
+                                 data-target="#panel-body-2">
+                              <h4>Society</h4>
+                            </div>
+                            <div className="accordion-body collapse" id="panel-body-2" data-parent="#accordion">
+                              <p className="mb-0" dangerouslySetInnerHTML={{__html: mentorEducation.society}}/>
+                            </div>
+                          </div>
+                          <div className="accordion">
+                            <div className="accordion-header" role="button" data-toggle="collapse"
+                                 data-target="#panel-body-3">
+                              <h4>Activity</h4>
+                            </div>
+                            <div className="accordion-body collapse" id="panel-body-3" data-parent="#accordion">
+                              <p className="mb-0" dangerouslySetInnerHTML={{__html: mentorEducation.activity}}/>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </a>
-                  ))
-                ) : (
-                  <p>No educations available.</p>
-                ))
-              }
+                      <div className="card-footer">
+                        <div className="d-flex flex-row" style={{gap: 5}}>
+                          <a
+                            href={`${process.env.NEXT_PUBLIC_BASE_URL}/admin/mentor/educations/update/${mentorEducation.id}`}
+                            className="btn btn-info">Edit</a>
+                          <button className="btn btn-danger">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>))) : (<p>No educations available.</p>))}
             </div>
-          </section>
+          </div>
         </div>
       </section>
     </AdminWrapper>
