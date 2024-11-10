@@ -168,7 +168,7 @@ export default function Page() {
     if (fetchResponse.ok) {
       console.log('Data submitted successfully', responseBody);
       setErrors({});
-      router.push('/admin/experiences?notify=success'); // Tambahkan query param
+      router.push('/admin/mentor/experiences?notify=success'); // Tambahkan query param
     } else {
       console.error('Failed to submit data', responseBody);
       const errorMessages = {};
