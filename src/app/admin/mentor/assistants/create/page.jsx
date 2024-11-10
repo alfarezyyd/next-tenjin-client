@@ -10,6 +10,7 @@ import {FilePond, registerPlugin} from "react-filepond";
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import {useRouter} from "next/navigation";
 
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -19,6 +20,7 @@ export default function Page() {
   const [assistanceDependency, setAssistanceDependency] = useState({
     categories: [], tags: [], languages: [],
   });
+  const router = useRouter();
   const [files, setFiles] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(0);
   const [accessToken, setAccessToken] = useState();
@@ -199,6 +201,7 @@ export default function Page() {
     if (response.ok) {
       console.log('Data submitted successfully', responseBody);
       setErrors({});
+      router.push("/admin/mentor/assistants?notify=success")
     } else {
       console.error('Failed to submit data', responseBody);
       const errorMessages = {};
