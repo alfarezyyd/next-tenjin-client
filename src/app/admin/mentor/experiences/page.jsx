@@ -11,6 +11,7 @@ import {useRouter, useSearchParams} from "next/navigation";
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 export default function Page() {
   const [accessToken, setAccessToken] = useState(null);
   const [allMentorExperience, setAllMentorExperience] = useState([]);
@@ -22,12 +23,11 @@ export default function Page() {
     // Cek jika ada `notify=success` di query param
     if (searchParams.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
-        position: 'top-right',
-        autoClose: 3000,
+        position: 'top-right', autoClose: 3000,
       });
 
       // Bersihkan query param setelah menampilkan toast
-      router.replace('/admin/experiences');
+      router.replace('/admin/mentor/experiences');
     }
   }, [searchParams, router]);
   useEffect(() => {
@@ -39,6 +39,7 @@ export default function Page() {
 
     if (typeof window !== 'undefined') {
       loadAssets();
+      setLoading(false);
     }
     setAccessToken(Cookies.get("accessToken"));
   }, []);
@@ -51,11 +52,8 @@ export default function Page() {
     if (accessToken) {
       try {
         const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/experiences`, {
-          method: 'GET',
-          includeCredentials: true,
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
+          method: 'GET', includeCredentials: true, headers: {
+            'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
           },
         });
         const responseBody = await responseFetch.json();
@@ -72,72 +70,98 @@ export default function Page() {
     }
   }
 
-  return (
-    <AdminWrapper>
-      <div>
-        <section className="section">
-          <div className="section-header">
-            <h1>Pengalaman Mentor</h1>
-            <div className="section-header-breadcrumb">
-              <div className="breadcrumb-item active"><a href="#">Admin</a></div>
-              <div className="breadcrumb-item"><a href="#">Mentor</a></div>
-              <div className="breadcrumb-item">Pengalaman</div>
-            </div>
-          </div>
-          <div className="section-body">
+  async function triggerDeleteExperiences() {
 
-            <section className="light">
-              {loading ? (  // Tampilkan loading selama data belum tersedia
-                <Loading/>
-              ) : (
-                allMentorExperience.length > 0 ? (
-                  allMentorExperience.map((mentorExperience, index) => (
-                    <article key={index} className="postcard light blue">
-                      <a className="postcard__img_link" href="#">
-                        <img className="postcard__img"
-                             src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/experience-resources/${mentorExperience.mentorId}/${mentorExperience.experienceResource[0].id}/${mentorExperience.experienceResource[0].imagePath}`}
-                             alt="Image Title"/>
-                      </a>
-                      <div className="postcard__text t-dark">
-                        <h1 className="postcard__title blue"><a href="#">{mentorExperience.positionName}</a></h1>
-                        <div className="postcard__subtitle small">
-                          <time dateTime="2020-05-25 12:00:00">
-                            <i className="fas fa-calendar-alt mr-2"></i>Mon, May 25th 2020
-                          </time>
-                        </div>
-                        <div className="postcard__bar"></div>
-                        <div
-                          className="postcard__preview-txt"
-                          dangerouslySetInnerHTML={{__html: mentorExperience.description}}
-                        ></div>
+  }
+
+  return (loading ? (<Loading/>) : (<AdminWrapper>
+        <div>
+          <section className="section">
+            <div className="section-header">
+              <h1>Pengalaman Mentor</h1>
+              <div className="section-header-breadcrumb">
+                <div className="breadcrumb-item active"><a href="#">Admin</a></div>
+                <div className="breadcrumb-item"><a href="#">Mentor</a></div>
+                <div className="breadcrumb-item">Pengalaman</div>
+              </div>
+            </div>
+            <div className="section-body">
+
+              <section className="light">
+                {loading ? (  // Tampilkan loading selama data belum tersedia
+                  <Loading/>) : (allMentorExperience.length > 0 ? (allMentorExperience.map((mentorExperience, index) => (
+                  <article key={index} className="postcard light blue">
+                    <a className="postcard__img_link" href="#">
+                      <img className="postcard__img"
+                           src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/experience-resources/${mentorExperience.mentorId}/${mentorExperience.experienceResource[0].id}/${mentorExperience.experienceResource[0].imagePath}`}
+                           alt="Image Title"/>
+                    </a>
+                    <div className="postcard__text t-dark">
+                      <h1 className="postcard__title blue"><a href="#">{mentorExperience.positionName}</a></h1>
+                      <div className="postcard__subtitle small">
+                        <time dateTime="2020-05-25 12:00:00">
+                          <i className="fas fa-calendar-alt mr-2"></i>{mentorExperience.updatedAt.substring(0, 10)}
+                        </time>
+                      </div>
+                      <div className="postcard__bar"></div>
+                      <div
+                        className="postcard__preview-txt"
+                        dangerouslySetInnerHTML={{__html: mentorExperience.description}}
+                      ></div>
+                      <div className="d-flex flex-row justify-content-between">
                         <div className="d-flex flex-row" style={{gap: 5 + "px"}}>
                           <button type="button" className="btn btn-primary btn-icon icon-left">
                             <i className="fas fa-tag mr-2"></i>{mentorExperience.companyName}
                           </button>
 
-
-                          <button type="button" className="btn btn-primary btn-icon icon-left">
+                          <button type="button" className="btn btn-info btn-icon icon-left">
                             <i className="fas  fa-clock mr-2"></i>{mentorExperience.employmentType}
                           </button>
 
 
-                          <button type="button" className="btn btn-primary btn-icon icon-left">
+                          <button type="button" className="btn btn-warning btn-icon icon-left">
                             <i
                               className="fas fa-play mr-2"></i>{mentorExperience.startDate.substring(0, 10)} hingga {mentorExperience.endDate.substring(0, 10)}
                           </button>
+                        </div>
+                        <div className="d-flex flex-row" style={{gap: 5 + "px"}}>
+                          <a
+                            href={`${process.env.NEXT_PUBLIC_BASE_URL}/admin/mentor/experiences/update/${mentorExperience.id}`}
+                            className="btn btn-primary btn-icon icon-left text-white">
+                            <i className="fas fa-pen mr-2"></i>Update
+                          </a>
 
+                          <button type="button" className="btn btn-danger btn-icon icon-left"
+                                  onClick={triggerDeleteExperiences}>
+                            <i
+                              className="fas fa-trash mr-2"></i>Hapus
+                          </button>
                         </div>
                       </div>
-                    </article>
-                  ))
-                ) : (
-                  <p>No experiences available.</p>
-                )
-              )}
-            </section>
-          </div>
-        </section>
-      </div>
-    </AdminWrapper>
-  );
+                    </div>
+                  </article>))) : (<div className="col-12 col-md-6 col-sm-12 p-0 mx-auto">
+                  <div className="card">
+                    <div className="card-header">
+                      <h4>Empty Data</h4>
+                    </div>
+                    <div className="card-body">
+                      <div className="empty-state" data-height="400">
+                        <div className="empty-state-icon">
+                          <i className="fas fa-question"></i>
+                        </div>
+                        <h2>We couldn't find any data</h2>
+                        <p className="lead">
+                          Sorry we can't find any data, to get rid of this message, make at least 1 entry.
+                        </p>
+                        <a href="#" className="btn btn-primary mt-4">Create new One</a>
+                        <a href="#" className="mt-4 bb">Need Help?</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>))}
+              </section>
+            </div>
+          </section>
+        </div>
+      </AdminWrapper>));
 }
