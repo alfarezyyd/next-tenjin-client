@@ -61,20 +61,20 @@ export default function AdminSidebar({parsedJwt}) {
               </li>
             </ul>
           </li>
-          <li className={`nav-item ${pathNames[1] === 'educations' ? 'active' : ''}`}>
+          <li className={`nav-item ${pathNames[2] === 'educations' ? 'active' : ''}`}>
             <a href="#" className="nav-link has-dropdown" data-toggle="dropdown">
               <i className="fas fa-university"></i>
               <span>Pendidikan</span>
             </a>
             <ul className="dropdown-menu">
               <li
-                className={`nav-item ${pathNames[1] === 'educations' && pathNames[2] === undefined ? 'active' : ''}`}>
-                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/educations`}>Lihat
+                className={`nav-item ${pathNames[2] === 'educations' && pathNames[3] === undefined ? 'active' : ''}`}>
+                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/educations`}>Lihat
                   Data</a>
               </li>
               <li
-                className={`nav-item ${pathNames[1] === 'educations' && pathNames[2] === "create" ? 'active' : ''}`}>
-                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/educations/create`}>Buat
+                className={`nav-item ${pathNames[2] === 'educations' && pathNames[3] === "create" ? 'active' : ''}`}>
+                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/educations/create`}>Buat
                   Data</a>
               </li>
             </ul>
