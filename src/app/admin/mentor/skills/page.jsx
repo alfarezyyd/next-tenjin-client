@@ -1,14 +1,15 @@
 "use client"
 import AdminWrapper from "@/components/admin/AdminWrapper";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import {Loading} from "@/components/admin/Loading";
-import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {useRouter, useSearchParams} from "next/navigation";
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Page() {
   const buttonColors = ['primary', 'danger', 'warning', 'success', 'dark']
@@ -17,24 +18,38 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [activeId, setActiveId] = useState(null);
+  const [formData, setFormData] = useState({
+    name: '', description: '',
+  });
+  const [errors, setErrors] = useState({});
+  const descriptionRef = useRef(null);
 
   useEffect(() => {
     // Cek jika ada `notify=success` di query param
     if (searchParams.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
-        position: 'top-right', autoClose: 3000,
+        position: 'top-right', autoClose: 10000,
       });
 
       // Bersihkan query param setelah menampilkan toast
-      router.replace('/admin/skills');
+      router.replace('/admin/mentor/skills');
     }
   }, [searchParams, router]);
 
   useEffect(() => {
     async function loadAssets() {
       const $ = (await import('jquery')).default;
+      await import('summernote/dist/summernote-bs4.css');
       await CommonStyle();
+      await import('summernote/dist/summernote-bs4.js');
       await CommonScript();
+      $(descriptionRef.current).on("summernote.change", () => {
+        console.log($(descriptionRef.current).val())
+        setFormData((prevFormData) => ({
+          ...prevFormData, description: ($(descriptionRef.current).val()),
+        }));
+      });
     }
 
     if (typeof window !== 'undefined') {
@@ -48,6 +63,48 @@ export default function Page() {
     fetchMentorSkills();
   }, [accessToken]);
 
+  const handleChange = useCallback((e) => {
+    const {name, value} = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData, [name]: value,
+    }));
+  }, []);
+
+
+  const handleSubmit = useCallback(async (event) => {
+    event.preventDefault();
+
+    const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/skills/${activeId}`, {
+      method: 'PUT', body: JSON.stringify(formData), includeCredentials: true, headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${Cookies.get('accessToken')}`,
+      }
+    });
+
+    const responseBody = await fetchResponse.json();
+
+    if (fetchResponse.ok) {
+      console.log('Data submitted successfully', responseBody);
+      setErrors({});
+      router.push('/admin/mentor/skills?notify=success');
+    } else {
+      console.error('Failed to submit data', responseBody);
+      const errorMessages = {};
+      responseBody.errors.message.forEach((error) => {
+        errorMessages[error.path[0]] = error.message;
+      });
+      setErrors(errorMessages);
+      console.log(errorMessages);
+    }
+  }, [formData]);
+
+  const errorFeedback = useMemo(() => {
+    return {
+      name: errors.name ? <div className="invalid-feedback">{errors.name}</div> : null,
+      description: errors.description ? <small className="text-danger">{errors.description}</small> : null,
+    };
+  }, [errors]);
 
   const fetchMentorSkills = async () => {
     if (accessToken) {
@@ -72,34 +129,95 @@ export default function Page() {
       }
     }
   }
-  return (<AdminWrapper>
-    <section className="section">
-      <div className="section-header">
-        <h1>Kemampuan Mentor</h1>
-        <div className="section-header-breadcrumb">
-          <div className="breadcrumb-item active"><a href="#">Admin</a></div>
-          <div className="breadcrumb-item"><a href="#">Mentor</a></div>
-          <div className="breadcrumb-item">Pendidikan</div>
+
+
+  async function triggerEditForm(mentorSkill) {
+    const $ = (await import('jquery')).default;
+    $(descriptionRef.current).summernote('code', mentorSkill.description);
+    setActiveId(mentorSkill.id);
+    setFormData({
+      name: mentorSkill.name, description: mentorSkill.description,
+    })
+  }
+
+  return (<>
+    {loading ? (<Loading/>) : (<AdminWrapper>
+      <section className="section">
+        <div className="section-header">
+          <h1>Kemampuan Mentor</h1>
+          <div className="section-header-breadcrumb">
+            <div className="breadcrumb-item active"><a href="#">Admin</a></div>
+            <div className="breadcrumb-item"><a href="#">Mentor</a></div>
+            <div className="breadcrumb-item">Pendidikan</div>
+          </div>
         </div>
-      </div>
 
-      <div className="section-body">
-        <section className="hero-section p-1">
-          <div className="card-grid">
-            <div className="col-6 col-md-6 col-sm-12 col-lg-6">
-              <div className="d-flex flex-row flex-wrap" style={{gap: 5 + "px"}}>
-                {loading ? (  // Tampilkan loading selama data belum tersedia
-                  <Loading/>) : (allMentorSkill.length > 0 ? (allMentorSkill.map((mentorSkill, index) => (
+        <div className="section-body">
+          <section className="hero-section">
+            <div className="d-flex flex-row">
+              <div className="col-6 col-md-6 col-sm-12 col-lg-5 pl-0">
+                <div className="d-flex flex-row flex-wrap" style={{gap: 5 + "px"}}>
+                  {loading ? (  // Tampilkan loading selama data belum tersedia
+                    <Loading/>) : (allMentorSkill.length > 0 ? (allMentorSkill.map((mentorSkill, index) => (
 
-                  <button key={`mentorSkill-${mentorSkill.id}`} type="button"
-                          className={`btn btn-${buttonColors[index % buttonColors.length]}`}>
-                    {mentorSkill.name}
-                  </button>))) : (<p>No skills available.</p>))}
+                    <button key={`mentorSkill-${mentorSkill.id}`} type="button" onClick={() => {
+                      triggerEditForm(mentorSkill)
+                    }}
+                            className={`btn btn-${buttonColors[index % buttonColors.length]}`}>
+                      {mentorSkill.name}
+                    </button>))) : (<p>No skills available.</p>))}
+                </div>
+              </div>
+              <div className="col-6 col-md-6 col-sm-12 col-lg-7 pl-0">
+                <div className="card">
+                  <div className="card-header">
+                    <h4>Formulir Menambah Kemampuan Mentor Baru</h4>
+                  </div>
+                  <div className="card-body">
+                    <form onSubmit={handleSubmit}>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="name">
+                          Nama Kemampuan
+                        </label>
+                        <div className="col-sm-12 col-md-7">
+                          <input
+                            type="text"
+                            className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                            name="name"
+                            id="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                          />
+                          {errorFeedback.name}
+                        </div>
+                      </div>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
+                               htmlFor="description">Deskripsi</label>
+                        <div className="col-sm-12 col-md-7">
+                                <textarea ref={descriptionRef}
+                                          className={`summernote-simple ${errors.description ? 'is-invalid' : ''}`}
+                                          name="description" id="description"></textarea>
+                          {errorFeedback.description}
+                        </div>
+                      </div>
+
+                      <div className="form-group row mb-4">
+                        <div className="col-sm-12 col-md-7 offset-md-3">
+                          <button type="submit" className="btn btn-primary">
+                            Submit
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
               </div>
             </div>
-          </div>
-        </section>
-      </div>
-    </section>
-  </AdminWrapper>)
+          </section>
+        </div>
+      </section>
+    </AdminWrapper>)}
+  </>)
 }
