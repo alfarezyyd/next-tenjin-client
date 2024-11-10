@@ -140,6 +140,31 @@ export default function Page() {
     })
   }
 
+  async function triggerDelete() {
+    if (accessToken) {
+      try {
+        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/skills/${activeId}`, {
+          method: 'DELETE', includeCredentials: true, headers: {
+            'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+        const responseBody = await responseFetch.json();
+        if (responseFetch.ok) {
+          setAllMentorSkill((prevAllMentorSkill) => prevAllMentorSkill.filter((skill) => skill.id !== activeId));
+          toast.success('Data submitted successfully!', {
+            position: 'top-right', autoClose: 10000,
+          });
+        } else {
+          console.error('Failed to fetch skill', responseBody);
+        }
+      } catch (error) {
+        console.error('Error fetching experiences:', error);
+      } finally {
+        setLoading(false); // Menghentikan loading ketika data sudah diterima
+      }
+    }
+  }
+
   return (<>
     {loading ? (<Loading/>) : (<AdminWrapper>
       <section className="section">
@@ -204,8 +229,11 @@ export default function Page() {
 
                       <div className="form-group row mb-4">
                         <div className="col-sm-12 col-md-7 offset-md-3">
-                          <button type="submit" className="btn btn-primary">
+                          <button type="submit" className="btn btn-primary mr-2">
                             Submit
+                          </button>
+                          <button type="button" className="btn btn-danger" onClick={triggerDelete}>
+                            Delete
                           </button>
                         </div>
                       </div>
