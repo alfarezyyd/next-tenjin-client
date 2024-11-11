@@ -20,8 +20,7 @@ export default function Page() {
     // Cek jika ada `notify=success` di query param
     if (searchParams.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
-        position: 'top-right',
-        autoClose: 3000,
+        position: 'top-right', autoClose: 3000,
       });
 
       // Bersihkan query param setelah menampilkan toast
@@ -52,11 +51,8 @@ export default function Page() {
     if (accessToken) {
       try {
         const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/mentor`, {
-          method: 'GET',
-          includeCredentials: true,
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
+          method: 'GET', includeCredentials: true, headers: {
+            'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
           },
         });
         const responseBody = await responseFetch.json();
@@ -73,63 +69,93 @@ export default function Page() {
       }
     }
   }
-  return (
-    <AdminWrapper>
-      <section className="section">
-        <div className="section-header">
-          <h1>Pendidikan Mentor</h1>
-          <div className="section-header-breadcrumb">
-            <div className="breadcrumb-item active"><a href="#">Admin</a></div>
-            <div className="breadcrumb-item"><a href="#">Mentor</a></div>
-            <div className="breadcrumb-item">Pendidikan</div>
-          </div>
+
+  async function triggerDeleteAssistant(id) {
+    if (accessToken) {
+      try {
+        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/${id}`, {
+          method: 'DELETE', includeCredentials: true, headers: {
+            'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+        const responseBody = await responseFetch.json();
+        if (responseFetch.ok) {
+          toast.success('Data deleted successfully!', {
+            position: 'top-right', autoClose: 3000,
+          })
+          setAllMentorAssistance(allMentorAssistance.filter(value => value.id !== id));
+          console.log(responseBody.result.data);
+        } else {
+          console.error('Failed to fetch assistance', responseBody);
+        }
+      } catch (error) {
+        console.error('Error fetching experiences:', error);
+      } finally {
+        setLoading(false); // Menghentikan loading ketika data sudah diterima
+      }
+    }
+  }
+
+  useEffect(() => {
+
+  }, [allMentorAssistance])
+
+  return (<AdminWrapper>
+    <section className="section">
+      <div className="section-header">
+        <h1>Pendidikan Mentor</h1>
+        <div className="section-header-breadcrumb">
+          <div className="breadcrumb-item active"><a href="#">Admin</a></div>
+          <div className="breadcrumb-item"><a href="#">Mentor</a></div>
+          <div className="breadcrumb-item">Pendidikan</div>
         </div>
+      </div>
 
-        <div className="section-body">
+      <div className="section-body">
 
-          <h2 className="section-title">Articles</h2>
-          <p className="section-lead">This article component is based on card and flexbox.</p>
-          <div className="row">
-            {loading ? (  // Tampilkan loading selama data belum tersedia
-              <Loading/>
-            ) : (
-              allMentorAssistance.length > 0 ? (
-                allMentorAssistance.map((mentorAssistance) => (
-                  <div key={`mentorAssistance-${mentorAssistance.id}`} className="col-12 col-md-4 col-lg-4">
-                    <article className="article article-style-c">
-                      <div className="article-header">
-                        <div className="article-image" data-background="../assets/img/news/img13.jpg"></div>
-                      </div>
-                      <div className="article-details">
-                        <div className="article-category">
-                          <a href="#">{mentorAssistance.categoryName}</a>
-                          <div className="bullet"></div>
-                          <a href="#">5 Days</a>
-                        </div>
-                        <div className="article-title">
-                          <h2><a href="#">{mentorAssistance.topic}</a></h2>
-                        </div>
-                        <p>{mentorAssistance.description}</p>
-                        <div className="article-user">
-                          <img alt="image" src="../assets/img/avatar/avatar-1.png"/>
-                          <div className="article-user-details">
-                            <div className="user-detail-name">
-                              <a href="#"></a>
-                            </div>
-                            <div className="text-job">Web Developer</div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
+        <h2 className="section-title">Articles</h2>
+        <p className="section-lead">This article component is based on card and flexbox.</p>
+        <div className="row">
+          {loading ? (  // Tampilkan loading selama data belum tersedia
+            <Loading/>) : (allMentorAssistance.length > 0 ? (allMentorAssistance.map((mentorAssistance) => (
+            <div key={`mentorAssistance-${mentorAssistance.id}`} className="col-12 col-md-4 col-lg-4">
+              <article className="article article-style-c">
+                <div className="article-header">
+                  <div className="article-image" data-background="../assets/img/news/img13.jpg"></div>
+                </div>
+                <div className="article-details">
+                  <div className="article-category">
+                    <a href="#">{mentorAssistance.categoryName}</a>
+                    <div className="bullet"></div>
+                    <a href="#">5 Days</a>
                   </div>
-                ))
-              ) : (
-                <p>No assistances available.</p>
-              ))
-            }
-          </div>
+                  <div className="article-title">
+                    <h2><a href="#">{mentorAssistance.topic}</a></h2>
+                  </div>
+                  <p>{mentorAssistance.description}</p>
+                  <div className=" d-flex flex-row">
+                    <div className="article-user">
+                      <img alt="image" src="../assets/img/avatar/avatar-1.png"/>
+                      <div className="article-user-details">
+                        <div className="user-detail-name">
+                          <a href="#"></a>
+                        </div>
+                        <div className="text-job">Web Developer</div>
+                      </div>
+                    </div>
+                    <div className="">
+                      <button className="btn btn-info">Edit</button>
+                      <button className="btn btn-danger mt-1" onClick={() => {
+                        triggerDeleteAssistant(mentorAssistance.id);
+                      }}>Hapus
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>))) : (<p>No assistances available.</p>))}
         </div>
-      </section>
-    </AdminWrapper>
-  )
+      </div>
+    </section>
+  </AdminWrapper>)
 }
