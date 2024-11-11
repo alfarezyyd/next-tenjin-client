@@ -212,11 +212,7 @@ export default function Page() {
       console.log(errorMessages);
     }
   }, [formData]);
-
-  useEffect(() => {
-    console.log(files);
-  }, [files])
-
+  
   const errorFeedback = useMemo(() => ({
     topic: errors.topic ? <div className="invalid-feedback">{errors.topic}</div> : null,
     durationMinutes: errors.durationMinutes ? <div className="invalid-feedback">{errors.durationMinutes}</div> : null,
