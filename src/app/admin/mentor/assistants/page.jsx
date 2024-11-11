@@ -144,7 +144,9 @@ export default function Page() {
                       </div>
                     </div>
                     <div className="">
-                      <button className="btn btn-info">Edit</button>
+                      <a
+                        href={`${process.env.NEXT_PUBLIC_BASE_URL}/admin/mentor/assistants/update/${mentorAssistance.id}`}
+                        className="btn btn-info">Edit</a>
                       <button className="btn btn-danger mt-1" onClick={() => {
                         triggerDeleteAssistant(mentorAssistance.id);
                       }}>Hapus
