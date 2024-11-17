@@ -132,7 +132,10 @@ export default function Page() {
                   <div className="article-title">
                     <h2><a href="#">{mentorAssistance.topic}</a></h2>
                   </div>
-                  <p>{mentorAssistance.description}</p>
+
+                  <p dangerouslySetInnerHTML={{
+                    __html: mentorAssistance.description
+                  }}>{}</p>
                   <div className=" d-flex flex-row">
                     <div className="article-user">
                       <img alt="image" src="../assets/img/avatar/avatar-1.png"/>
