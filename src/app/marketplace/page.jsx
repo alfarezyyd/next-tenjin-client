@@ -53,7 +53,7 @@ const Marketplace = () => {
               <ul className="mt-4 flex items-center justify-between md:mt-0 md:justify-center md:!gap-5 2xl:!gap-12">
                 <li>
                   <a
-                    className="text-base font-medium text-brand-500 hover:text-brand-500 dark:text-white"
+                    className="text-base font-medium text-brand-500 hover:text-brand-500 dark:text-white bg-gray-300/50 p-2 px-3 rounded-3xl"
                     href=" "
                   >
                     Art
