@@ -132,7 +132,8 @@ export default function Page() {
     })
     const responseBody = await fetchResponse.json();
     if (fetchResponse.ok) {
-      router.push('/admin/educations?notify=success'); // Tambahkan query param
+      Cookies.set(responseBody['result']['data']['accessToken'])
+      router.push('/admin/mentors?notify=success'); // Tambahkan query param
     } else {
       setCurrentStep(1);
       const errorMessages = {};
