@@ -7,7 +7,7 @@ import Link from "next/link";
 const NftCard = ({title, author, price, image, mentorId, assistantId, extra, durationMinutes}) => {
   const [heart, setHeart] = useState(true);
   return (
-    <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/mentors/${mentorId}/assistants/${assistantId}`}>
+    <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/mentors/${mentorId}`}>
       <Card
         extra={`flex flex-col w-full h-full !p-4 3xl:p-![18px] bg-white ${extra}`}
       >

@@ -1,5 +1,5 @@
 "use client";
-import {useEffect, useState, useCallback, useMemo, useRef} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
@@ -31,7 +31,7 @@ export default function Page() {
     durationMinutes: '',
     price: '',
     format: 'INDIVIDUAL',
-    capacity: '',
+    capacity: 1,
     languageId: '',
     tagId: [],
   });
@@ -212,7 +212,7 @@ export default function Page() {
       console.log(errorMessages);
     }
   }, [formData]);
-  
+
   const errorFeedback = useMemo(() => ({
     topic: errors.topic ? <div className="invalid-feedback">{errors.topic}</div> : null,
     durationMinutes: errors.durationMinutes ? <div className="invalid-feedback">{errors.durationMinutes}</div> : null,
@@ -328,28 +328,6 @@ export default function Page() {
                       </div>
                     </div>
                     <div className="form-group row mb-4">
-                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
-                             htmlFor="capacity">
-                        Kapasitas
-                      </label>
-                      <div className="col-sm-9 col-md-5 input-group">
-                        <input
-                          type="number"
-                          className={`form-control ${errors.capacity ? 'is-invalid' : ''}`}
-                          name="capacity"
-                          id="capacity"
-                          value={formData.capacity}
-                          onChange={handleChange}
-                        />
-                        <div className="input-group-append">
-                          <div className="input-group-text">
-                            Orang
-                          </div>
-                        </div>
-                        {errorFeedback.capacity}
-                      </div>
-                    </div>
-                    <div className="form-group row mb-4">
                       <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="format">
                         Format Asistensi
                       </label>
@@ -363,6 +341,30 @@ export default function Page() {
                         </select>
                       </div>
                     </div>
+                    {formData.format !== "INDIVIDUAL" &&
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
+                               htmlFor="capacity">
+                          Kapasitas
+                        </label>
+                        <div className="col-sm-9 col-md-5 input-group">
+                          <input
+                            type="number"
+                            className={`form-control ${errors.capacity ? 'is-invalid' : ''}`}
+                            name="capacity"
+                            id="capacity"
+                            value={formData.capacity}
+                            onChange={handleChange}
+                          />
+                          <div className="input-group-append">
+                            <div className="input-group-text">
+                              Orang
+                            </div>
+                          </div>
+                          {errorFeedback.capacity}
+                        </div>
+                      </div>
+                    }
                     <div className="form-group row mb-4">
                       <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="tags">
                         Tag

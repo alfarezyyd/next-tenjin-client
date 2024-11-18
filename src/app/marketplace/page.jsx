@@ -2,15 +2,12 @@
 import "../globals.css"
 import Banner from "./components/Banner";
 import NFt4 from "@/../public/assets/img/nfts/Nft1.png";
-import NFt5 from "../../../public/assets/img/nfts/Nft5.png";
-import NFt6 from "../../../public/assets/img/nfts/Nft6.png";
 import avatar1 from "../../../public/assets/img/avatars/avatar1.png";
 import avatar2 from "../../../public/assets/img/avatars/avatar2.png";
 import avatar3 from "../../../public/assets/img/avatars/avatar3.png";
 
 import tableDataTopCreators from "./variables/tableDataTopCreators.json";
 import {tableColumnsTopCreators} from "./variables/tableColumnsTopCreators";
-import HistoryCard from "./components/HistoryCard";
 import TopCreatorTable from "./components/TableTopCreators";
 import NftCard from "@/components/card/NftCard";
 import LandingWrapper from "@/components/landing/LandingWrapper";
@@ -91,7 +88,7 @@ const Marketplace = () => {
               {assistants.length > 0 ?
                 assistants.map((assistant, index) => (
                   <NftCard
-                    key={`assistants-${index}`}
+                    key={`assistants-tre${index}`}
                     title={assistant.topic}
                     author={assistant.mentorName}
                     price={assistant.price}
@@ -106,19 +103,18 @@ const Marketplace = () => {
             </div>
 
             {assistants.length > 0 ? (
-
               assistants.map((assistant, index) => (
-                <>
+                <div key={`assistance-parent${index}`}>
                   {/* Recenlty Added setion */}
                   <div className="mb-5 mt-5 flex items-center justify-between px-[26px]">
                     <h4 className="text-2xl font-bold text-navy-700 dark:text-white">
                       {assistant.name}
                     </h4>
                   </div>
-
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
                     {assistant.Assistance.map((assistant, index) => (
                       <NftCard
+                        key={`assistants-${index}`}
                         bidders={[avatar1, avatar2, avatar3]}
                         title={assistant.topic}
                         author={assistant.mentor.user.name}
@@ -128,9 +124,8 @@ const Marketplace = () => {
                         image={NFt4}
                       />
                     ))}
-
                   </div>
-                </>
+                </div>
               ))
 
             ) : <Loading/>}
@@ -142,7 +137,7 @@ const Marketplace = () => {
               tableData={tableDataTopCreators}
               columnsData={tableColumnsTopCreators}
             />
-            <HistoryCard/>
+            {/*<HistoryCard/>*/}
           </div>
         </div>
       </div>
