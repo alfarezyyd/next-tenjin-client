@@ -54,12 +54,11 @@ export default function Page({params}) {
   async function initiateCheckout() {
     localStorage.setItem("checkoutItem", "");
     localStorage.setItem("checkoutItem", JSON.stringify({
-      topic: assistanceData['topic'],
-      assistantId: assistanceData['id'],
-      mentorId: assistanceData['mentorId'],
-      price: assistanceData['price'],
-      sessionTimestamp: "2024-10-10",
-      minutesDurations: 29,
+      topic: activeCategory['topic'],
+      assistantId: activeCategory['id'],
+      mentorId: activeCategory['mentorId'],
+      price: activeCategory['price'],
+      minutesDurations: activeCategory['durationMinutes'],
       note: "Testing",
     }));
     push(`${process.env.NEXT_PUBLIC_BASE_URL}/checkout`)

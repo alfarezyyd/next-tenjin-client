@@ -390,3 +390,7 @@ html {
 .manage > div:nth-child(2) h3 {
   color: #747474;
 }
+
+.fc-toolbar-title {
+  @apply text-sm lg:text-xs font-semibold
+}

@@ -5,6 +5,8 @@ import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {CommonUtil} from "@/common/utils/common-util";
 import {Loading} from "@/components/admin/Loading";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 
 
 export default function Page() {
@@ -88,9 +90,11 @@ export default function Page() {
   return (<>
     {loading ? <Loading/> : (<LandingWrapper>
       {loggedUser !== undefined ? <>
+
         <div
           className="flex flex-col items-center border-b bg-white py-4 sm:flex-row sm:px-10 lg:px-20 xl:px-32">
           <a href="#" className="text-2xl font-bold text-gray-800">Payment Checkout</a>
+
           <div className="mt-4 py-2 text-xs sm:mt-0 sm:ml-auto sm:text-base">
             <div className="relative">
               <ul className="relative flex w-full items-center justify-between space-x-2 sm:space-x-4">
@@ -133,6 +137,7 @@ export default function Page() {
             </div>
           </div>
         </div>
+
         <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
           <div className="px-4 pt-8">
             <p className="text-xl font-medium">Order Summary</p>
@@ -155,6 +160,26 @@ export default function Page() {
                   <button onClick={handleIncrement}>+</button>
                 </div>
               </div>
+            </div>
+            <div className="mt-2">
+              <FullCalendar
+                plugins={[dayGridPlugin]}
+                initialView="dayGridMonth"
+                height={400}
+                headerToolbar={{
+                  left: 'prev,next',
+                  center: 'title',
+                  right: 'today,dayGridMonth'
+                }}
+                buttonText={{
+                  today: 'Today',
+                  month: 'Month',
+                  week: 'Week',
+                  day: 'Day',
+                  list: 'list'
+                }}
+                editable={true}
+              />
             </div>
           </div>
           <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
@@ -225,6 +250,7 @@ export default function Page() {
               Order
             </button>
           </div>
+
         </div>
       </> : (<Loading/>)}
     </LandingWrapper>)}
