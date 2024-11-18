@@ -1,12 +1,24 @@
 "use client"
 import LandingWrapper from "@/components/landing/LandingWrapper";
-import {Image} from "@nextui-org/react"
+import {
+  Button,
+  Image,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  TimeInput,
+  useDisclosure
+} from "@nextui-org/react"
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {CommonUtil} from "@/common/utils/common-util";
 import {Loading} from "@/components/admin/Loading";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import timeGridPlugin from '@fullcalendar/timegrid' // a plugin!
+import interactionPlugin from '@fullcalendar/interaction'
 
 
 export default function Page() {
@@ -15,6 +27,10 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [checkoutItem, setCheckoutItem] = useState();
   const [count, setCount] = useState(1);
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedInfoDate, setSelectedInfoDate] = useState(null);
+
   const [totalPrice, setTotalPrice] = useState(0);
   const handleIncrement = () => {
     setCount(count + 1);
@@ -83,6 +99,26 @@ export default function Page() {
         console.error('Failed to submit data', responseBody);
       }
     }
+  }
+
+  async function handleDateSelect() {
+    console.log(selectedTime)
+    console.log(selectedInfoDate)
+// Gabungkan tanggal dan waktu menjadi ISO string
+    const dateNow = `${selectedInfoDate.startStr}T${String(selectedTime.hour).padStart(2, '0')}:${String(selectedTime.minute).padStart(2, '0')}:00`
+    console.log(selectedTime)
+
+    const eventStart = new Date(dateNow);
+
+// Tambahkan 20 menit
+    eventStart.setMinutes(eventStart.getMinutes() + (checkoutItem['minutesDurations'] * count));
+// Konversikan kembali ke format ISO untuk FullCalendar
+    const eventEnd = eventStart.toISOString(); // Full ISO format
+    const formattedEnd = eventEnd.slice(0, 19); // Ambil hingga `YYYY-MM-DDTHH:mm:ss`
+
+    selectedInfoDate.view.calendar.addEvent({
+      title: 'Testing', start: dateNow, end: formattedEnd, allDay: false
+    })
   }
 
 // Then somewhere else on your React component, `window.snap` global object will be available to use
@@ -163,22 +199,22 @@ export default function Page() {
             </div>
             <div className="mt-2">
               <FullCalendar
-                plugins={[dayGridPlugin]}
-                initialView="dayGridMonth"
+                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                initialView="timeGridDay"
                 height={400}
                 headerToolbar={{
-                  left: 'prev,next',
-                  center: 'title',
-                  right: 'today,dayGridMonth'
+                  left: '', center: 'title', right: 'today,prev,next,dayGridMonth,timeGridWeek,timeGridDay'
                 }}
                 buttonText={{
-                  today: 'Today',
-                  month: 'Month',
-                  week: 'Week',
-                  day: 'Day',
-                  list: 'list'
+                  today: 'Today', month: 'Month', week: 'Week', day: 'Day', list: 'list'
+                }}
+                select={(e) => {
+                  onOpenChange()
+                  setSelectedInfoDate(e)
                 }}
                 editable={true}
+                selectable={true}
+                displayEventEnd={true}
               />
             </div>
           </div>
@@ -252,6 +288,34 @@ export default function Page() {
           </div>
 
         </div>
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          placement="top-center"
+        >
+          <ModalContent>
+            {(onClose) => (<>
+              <ModalHeader className="flex flex-col gap-1">Pilih Waktu</ModalHeader>
+              <ModalBody>
+                <TimeInput
+                  isRequired
+                  hourCycle={24}
+                  label="Event Time"
+                  value={selectedTime} // Set nilai dari state
+                  onChange={(e) => setSelectedTime(e)} // Tangani perubahan
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="flat" onPress={onClose}>
+                  Close
+                </Button>
+                <Button color="primary" onClick={handleDateSelect}>
+                  Submit
+                </Button>
+              </ModalFooter>
+            </>)}
+          </ModalContent>
+        </Modal>
       </> : (<Loading/>)}
     </LandingWrapper>)}
   </>)
