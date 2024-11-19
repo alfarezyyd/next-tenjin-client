@@ -32,7 +32,6 @@ export default function Page() {
       const $ = (await import('jquery')).default;
 
       $(descriptionRef.current).on("summernote.change", () => {
-        console.log($(descriptionRef.current).val())
         setFormData((prevFormData) => ({
           ...prevFormData,
           description: ($(descriptionRef.current).val()),
@@ -73,7 +72,6 @@ export default function Page() {
     const responseBody = await fetchResponse.json();
 
     if (fetchResponse.ok) {
-      console.log('Data submitted successfully', responseBody);
       setErrors({});
       router.push('/admin/mentor/skills?notify=success');
     } else {
@@ -83,7 +81,6 @@ export default function Page() {
         errorMessages[error.path[0]] = error.message;
       });
       setErrors(errorMessages);
-      console.log(errorMessages);
     }
   }, [formData]);
 

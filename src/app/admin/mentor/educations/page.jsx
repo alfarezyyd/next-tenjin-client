@@ -38,7 +38,6 @@ export default function Page() {
     if (typeof window !== 'undefined') {
       loadAssets();
     }
-    console.log(Cookies.get("accessToken"))
     setAccessToken(Cookies.get("accessToken"));
   }, []);
 

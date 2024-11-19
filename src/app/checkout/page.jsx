@@ -84,7 +84,6 @@ export default function Page() {
 
   async function triggerPayment() {
     if (accessToken) {
-      console.log(selectedTime)
       if (selectedTime === null) {
         toast.error('🦄 Gagal! Anda harus memilih waktu terlebih dahulu!', {
           position: "top-center",
@@ -100,7 +99,6 @@ export default function Page() {
         return;
       }
       checkoutItem.sessionCount = count;
-      console.log(checkoutItem)
       const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/orders`, {
         method: 'POST', includeCredentials: true, headers: {
           'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`

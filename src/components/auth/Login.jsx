@@ -47,7 +47,6 @@ export default function Login() {
   }, [searchParams, router]);
 
   const handleGoogleAuthentication = async () => {
-    console.log("Ada");
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}authentication/google`, {
         method: 'GET', headers: {
@@ -75,7 +74,6 @@ export default function Login() {
         }
       }
     } catch (e) {
-      console.log(e)
     }
   }
 
@@ -109,7 +107,6 @@ export default function Login() {
         }
       }
     } catch (e) {
-      console.log(e)
     }
 
   };

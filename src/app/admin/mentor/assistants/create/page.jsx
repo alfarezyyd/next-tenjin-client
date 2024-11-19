@@ -69,7 +69,6 @@ export default function Page() {
         }));
       });
       $(languageIdSelectRef.current).on("change", () => {
-        console.log($(languageIdSelectRef.current).val());
         setFormData(prev => ({
           ...prev, languageId: $(languageIdSelectRef.current).val()
         }));
@@ -80,7 +79,6 @@ export default function Page() {
         }));
       })
       $(descriptionRef.current).on("summernote.change", () => {
-        console.log($(descriptionRef.current).val());
         setFormData(prev => ({
           ...prev, description: $(descriptionRef.current).val()
         }));
@@ -187,7 +185,6 @@ export default function Page() {
     formDataPayload.append('categoryId', selectedCategoryId);
 
     formDataPayload.forEach((value, key) => {
-      console.log(key, value);
     })
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
@@ -199,7 +196,6 @@ export default function Page() {
     const responseBody = await response.json();
 
     if (response.ok) {
-      console.log('Data submitted successfully', responseBody);
       setErrors({});
       router.push("/admin/mentor/assistants?notify=success")
     } else {
@@ -209,7 +205,6 @@ export default function Page() {
         errorMessages[error.path[0]] = error.message;
       });
       setErrors(errorMessages);
-      console.log(errorMessages);
     }
   }, [formData]);
 

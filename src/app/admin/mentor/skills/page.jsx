@@ -45,7 +45,6 @@ export default function Page() {
       await import('summernote/dist/summernote-bs4.js');
       await CommonScript();
       $(descriptionRef.current).on("summernote.change", () => {
-        console.log($(descriptionRef.current).val())
         setFormData((prevFormData) => ({
           ...prevFormData, description: ($(descriptionRef.current).val()),
         }));
@@ -55,7 +54,6 @@ export default function Page() {
     if (typeof window !== 'undefined') {
       loadAssets();
     }
-    console.log(Cookies.get("accessToken"))
     setAccessToken(Cookies.get("accessToken"));
   }, []);
 
@@ -85,7 +83,6 @@ export default function Page() {
     const responseBody = await fetchResponse.json();
 
     if (fetchResponse.ok) {
-      console.log('Data submitted successfully', responseBody);
       setErrors({});
       router.push('/admin/mentor/skills?notify=success');
     } else {
@@ -95,7 +92,6 @@ export default function Page() {
         errorMessages[error.path[0]] = error.message;
       });
       setErrors(errorMessages);
-      console.log(errorMessages);
     }
   }, [formData]);
 
