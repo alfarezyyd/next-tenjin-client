@@ -21,12 +21,9 @@ export function middleware(request) {
   }
 
   // Lainnya
-  if (pathname.startsWith('/admin')) {
-    if (!token || CommonUtil.isTokenExpired(token)) {
-      const loginUrl = new URL('/auth/login', request.url);
-      return NextResponse.redirect(loginUrl);
-    }
-    return NextResponse.next();
+  if (!token || CommonUtil.isTokenExpired(token)) {
+    const loginUrl = new URL('/auth/login', request.url);
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();
@@ -34,5 +31,5 @@ export function middleware(request) {
 
 // Middleware config
 export const config = {
-  matcher: ['/admin/:path*', '/admin/mentor/:path*'],
+  matcher: ['/admin/:path*', '/admin/mentor/:path*', '/'],
 };
