@@ -53,10 +53,13 @@ export default function Page({params}) {
 
   async function initiateCheckout() {
     localStorage.setItem("checkoutItem", "");
+    console.log(activeCategory)
     localStorage.setItem("checkoutItem", JSON.stringify({
       topic: activeCategory['topic'],
       assistantId: activeCategory['id'],
       mentorId: activeCategory['mentorId'],
+      categoryName: activeCategory['category']['name'],
+      durationMinutes: activeCategory['durationMinutes'],
       price: activeCategory['price'],
       minutesDurations: activeCategory['durationMinutes'],
       note: "Testing",
