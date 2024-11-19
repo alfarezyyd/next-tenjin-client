@@ -13,12 +13,16 @@ import {
 } from "@nextui-org/react"
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
+import 'react-toastify/dist/ReactToastify.css';
+
 import {CommonUtil} from "@/common/utils/common-util";
 import {Loading} from "@/components/admin/Loading";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import timeGridPlugin from '@fullcalendar/timegrid' // a plugin!
 import interactionPlugin from '@fullcalendar/interaction'
+import {Time} from "@internationalized/date";
+import {Bounce, toast} from "react-toastify";
 
 
 export default function Page() {
@@ -80,7 +84,23 @@ export default function Page() {
 
   async function triggerPayment() {
     if (accessToken) {
+      console.log(selectedTime)
+      if (selectedTime === null) {
+        toast.error('🦄 Gagal! Anda harus memilih waktu terlebih dahulu!', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        return;
+      }
       checkoutItem.sessionCount = count;
+      console.log(checkoutItem)
       const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/orders`, {
         method: 'POST', includeCredentials: true, headers: {
           'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`
@@ -105,20 +125,24 @@ export default function Page() {
     console.log(selectedTime)
     console.log(selectedInfoDate)
 // Gabungkan tanggal dan waktu menjadi ISO string
-    const dateNow = `${selectedInfoDate.startStr}T${String(selectedTime.hour).padStart(2, '0')}:${String(selectedTime.minute).padStart(2, '0')}:00`
-    console.log(selectedTime)
+    const dateNow = `${selectedInfoDate.startStr.substring(0, 10)}T${String(selectedTime.hour).padStart(2, '0')}:${String(selectedTime.minute).padStart(2, '0')}:00`
+
 
     const eventStart = new Date(dateNow);
+    setCheckoutItem(prevState => ({
+      ...prevState, sessionStartTimestamp: eventStart
+    }))
+    const eventEnd = new Date(eventStart); // Salinan eventStart
+    eventEnd.setMinutes(eventEnd.getMinutes() + (checkoutItem['minutesDurations'] * count));
 
-// Tambahkan 20 menit
-    eventStart.setMinutes(eventStart.getMinutes() + (checkoutItem['minutesDurations'] * count));
-// Konversikan kembali ke format ISO untuk FullCalendar
-    const eventEnd = eventStart.toISOString(); // Full ISO format
-    const formattedEnd = eventEnd.slice(0, 19); // Ambil hingga `YYYY-MM-DDTHH:mm:ss`
+    setCheckoutItem(prevState => ({
+      ...prevState, sessionEndTimestamp: eventEnd
+    }))
 
     selectedInfoDate.view.calendar.addEvent({
-      title: 'Testing', start: dateNow, end: formattedEnd, allDay: false
+      title: 'Testing', start: dateNow, end: eventEnd, allDay: false
     })
+    onOpenChange()
   }
 
 // Then somewhere else on your React component, `window.snap` global object will be available to use
@@ -186,8 +210,9 @@ export default function Page() {
                          alt=""/>
                   <div className="flex w-full flex-col px-4 py-4">
                     <span className="font-semibold">{checkoutItem['topic']}</span>
-                    <span className="float-right text-gray-400">42EU - 8.5US</span>
-                    <p className="text-lg font-bold">$138.99</p>
+                    <span
+                      className="float-right text-gray-400">{checkoutItem.categoryName} - {checkoutItem.durationMinutes} Menit</span>
+                    <p className="text-lg font-bold">Rp. {checkoutItem.price}</p>
                   </div>
                 </div>
                 <div className="flex flex-row justify-center items-center gap-4 text-xl">
@@ -203,19 +228,27 @@ export default function Page() {
                 initialView="timeGridDay"
                 height={400}
                 headerToolbar={{
-                  left: '', center: 'title', right: 'today,prev,next,dayGridMonth,timeGridWeek,timeGridDay'
+                  left: '', center: 'title', right: 'today,prev,next,timeGridWeek,timeGridDay'
                 }}
                 buttonText={{
-                  today: 'Today', month: 'Month', week: 'Week', day: 'Day', list: 'list'
+                  today: 'Today', week: 'Week', day: 'Day', list: 'list'
                 }}
                 select={(e) => {
                   onOpenChange()
                   setSelectedInfoDate(e)
+                  const dateObj = new Date(e.startStr);
+                  const hours = dateObj.getHours().toString().padStart(2, "0");
+                  const minutes = dateObj.getMinutes().toString().padStart(2, "0");
+                  setSelectedTime(new Time(Number(hours), Number(minutes)))
                 }}
                 editable={true}
                 selectable={true}
                 displayEventEnd={true}
-              />
+                slotLabelFormat={{
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false, // Pastikan format 24 jam
+                }}/>
             </div>
           </div>
           <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
@@ -253,12 +286,13 @@ export default function Page() {
               <div className="flex flex-col sm:flex-row">
                 <div className="relative flex-shrink-0 sm:w-7/12">
                   <input type="text" id="billing-address" name="billing-address" readOnly
-                         value={`${loggedUser.telephone}`}
+                         value={`${loggedUser.telephone ?? 'Tidak Ada'} `}
                          className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                          placeholder="Street Address"/>
-                  <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                  <div
+                    className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3 bg-zinc-200">
                     <img className="h-4 w-4 object-contain"
-                         src="https://flagpack.xyz/_nuxt/4c829b6c0131de7162790d2f897a90fd.svg" alt=""/>
+                         src="https://flagpack.xyz/_nuxt/dae2e14a2f5914070d202ecf2d0f3a5c.svg" alt=""/>
                   </div>
                 </div>
               </div>
