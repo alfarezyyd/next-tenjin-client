@@ -21,7 +21,7 @@ export default function LandingWrapper({children}) {
       <div className="relative z-50">
         <button
           onClick={toggleChatbot}
-          className="fixed bottom-4 right-4 inline-flex items-center justify-center text-sm font-medium disabled:pointer-events-none disabled:opacity-50 border rounded-full w-16 h-16 bg-black hover:bg-gray-700 cursor-pointer border-gray-200  normal-case leading-5 hover:text-gray-900"
+          className="fixed bottom-4 right-4  inline-flex items-center justify-center text-sm font-medium disabled:pointer-events-none disabled:opacity-50 border rounded-full w-16 h-16 bg-black hover:bg-gray-700 cursor-pointer border-gray-200  normal-case leading-5 hover:text-gray-900"
           type="button"
           aria-haspopup="dialog"
           aria-expanded={isOpen ? "true" : "false"}
@@ -46,12 +46,12 @@ export default function LandingWrapper({children}) {
         </button>
 
         <div
-          className={`fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4 bg-white p-6 rounded-lg border border-[#e5e7eb] w-6/12 h-fit transform transition-all duration-300 ease-in-out ${isOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0 pointer-events-none"}`}
+          className={`fixed h-4/5 bottom-[calc(4rem+1.5rem)]  right-0 mr-4 bg-white p-6 rounded-lg border border-[#e5e7eb] w-6/12  transform transition-all duration-300 ease-in-out ${isOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0 pointer-events-none"}`}
           style={{
             boxShadow: "0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgba(0, 0, 0, 0.05)",
           }}
         >
-          <div className="flex flex-row">
+          <div className="flex flex-row ">
             <div
               className="flex flex-col justify-center antialiased bg-gray-50 text-gray-600 h-full -ml-6 -mt-6 -mb-6 mr-4 w-full lg:w-5/12 rounded-lg">
               <div className="relative max-w-[340px] mx-auto bg-white shadow-lg rounded-xl">
