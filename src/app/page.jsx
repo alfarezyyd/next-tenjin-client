@@ -26,7 +26,6 @@ export default function Page() {
         <Digital/>
         <Beliefs/>
         <Wework/>
-        <Ourteam/>
         <Manage/>
         <FAQ/>
         <Testimonials/>
