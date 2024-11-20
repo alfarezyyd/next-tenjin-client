@@ -31,5 +31,5 @@ export function middleware(request) {
 
 // Middleware config
 export const config = {
-  matcher: ['/admin/:path*', '/admin/mentor/:path*', '/'],
+  matcher: ['/admin/:path*', '/admin/mentor/:path*', '/checkout'],
 };
