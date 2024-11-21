@@ -28,7 +28,7 @@ export default function Page({}) {
   const {push} = useRouter();
   const [loading, setLoading] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
-  const {isChatVisible, toggleChat} = useContext(LandingContext);
+  const {isChatVisible, toggleChat, chatData, setChatData} = useContext(LandingContext);
 
   const list = [{
     title: "Orange", img: "/images/articles/article.png", price: "$5.50",
@@ -149,7 +149,7 @@ export default function Page({}) {
                   <div className="inline-flex gap-2">
                     {mentorData['MentorResources']?.length > 0 && mentorData['MentorResources']?.map((item, index) => (
                       <Card
-                        key={index}
+                        key={`assistant-${index}`}
                         shadow="sm"
                         isPressable
                         onPress={() => console.log("item pressed")}
@@ -244,7 +244,15 @@ export default function Page({}) {
                                   className="w-48 h-16 disabled">
                             <span className="font-bold text-2xl">Order</span>
                           </Button>
-                          <Button variant="solid" size="lg" radius="full" onClick={toggleChat}
+                          <Button variant="solid" size="lg" radius="full" onClick={() => {
+                            toggleChat()
+                            setChatData((prevChatData) => {
+                              return [...prevChatData, {
+                                name: mentorData.user.name,
+                                uniqueId: mentorData.user.uniqueId,
+                              }]
+                            })
+                          }}
                                   className="w-48 h-16 bg-gradient-to-r from-teal-400 to-blue-500 hover:from-pink-500 hover:to-orange-500 ">
                             <div className="flex flex-row gap-4 font-bold text-3xl text-white items-center">
                               <PiHandWavingFill/>

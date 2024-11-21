@@ -1,10 +1,17 @@
 import {io} from "socket.io-client";
 
-const URL = "http://localhost:3001/chats";
-const socket = io(URL, {
-  autoConnect: false, extraHeaders: {
-    'email': 'saranshinamallecath@gmail.com', 'user-unique-id': '5c585d9b-4dd1-4e74-a787-c0b681abd74c'
-  }
-});
-socket.connect()
-export default socket;
+const URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}chats`;
+
+let socket; // Menyimpan instance socket
+
+export const initializeSocket = (email, userUniqueId) => {
+  socket = io(URL, {
+    autoConnect: false, extraHeaders: {
+      email, "user-unique-id": userUniqueId,
+    },
+  });
+  socket.connect(); // Hubungkan socket
+  return socket;
+};
+
+export const getSocket = () => socket; // Untuk mengakses instance socket yang sudah dibuat
