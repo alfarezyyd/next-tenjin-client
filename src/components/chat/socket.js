@@ -11,6 +11,7 @@ export const initializeSocket = (email, userUniqueId) => {
     },
   });
   socket.connect(); // Hubungkan socket
+
   return socket;
 };
 

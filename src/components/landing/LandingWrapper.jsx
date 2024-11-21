@@ -1,6 +1,6 @@
 import Footer from "./Footer";
 import Navbar from "./Navbar";
-import {Divider, Image, NextUIProvider} from "@nextui-org/react";
+import {Divider, Image, Input, NextUIProvider} from "@nextui-org/react";
 import Insta from "@/components/landing/Insta";
 import {ToastContainer} from "react-toastify";
 import {useContext, useEffect, useState} from "react";
@@ -16,6 +16,7 @@ export default function LandingWrapper({children}) {
   const {isChatVisible, toggleChat, chatData, setChatData} = useContext(LandingContext);
   const [socket, setSocket] = useState();
   const [activeChat, setActiveChat] = useState();
+  const [message, setMessage] = useState();
   useEffect(() => {
     setAccessToken(Cookies.get("accessToken"));
   }, []);
@@ -23,6 +24,7 @@ export default function LandingWrapper({children}) {
   useEffect(() => {
     if (accessToken) {
       setDecodedAccessToken(CommonUtil.parseJwt(accessToken));
+      console.log(CommonUtil.parseJwt(accessToken));
     }
   }, [accessToken]);
 
@@ -35,22 +37,19 @@ export default function LandingWrapper({children}) {
   useEffect(() => {
     if (socket && decodedAccessToken) {
       socket.on("onlineUsers", (onlineUser) => {
-        console.log("onlineUser", onlineUser);
         setChatData((prevChatData) => {
-          const updatedChatData = [...prevChatData]; // Salin data lama
-
+          const updatedChatData = {...prevChatData}; // Salin data lama (spread operator untuk objek)
           onlineUser.forEach((onlineUserElement) => {
             // Hindari duplikasi dan tambahkan hanya jika berbeda
-            if (onlineUserElement.userUniqueId !== decodedAccessToken.uniqueId && !updatedChatData.some((chat) => chat.uniqueId !== onlineUserElement.userUniqueId)) {
-              updatedChatData.push({
+            if (onlineUserElement.userUniqueId !== decodedAccessToken.uniqueId && !updatedChatData[onlineUserElement.userUniqueId]) {
+              updatedChatData[onlineUserElement.userUniqueId] = {
                 name: onlineUserElement.name,
                 uniqueId: onlineUserElement.userUniqueId,
                 userId: onlineUserElement.userId,
                 messages: onlineUserElement.messages,
-              });
+              };
             }
           });
-
           return updatedChatData; // Kembalikan array yang diperbarui
         });
       });
@@ -58,18 +57,61 @@ export default function LandingWrapper({children}) {
   }, [socket, decodedAccessToken]);
 
   useEffect(() => {
-    console.log(chatData)
-  }, [chatData]);
+    if (socket) {
+      // Pastikan event listener sudah ada sebelum mengirim atau menerima pesan
+      socket.on("privateMessage", (message) => {
+        console.log("Pesan diterima:", message);
+
+        // Update chatData secara dinamis
+        setChatData((prevChatData) => {
+          const updatedChatData = {...prevChatData}; // Salin data sebelumnya
+
+          // Periksa apakah pengguna dengan `destinationUserUniqueId` ada di data
+          if (updatedChatData[message.destinationUserUniqueId]) {
+            // Tambahkan pesan baru ke array `messages`
+            updatedChatData[message.destinationUserUniqueId].messages = [...(updatedChatData[message.destinationUserUniqueId].messages || []), // Pesan lama jika ada
+              {
+                isSender: message.message.isSender,
+                message: message.message.message,
+                timestamp: message.message.timestamp,
+                status: message.message.status,
+              },];
+          } else {
+            // Jika pengguna tidak ada, buat entri baru untuk pengguna tersebut
+            updatedChatData[message.destinationUserUniqueId] = {
+              name: message.originUserName,
+              uniqueId: message.destinationUserUniqueId,
+              userId: message.userId,
+              messages: [{
+                isSender: message.message.isSender,
+                message: message.message.message,
+                timestamp: message.message.timestamp,
+                status: message.message.status,
+              },],
+            };
+          }
+
+          return updatedChatData; // Kembalikan data yang diperbarui
+        });
+      });
+
+      // Cleanup listener saat komponen unmount
+      return () => socket.off("privateMessage");
+    }
+  }, [socket]);
+
 
   const triggerSendMessage = async () => {
     console.log(message)
     if (socket) {
-      socket.emit("privateMessage", message);
+      socket.emit("privateMessage", {
+        "type": "privateMessage",
+        "message": message, "destinationUserUniqueId": activeChat.destinationUserUniqueId
+      });
     }
   };
 
   async function handleActiveChat(chatData) {
-    console.log(chatData);
     setActiveChat({
       name: chatData.name,
       messages: chatData.messages,
@@ -120,18 +162,17 @@ export default function LandingWrapper({children}) {
                 </header>
                 <div className="space-y-2">
                   <h3 className="text-sm font-semibold text-gray-400 uppercase">Chats</h3>
-                  {chatData?.length > 0 && chatData.map((chat) => {
+                  {chatData && Object.values(chatData).length > 0 && Object.values(chatData).map((chat) => {
                     return (<button key={chat.userUniqueId} onClick={() => {
                       handleActiveChat(chat)
-                    }}
-                                    className="w-full flex items-center p-2 rounded-md hover:bg-gray-100 transition">
+                    }} className="w-full flex items-center p-2 rounded-md hover:bg-gray-100 transition">
                       <Image
                         className="w-8 h-8 rounded-full mr-3"
                         src={`https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-32-01_pfck4u.jpg`}
                         alt={chat.name}
                       />
                       <div>
-                        <h4 className="text-sm font-semibold text-gray-800">{activeChat?.name}</h4>
+                        <h4 className="text-sm font-semibold text-gray-800">{chat.name}</h4>
                         <p className="text-xs text-gray-500">Last chat · 2hrs ago</p>
                       </div>
                     </button>)
@@ -152,12 +193,13 @@ export default function LandingWrapper({children}) {
                               <span
                                 className="text-sm font-semibold text-gray-900 dark:text-white">{activeChat.name}</span>
                           <span className="text-sm font-semibold text-black">-</span>
-                          <span className="text-sm font-normal text-gray-500 dark:text-gray-400">11:46</span>
+                          <span
+                            className="text-sm font-normal text-gray-500 dark:text-gray-400">{chat.timestamp.substring(11, 16)}</span>
                         </div>
                         <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">
                           {chat.message}
                         </p>
-                        <span className="text-sm font-normal text-gray-500 dark:text-gray-400">Delivered</span>
+                        <span className="text-sm font-normal text-gray-500 dark:text-gray-400">{chat.status}</span>
                       </div>
                       <Image className="w-9 h-8 rounded-full"
                              src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-48-01_nugblk.jpg"
@@ -183,10 +225,12 @@ export default function LandingWrapper({children}) {
                   })}
                 </div>
                 <form className="flex items-center space-x-2 mt-4">
-                  <input
+                  <Input
                     type="text"
                     placeholder="Type your message"
-                    className="flex-grow px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gray-500 focus:outline-none"
+                    onChange={(e) => {
+                      setMessage(e.target.value)
+                    }}
                   />
                   <button onClick={triggerSendMessage} type="button"
                           className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800">

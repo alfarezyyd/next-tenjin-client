@@ -15,7 +15,7 @@ import {useEffect, useState} from "react";
 import {Loading} from "@/components/admin/Loading";
 
 const Marketplace = () => {
-  const [assistants, setAssistants] = useState([]);
+  const [assistants, setAssistants] = useState();
   useEffect(() => {
     fetchAllAssistants()
   }, []);
@@ -85,7 +85,7 @@ const Marketplace = () => {
 
             {/* NFTs trending card */}
             <div className="z-20 grid grid-cols-1 gap-5 md:grid-cols-3">
-              {assistants.length > 0 ?
+              {assistants && assistants.length > 0 ?
                 assistants.map((assistant, index) => (
                   <NftCard
                     key={`assistants-tre${index}`}
@@ -102,7 +102,7 @@ const Marketplace = () => {
               }
             </div>
 
-            {assistants.length > 0 ? (
+            {assistants && assistants.length > 0 ? (
               assistants.map((assistant, index) => (
                 <div key={`assistance-parent${index}`}>
                   {/* Recenlty Added setion */}
@@ -140,7 +140,7 @@ const Marketplace = () => {
             {/*<HistoryCard/>*/}
           </div>
         </div>
-    
+
 
       </div>
 
