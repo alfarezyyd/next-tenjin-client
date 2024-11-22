@@ -70,6 +70,7 @@ export default function Page() {
         console.log(responseBody);
         if (responseFetch.ok) {
           setAllOrder(responseBody.result.data);
+          console.log(responseBody.result.data);
         } else {
           console.error('Failed to fetch experiences', responseBody);
         }
@@ -95,18 +96,19 @@ export default function Page() {
   return (<AdminWrapper>
     <section className="section">
       <div className="section-header">
-        <h1>Pendidikan Mentor</h1>
+        <h1>Riwayat Order</h1>
         <div className="section-header-breadcrumb">
           <div className="breadcrumb-item active"><a href="#">Admin</a></div>
           <div className="breadcrumb-item"><a href="#">Mentor</a></div>
-          <div className="breadcrumb-item">Pendidikan</div>
+          <div className="breadcrumb-item">Riwayat Order</div>
         </div>
       </div>
 
       <div className="section-body">
 
-        <h2 className="section-title">Articles</h2>
-        <p className="section-lead">This article component is based on card and flexbox.</p>
+        <h2 className="section-title">Overview</h2>
+        <p className="section-lead">Kelola dan pantau pesanan Anda dengan mudah. Lihat status, detail, dan riwayat
+          transaksi semuanya di satu halaman.</p>
         <div className="row">
           {loading ? (  // Tampilkan loading selama data belum tersedia
             <Loading/>) : (allOrder.length > 0 ? (allOrder.map((mentorAssistance) => (
@@ -123,21 +125,20 @@ export default function Page() {
                 </div>
                 <div className="col-8">
                   <div className="article-details">
-                    <div className="article-category"><a href="#">News</a>
+                    <div className="article-category"><a href="#">{mentorAssistance.assistance.category.name}</a>
                       <div className="bullet"></div>
                       <a href="#">5 Days</a></div>
                     <div className="article-title">
                       <h2><a href="#">{mentorAssistance.assistance.topic}</a></h2>
                     </div>
-                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse
-                      cillum dolore eu fugiat nulla pariatur. </p>
+                    <p dangerouslySetInnerHTML={{__html: mentorAssistance.assistance.description}}></p>
                     <div className="article-user">
                       <img alt="image" src="../assets/img/avatar/avatar-1.png"/>
                       <div className="article-user-details float-left">
                         <div className="user-detail-name">
-                          <a href="#">Hasan Basri</a>
+                          <a href="#">{mentorAssistance.assistance.mentor.user.name}</a>
                         </div>
-                        <div className="text-job">Web Developer</div>
+                        <div className="text-job">{mentorAssistance.assistance.mentor.user.gender}</div>
                       </div>
                       {!isOrderExpired(mentorAssistance.createdAt) && (<>
                         <a href="#" className="btn btn-outline-primary float-right mt-1 ml-2">Cancel</a>
