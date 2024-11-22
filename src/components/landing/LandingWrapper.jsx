@@ -43,18 +43,18 @@ export default function LandingWrapper({children}) {
 
   useEffect(() => {
     if (socket && decodedAccessToken) {
-      socket.on("onlineUsers", (onlineUser) => {
-        console.log("onlineUsers", onlineUser);
+      socket.on("allRelatedUsers", (relatedUser) => {
+        console.log("allRelatedUsers", relatedUser);
         setChatData((prevChatData) => {
           const updatedChatData = {...prevChatData}; // Salin data lama (spread operator untuk objek)
-          onlineUser.forEach((onlineUserElement) => {
+          relatedUser.forEach((relatedUserElement) => {
             // Hindari duplikasi dan tambahkan hanya jika berbeda
-            if (onlineUserElement.userUniqueId !== decodedAccessToken.uniqueId && !updatedChatData[onlineUserElement.userUniqueId]) {
-              updatedChatData[onlineUserElement.userUniqueId] = {
-                name: onlineUserElement.name,
-                uniqueId: onlineUserElement.userUniqueId,
-                userId: onlineUserElement.userId,
-                messages: onlineUserElement.messages,
+            if (relatedUserElement.userUniqueId !== decodedAccessToken.uniqueId && !updatedChatData[relatedUserElement.userUniqueId]) {
+              updatedChatData[relatedUserElement.userUniqueId] = {
+                name: relatedUserElement.name,
+                uniqueId: relatedUserElement.userUniqueId,
+                userId: relatedUserElement.userId,
+                messages: relatedUserElement.messages,
               };
             }
           });
