@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 import {Divider, Image, Input, NextUIProvider} from "@nextui-org/react";
 import Insta from "@/components/landing/Insta";
 import {ToastContainer} from "react-toastify";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import {IoChatbubblesOutline} from "react-icons/io5";
 import {CommonUtil} from "@/common/utils/common-util";
 import Cookies from "js-cookie";
@@ -16,7 +16,14 @@ export default function LandingWrapper({children}) {
   const {isChatVisible, toggleChat, chatData, setChatData} = useContext(LandingContext);
   const [socket, setSocket] = useState();
   const [activeChat, setActiveChat] = useState();
-  const [message, setMessage] = useState();
+  const [message, setMessage] = useState("");
+  const activeChatRef = useRef(); // Ref untuk menyimpan activeChat
+  const lastMessageRef = useRef(null);
+
+  useEffect(() => {
+    activeChatRef.current = activeChat; // Update ref setiap activeChat berubah
+  }, [activeChat]);
+
   useEffect(() => {
     setAccessToken(Cookies.get("accessToken"));
   }, []);
@@ -37,6 +44,7 @@ export default function LandingWrapper({children}) {
   useEffect(() => {
     if (socket && decodedAccessToken) {
       socket.on("onlineUsers", (onlineUser) => {
+        console.log("onlineUsers", onlineUser);
         setChatData((prevChatData) => {
           const updatedChatData = {...prevChatData}; // Salin data lama (spread operator untuk objek)
           onlineUser.forEach((onlineUserElement) => {
@@ -55,29 +63,33 @@ export default function LandingWrapper({children}) {
       });
     }
   }, [socket, decodedAccessToken]);
+  useEffect(() => {
+    console.log(activeChat);
+  }, [activeChat])
 
   useEffect(() => {
     if (socket) {
-      // Pastikan event listener sudah ada sebelum mengirim atau menerima pesan
       socket.on("privateMessage", (message) => {
-        console.log("Pesan diterima:", message);
+        setActiveChat({
+          ...activeChatRef.current, messages: [...(activeChatRef.current.messages), {
+            isSender: message.message.isSender,
+            message: message.message.message,
+            timestamp: message.message.timestamp,
+            status: message.message.status,
+          }]
+        })
 
         // Update chatData secara dinamis
         setChatData((prevChatData) => {
-          const updatedChatData = {...prevChatData}; // Salin data sebelumnya
-
-          // Periksa apakah pengguna dengan `destinationUserUniqueId` ada di data
+          const updatedChatData = {...prevChatData};
           if (updatedChatData[message.destinationUserUniqueId]) {
-            // Tambahkan pesan baru ke array `messages`
-            updatedChatData[message.destinationUserUniqueId].messages = [...(updatedChatData[message.destinationUserUniqueId].messages || []), // Pesan lama jika ada
-              {
-                isSender: message.message.isSender,
-                message: message.message.message,
-                timestamp: message.message.timestamp,
-                status: message.message.status,
-              },];
+            updatedChatData[message.destinationUserUniqueId].messages = [...(updatedChatData[message.destinationUserUniqueId].messages || []), {
+              isSender: message.message.isSender,
+              message: message.message.message,
+              timestamp: message.message.timestamp,
+              status: message.message.status,
+            },];
           } else {
-            // Jika pengguna tidak ada, buat entri baru untuk pengguna tersebut
             updatedChatData[message.destinationUserUniqueId] = {
               name: message.originUserName,
               uniqueId: message.destinationUserUniqueId,
@@ -91,7 +103,7 @@ export default function LandingWrapper({children}) {
             };
           }
 
-          return updatedChatData; // Kembalikan data yang diperbarui
+          return {...updatedChatData}; // Ganti referensi utama
         });
       });
 
@@ -100,18 +112,28 @@ export default function LandingWrapper({children}) {
     }
   }, [socket]);
 
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({behavior: 'smooth'});
+    }
+  }, [activeChat?.messages, isChatVisible]); // Tambahkan dependensi
+
+
+  useEffect(() => {
+
+  }, [chatData])
 
   const triggerSendMessage = async () => {
-    console.log(message)
     if (socket) {
       socket.emit("privateMessage", {
-        "type": "privateMessage",
-        "message": message, "destinationUserUniqueId": activeChat.destinationUserUniqueId
+        "type": "privateMessage", "message": message, "destinationUserUniqueId": activeChat.destinationUserUniqueId
       });
+      setMessage("")
     }
   };
 
   async function handleActiveChat(chatData) {
+    console.log("active" + chatData)
     setActiveChat({
       name: chatData.name,
       messages: chatData.messages,
@@ -163,7 +185,7 @@ export default function LandingWrapper({children}) {
                 <div className="space-y-2">
                   <h3 className="text-sm font-semibold text-gray-400 uppercase">Chats</h3>
                   {chatData && Object.values(chatData).length > 0 && Object.values(chatData).map((chat) => {
-                    return (<button key={chat.userUniqueId} onClick={() => {
+                    return (<button key={chat.uniqueId} onClick={() => {
                       handleActiveChat(chat)
                     }} className="w-full flex items-center p-2 rounded-md hover:bg-gray-100 transition">
                       <Image
@@ -186,47 +208,70 @@ export default function LandingWrapper({children}) {
                 </div>
                 <div className="mt-6 space-y-4 overflow-y-auto flex-grow">
                   {activeChat?.messages?.length > 0 && activeChat.messages.map((chat, index) => {
-                    return (chat.isSender ? (<div className="flex items-start gap-2.5 justify-end" key={index}>
+                    const isLastMessage = index === activeChat.messages.length - 1; // Cek apakah ini pesan terakhir
+                    return chat.isSender ? (<div
+                      className="flex items-start gap-2.5 justify-end"
+                      key={index}
+                      ref={isLastMessage ? lastMessageRef : null} // Tambahkan ref ke pesan terakhir
+                    >
                       <div
                         className="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-s-xl rounded-br-xl dark:bg-gray-700 text-right">
                         <div className="flex items-center justify-end space-x-2 rtl:space-x-reverse">
-                              <span
-                                className="text-sm font-semibold text-gray-900 dark:text-white">{activeChat.name}</span>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                {activeChat.name}
+              </span>
                           <span className="text-sm font-semibold text-black">-</span>
-                          <span
-                            className="text-sm font-normal text-gray-500 dark:text-gray-400">{chat.timestamp.substring(11, 16)}</span>
+                          <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                {chat.timestamp.substring(11, 16)}
+              </span>
                         </div>
                         <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">
                           {chat.message}
                         </p>
-                        <span className="text-sm font-normal text-gray-500 dark:text-gray-400">{chat.status}</span>
+                        <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+              {chat.status}
+            </span>
                       </div>
-                      <Image className="w-9 h-8 rounded-full"
-                             src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-48-01_nugblk.jpg"
-                             alt="Jese image"/>
-                    </div>) : (<div className="flex items-start gap-2.5" key={index}>
-                      <Image className="w-9 h-8 rounded-full"
-                             src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-48-01_nugblk.jpg"
-                             alt="Jese image"/>
+                      <Image
+                        className="w-9 h-8 rounded-full"
+                        src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-48-01_nugblk.jpg"
+                        alt="Jese image"
+                      />
+                    </div>) : (<div
+                      className="flex items-start gap-2.5"
+                      key={index}
+                      ref={isLastMessage ? lastMessageRef : null} // Tambahkan ref ke pesan terakhir
+                    >
+                      <Image
+                        className="w-9 h-8 rounded-full"
+                        src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-48-01_nugblk.jpg"
+                        alt="Jese image"
+                      />
                       <div
                         className="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
                         <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                              <span
-                                className="text-sm font-semibold text-gray-900 dark:text-white">{activeChat.name}</span>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                {activeChat.name}
+              </span>
                           <span className="text-sm font-semibold text-black">-</span>
-                          <span className="text-sm font-normal text-gray-500 dark:text-gray-400">11:46</span>
+                          <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                11:46
+              </span>
                         </div>
                         <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">
                           {chat.message}
                         </p>
-                        <span className="text-sm font-normal text-gray-500 dark:text-gray-400">Delivered</span>
+                        <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+              Delivered
+            </span>
                       </div>
-                    </div>))
+                    </div>);
                   })}
                 </div>
                 <form className="flex items-center space-x-2 mt-4">
                   <Input
                     type="text"
+                    value={message}
                     placeholder="Type your message"
                     onChange={(e) => {
                       setMessage(e.target.value)

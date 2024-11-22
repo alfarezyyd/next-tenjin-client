@@ -20,38 +20,35 @@ import {Loading} from "@/components/admin/Loading";
 import Link from "next/link";
 import {PiHandWavingFill} from "react-icons/pi";
 import {LandingContext} from "@/components/LandingProvider";
+import Cookies from "js-cookie";
+import {CommonUtil} from "@/common/utils/common-util";
 
 export default function Page({}) {
-
   const [mentorData, setMentorData] = useState({});
   const pathName = useParams();
   const {push} = useRouter();
   const [loading, setLoading] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
   const {isChatVisible, toggleChat, chatData, setChatData} = useContext(LandingContext);
+  const [accessToken, setAccessToken] = useState(null);
+  const [decodedAccessToken, setDecodedAccessToken] = useState(null);
 
-  const list = [{
-    title: "Orange", img: "/images/articles/article.png", price: "$5.50",
-  }, {
-    title: "Tangerine", img: "/images/articles/article.png", price: "$3.00",
-  }, {
-    title: "Raspberry", img: "/images/articles/article.png", price: "$10.00",
-  }, {
-    title: "Lemon", img: "/images/articles/article.png", price: "$5.30",
-  }, {
-    title: "Avocado", img: "/images/articles/article.png", price: "$15.70",
-  }, {
-    title: "Lemon 2", img: "/images/articles/article.png", price: "$8.00",
-  }, {
-    title: "Banana", img: "/images/articles/article.png", price: "$7.50",
-  }, {
-    title: "Watermelon", img: "/images/articles/article.png", price: "$12.20",
-  },];
+
   useEffect(() => {
     if (pathName.mentorId) {
       fetchMentorData(pathName.mentorId);
     }
   }, [pathName])
+
+  useEffect(() => {
+    setAccessToken(Cookies.get("accessToken"));
+  }, []);
+
+  useEffect(() => {
+    if (accessToken) {
+      setDecodedAccessToken(CommonUtil.parseJwt(accessToken));
+    }
+  }, [accessToken]);
 
   async function initiateCheckout() {
     localStorage.setItem("checkoutItem", "");
@@ -247,11 +244,17 @@ export default function Page({}) {
                           <Button variant="solid" size="lg" radius="full" onClick={() => {
                             toggleChat()
                             setChatData((prevChatData) => {
-                              return [...prevChatData, {
-                                name: mentorData.user.name,
-                                uniqueId: mentorData.user.uniqueId,
-                              }]
-                            })
+                              const updatedChatData = {...prevChatData}; // Salin data lama (spread operator untuk objek)
+                              // Hindari duplikasi dan tambahkan hanya jika berbeda
+                              if (mentorData.userUniqueId !== decodedAccessToken?.uniqueId && !updatedChatData[mentorData.userUniqueId]) {
+                                updatedChatData[mentorData.userUniqueId] = {
+                                  name: mentorData.user.name,
+                                  uniqueId: mentorData.user.uniqueId,
+                                  userId: mentorData.user.id,
+                                };
+                              }
+                              return updatedChatData; // Kembalikan array yang diperbarui
+                            });
                           }}
                                   className="w-48 h-16 bg-gradient-to-r from-teal-400 to-blue-500 hover:from-pink-500 hover:to-orange-500 ">
                             <div className="flex flex-row gap-4 font-bold text-3xl text-white items-center">
