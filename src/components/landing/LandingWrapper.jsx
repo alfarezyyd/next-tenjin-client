@@ -185,19 +185,22 @@ export default function LandingWrapper({children}) {
                 <div className="space-y-2">
                   <h3 className="text-sm font-semibold text-gray-400 uppercase">Chats</h3>
                   {chatData && Object.values(chatData).length > 0 && Object.values(chatData).map((chat) => {
-                    return (<button key={chat.uniqueId} onClick={() => {
-                      handleActiveChat(chat)
-                    }} className="w-full flex items-center p-2 rounded-md hover:bg-gray-100 transition">
-                      <Image
-                        className="w-8 h-8 rounded-full mr-3"
-                        src={`https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-32-01_pfck4u.jpg`}
-                        alt={chat.name}
-                      />
-                      <div>
-                        <h4 className="text-sm font-semibold text-gray-800">{chat.name}</h4>
-                        <p className="text-xs text-gray-500">Last chat · 2hrs ago</p>
-                      </div>
-                    </button>)
+                    return (
+                      <button key={chat.uniqueId} onClick={() => {
+                        handleActiveChat(chat)
+                      }} className="w-full flex items-center p-2 rounded-md hover:bg-gray-100 transition">
+                        <Image
+                          className="w-8 h-8 rounded-full mr-3"
+                          src={`https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-32-01_pfck4u.jpg`}
+                          alt={chat.name}
+                        />
+                        <div>
+                          <h4 className="text-sm font-semibold text-gray-800">{chat.name}</h4>
+                          <p
+                            className="text-xs text-gray-500 text-left">{chat.messages[chat.messages.length - 1].message} ·
+                            {CommonUtil.diffForHumans(chat.messages[chat.messages.length - 1].timestamp)}</p>
+                        </div>
+                      </button>)
                   })}
                 </div>
               </div>
