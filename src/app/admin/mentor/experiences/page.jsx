@@ -173,7 +173,7 @@ export default function Page() {
                     <p className="lead">
                       Sorry we can't find any data, to get rid of this message, make at least 1 entry.
                     </p>
-                    <a href="#" className="btn btn-primary mt-4">Create new One</a>
+                    <a href="/admin/mentor/experiences/create" className="btn btn-primary mt-4">Create new One</a>
                     <a href="#" className="mt-4 bb">Need Help?</a>
                   </div>
                 </div>
