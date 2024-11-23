@@ -173,6 +173,11 @@ export default function Page() {
         </div>
 
         <div className="section-body">
+          <h2 className="section-title">Overview</h2>
+          <p className="section-lead w-50">
+            Atur keahlian mentor dengan mudah. Tambahkan, perbarui, atau hapus keterampilan untuk mencerminkan kemampuan
+            mereka secara akurat.
+          </p>
           <section className="hero-section">
             <div className="d-flex flex-row">
               <div className="col-6 col-md-6 col-sm-12 col-lg-6 pl-0">

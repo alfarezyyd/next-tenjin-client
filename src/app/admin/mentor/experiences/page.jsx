@@ -104,6 +104,11 @@ export default function Page() {
           </div>
         </div>
         <div className="section-body">
+          <h2 className="section-title">Overview</h2>
+          <p className="section-lead w-50">
+            Kelola data pengalaman mentor dengan mudah. Tambahkan, perbarui, atau hapus informasi pengalaman untuk
+            memastikan profil mentor selalu up-to-date.
+          </p>
 
           <section className="light">
             {loading ? (  // Tampilkan loading selama data belum tersedia

@@ -111,7 +111,11 @@ export default function Page() {
       </div>
 
       <div className="section-body">
-
+        <h2 className="section-title">Overview</h2>
+        <p className="section-lead w-50">
+          Kelola layanan asistensi yang ditawarkan mentor. Sesuaikan topik, jadwal, dan detail lainnya agar sesuai
+          dengan kebutuhan pengguna.
+        </p>
         <h2 className="section-title">Articles</h2>
         <p className="section-lead">This article component is based on card and flexbox.</p>
         <div className="row">

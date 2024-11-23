@@ -107,6 +107,11 @@ export default function Page() {
       </div>
 
       <div className="section-body">
+        <h2 className="section-title">Overview</h2>
+        <p className="section-lead w-50">
+          Kelola data pendidikan mentor dengan praktis. Tambahkan, perbarui, atau hapus informasi pendidikan untuk
+          mendukung profil mentor yang kredibel.
+        </p>
         <div className="container">
           {loading ? (  // Tampilkan loading selama data belum tersedia
             <Loading/>) : (allMentorEducation.length > 0 ? (allMentorEducation.map((mentorEducation) => (
