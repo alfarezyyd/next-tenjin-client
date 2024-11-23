@@ -9,7 +9,6 @@ import {Loading} from "@/components/admin/Loading";
 import 'react-toastify/dist/ReactToastify.css';
 import {useRouter, useSearchParams} from "next/navigation";
 import {toast} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 export default function Page() {
   const buttonColors = ['primary', 'danger', 'warning', 'success', 'dark']
@@ -176,17 +175,37 @@ export default function Page() {
         <div className="section-body">
           <section className="hero-section">
             <div className="d-flex flex-row">
-              <div className="col-6 col-md-6 col-sm-12 col-lg-5 pl-0">
+              <div className="col-6 col-md-6 col-sm-12 col-lg-6 pl-0">
                 <div className="d-flex flex-row flex-wrap" style={{gap: 5 + "px"}}>
                   {loading ? (  // Tampilkan loading selama data belum tersedia
                     <Loading/>) : (allMentorSkill.length > 0 ? (allMentorSkill.map((mentorSkill, index) => (
-
                     <button key={`mentorSkill-${mentorSkill.id}`} type="button" onClick={() => {
                       triggerEditForm(mentorSkill)
-                    }}
-                            className={`btn btn-${buttonColors[index % buttonColors.length]}`}>
+                    }} className={`btn btn-${buttonColors[index % buttonColors.length]}`}>
                       {mentorSkill.name}
-                    </button>))) : (<p>No skills available.</p>))}
+                    </button>))) : (
+                    <div className="col-12 col-md-12 col-sm-12 p-0 mx-auto">
+                      <div className="card">
+                        <div className="card-header">
+                          <h4>Empty Data</h4>
+                        </div>
+                        <div className="card-body">
+                          <div className="empty-state" data-height="400">
+                            <div className="empty-state-icon">
+                              <i className="fas fa-question"></i>
+                            </div>
+                            <h2>We couldn't find any data</h2>
+                            <p className="lead">
+                              Sorry we can't find any data, to get rid of this message, make at least 1 entry.
+                            </p>
+                            <a href="/admin/mentor/skills/create" className="btn btn-primary mt-4">Create new
+                              One</a>
+                            <a href="#" className="mt-4 bb">Need Help?</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="col-6 col-md-6 col-sm-12 col-lg-7 pl-0">
