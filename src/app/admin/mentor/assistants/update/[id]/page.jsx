@@ -182,8 +182,9 @@ export default function Page() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formDataPayload = new FormData();
+    console.log(files, oldFiles)
     const updatedFiles = files.filter(file =>
-      !oldFiles.some(oldFile => oldFile.name === file.name)
+      !oldFiles.some(oldFile => oldFile.name === file.file.name)
     );
     updatedFiles.forEach((file, index) => {
       formDataPayload.append(`images`, file.file);
@@ -203,7 +204,6 @@ export default function Page() {
     formDataPayload.forEach((value, key) => {
       console.log(key, value);
     })
-    console.log(existingAssistance)
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/${existingAssistance.id}`, {
       method: 'PUT', body: formDataPayload, includeCredentials: true, headers: {
         'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
@@ -215,7 +215,7 @@ export default function Page() {
     if (response.ok) {
       console.log('Data submitted successfully', responseBody);
       setErrors({});
-      router.push("/admin/mentor/assistants?notify=success")
+      // router.push("/admin/mentor/assistants?notify=success")
     } else {
       console.error('Failed to submit data', responseBody);
       const errorMessages = {};
@@ -256,7 +256,7 @@ export default function Page() {
             allFiles.push({
               source: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${existingAssistance.mentorId}/${existingAssistance.id}/${image}`,
               options: {type: 'input'},
-              name: `${image}`,
+              name: image
             })
           })
           setFiles(allFiles);
@@ -332,7 +332,7 @@ export default function Page() {
   }), [errors]);
 
   async function handleRemoveFile(error, file) {
-    console.log(file.file)
+    console.log(file)
     setFormData((prevFormData) => ({
       ...prevFormData, deletedFilesName: [...formData.deletedFilesName, file.file.name]
     }))
@@ -517,8 +517,8 @@ export default function Page() {
                       <div className="col-sm-12 col-md-7">
                         <FilePond
                           files={files}
-                          onremovefile={handleRemoveFile}
                           onupdatefiles={setFiles}
+                          onremovefile={handleRemoveFile}
                           allowMultiple={true}
                           maxFiles={3}
                           name="assistanceResources"

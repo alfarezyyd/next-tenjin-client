@@ -189,6 +189,7 @@ export default function Page() {
 
     files.forEach((file, index) => {
       formDataPayload.append(`images`, file.file);
+      console.log(file.file)
     });
     formDataPayload.forEach((value, key) => {
       console.log(key, value);
