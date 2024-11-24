@@ -29,6 +29,7 @@ export default function Page() {
   const router = useRouter();
   const params = useParams();
   const [files, setFiles] = useState([]);
+  const [oldFiles, setOldFiles] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(0);
   const [accessToken, setAccessToken] = useState();
   const [filteredTags, setFilteredTags] = useState([]);
@@ -180,7 +181,10 @@ export default function Page() {
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
     const formDataPayload = new FormData();
-    files.forEach((file, index) => {
+    const updatedFiles = files.filter(file =>
+      !oldFiles.some(oldFile => oldFile.name === file.name)
+    );
+    updatedFiles.forEach((file, index) => {
       formDataPayload.append(`images`, file.file);
     });
     Object.entries(formData).forEach(([key, value]) => {
@@ -245,14 +249,17 @@ export default function Page() {
             languages: [...existingAssistance.languageIds],
             format: existingAssistance.format
           })
+          const allFiles = [];
           existingAssistance.imagePath.forEach(image => {
-            setFiles([{
+            allFiles.push({
               source: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${existingAssistance.mentorId}/${existingAssistance.id}/${image}`,
-              options: {type: 'input'}
-            }]);
+              options: {type: 'input'},
+              name: image
+            })
           })
+          setFiles(allFiles);
+          setOldFiles(allFiles);
           setExistingAssistance(existingAssistance)
-
         } else {
           console.error('Failed to fetch experiences', responseBody);
         }
