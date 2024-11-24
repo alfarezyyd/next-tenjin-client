@@ -9,7 +9,6 @@ import '@/../public/assets/css/style.css'
 import '@/../public/assets/css/custom.scss'
 import {useEffect, useState} from 'react';
 import {Loading} from "@/components/admin/Loading";
-import {ToastContainer} from "react-toastify";
 import {CommonUtil} from "@/common/utils/common-util";
 import Cookies from "js-cookie";
 
@@ -42,7 +41,6 @@ export default function AdminWrapper({children}) {
   return (<>
     {loading ? (<Loading/>) : (<div id="app">
       <div className="main-wrapper">
-        <ToastContainer style={{zIndex: 9999}}/>
         <div className="navbar-bg"></div>
         <AdminNavbar/>
         {accessToken && <AdminSidebar parsedJwt={parsedAccessToken}/>}
