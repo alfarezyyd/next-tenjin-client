@@ -2,7 +2,6 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import {Divider, Image, Input, NextUIProvider} from "@nextui-org/react";
 import Insta from "@/components/landing/Insta";
-import {ToastContainer} from "react-toastify";
 import {useContext, useEffect, useRef, useState} from "react";
 import {IoChatbubblesOutline} from "react-icons/io5";
 import {CommonUtil} from "@/common/utils/common-util";
@@ -146,7 +145,6 @@ export default function LandingWrapper({children}) {
   return (<LandingProvider>
 
     <NextUIProvider>
-      <ToastContainer/>
       <Navbar/>
       <main>
         {children}
