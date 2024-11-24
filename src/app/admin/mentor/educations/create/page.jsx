@@ -1,7 +1,6 @@
 "use client";
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
@@ -12,7 +11,6 @@ import {useRouter} from "next/navigation";
 // Style
 import 'select2/dist/css/select2.min.css'
 import 'bootstrap-daterangepicker/daterangepicker.css'
-import 'filepond/dist/filepond.min.css'
 import 'summernote/dist/summernote-bs4.css'
 import '@/../public/assets/css/components.css'
 
