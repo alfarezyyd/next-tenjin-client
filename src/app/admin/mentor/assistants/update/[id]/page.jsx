@@ -1,5 +1,5 @@
 "use client";
-import {useEffect, useState, useCallback, useMemo, useRef} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
@@ -12,6 +12,12 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import {useParams, useRouter} from "next/navigation";
 
+
+import 'select2/dist/css/select2.min.css';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+import 'summernote/dist/summernote-bs4.css';
+import 'filepond/dist/filepond.min.css';
+import '@/../public/assets/css/components.css'
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -34,7 +40,7 @@ export default function Page() {
     price: '',
     format: 'INDIVIDUAL',
     capacity: '',
-    languageId: '',
+    languages: [],
     tagId: [],
   });
 
@@ -42,16 +48,13 @@ export default function Page() {
   const categorySelectRef = useRef(null);
   const tagsSelectRef = useRef(null);
   const descriptionRef = useRef(null);
-  const languageIdSelectRef = useRef(null);
+  const languagesSelectRef = useRef(null);
   const formatSelectRef = useRef(null);
 
   useEffect(() => {
     const loadAssets = async () => {
       const $ = (await import('jquery')).default;
-      await import('select2/dist/css/select2.min.css');
-      await import('bootstrap-daterangepicker/daterangepicker.css');
-      await import('summernote/dist/summernote-bs4.css');
-      await import('filepond/dist/filepond.min.css');
+
       await CommonStyle();
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
@@ -67,10 +70,10 @@ export default function Page() {
           ...prev, tagId: [...formData['tagId'], Number($(tagsSelectRef.current).val())]
         }));
       });
-      $(languageIdSelectRef.current).on("change", () => {
-        console.log($(languageIdSelectRef.current).val());
+      $(languagesSelectRef.current).on("change", () => {
+        console.log($(languagesSelectRef.current).val());
         setFormData(prev => ({
-          ...prev, languageId: $(languageIdSelectRef.current).val()
+          ...prev, languages: $(languagesSelectRef.current).val()
         }));
       });
       $(formatSelectRef.current).on("change", () => {
@@ -150,8 +153,9 @@ export default function Page() {
         setAssistanceDependency(responseBody['result']['data']);
         let firstCategoryElementId = responseBody['result']['data']['categories'][0]['id'];
         setSelectedCategoryId(firstCategoryElementId);
-        setFormData({...formData, languageId: responseBody['result']['data']['languages'][0]['id']});
+        setFormData({...formData, languages: responseBody['result']['data']['languages'].map(language => language.id)});
         setFilteredTags(responseBody['result']['data']['tags'].filter(value => value['categoryId'] === Number(firstCategoryElementId)));
+
       } else {
         console.error('Failed to fetch assistance dependency', responseBody);
       }
@@ -164,6 +168,7 @@ export default function Page() {
       setFilteredTags(tags);
     }
   }, [selectedCategoryId, assistanceDependency.tags]);
+
 
   const handleChange = useCallback((e) => {
     const {name, value} = e.target;
@@ -225,11 +230,11 @@ export default function Page() {
             'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
           },
         });
+
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
           const existingAssistance = responseBody.result.data;
-          setExistingAssistance(existingAssistance)
-          console.log(existingAssistance);
+          console.log(existingAssistance)
           setFormData({
             topic: existingAssistance.topic,
             capacity: existingAssistance.capacity,
@@ -237,7 +242,7 @@ export default function Page() {
             durationMinutes: existingAssistance.durationMinutes,
             description: existingAssistance.description,
             tagId: [...existingAssistance.tagId],
-            languageId: existingAssistance.languageId,
+            languages: [...existingAssistance.languageIds],
             format: existingAssistance.format
           })
           existingAssistance.imagePath.forEach(image => {
@@ -246,6 +251,7 @@ export default function Page() {
               options: {type: 'input'}
             }]);
           })
+          setExistingAssistance(existingAssistance)
 
         } else {
           console.error('Failed to fetch experiences', responseBody);
@@ -278,13 +284,39 @@ export default function Page() {
     }
   }, [params.id, accessToken]);
 
+  useEffect(() => {
+    const setDefaultLanguages = async () => {
+      const $ = (await import('jquery')).default;
+
+      // Set default value pada select2
+      $(languagesSelectRef.current).val(formData.languages).trigger('change');
+    };
+
+    if (formData.languages && formData.languages.length > 0) {
+      setDefaultLanguages();
+    }
+  }, [formData.languages]);
+
+  useEffect(() => {
+    const setDefaultTags = async () => {
+      const $ = (await import('jquery')).default;
+
+      // Set default value pada select2
+      $(tagsSelectRef.current).val(formData.tagId).trigger('change');
+    };
+
+    if (formData.tagId && formData.tagId.length > 0) {
+      setDefaultTags();
+    }
+  }, [formData.tagId]);
+
 
   const errorFeedback = useMemo(() => ({
     topic: errors.topic ? <div className="invalid-feedback">{errors.topic}</div> : null,
     durationMinutes: errors.durationMinutes ? <div className="invalid-feedback">{errors.durationMinutes}</div> : null,
     price: errors.price ? <div className="invalid-feedback">{errors.price}</div> : null,
     capacity: errors.capacity ? <div className="invalid-feedback">{errors.capacity}</div> : null,
-    languageId: errors.languageId ? <div className="invalid-feedback">{errors.languageId}</div> : null,
+    languages: errors.languages ? <div className="invalid-feedback">{errors.languages}</div> : null,
     format: errors.format ? <div className="invalid-feedback">{errors.format}</div> : null,
     tagId: errors.tagId ? <div className="invalid-feedback">{errors.tagId}</div> : null,
     description: errors.description ? <small className="text-danger">{errors.description}</small> : null,
@@ -444,14 +476,14 @@ export default function Page() {
                       </div>
                     </div>
                     <div className="form-group row mb-4">
-                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="languageId">
+                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="languages">
                         Bahasa
                       </label>
                       <div className="col-sm-12 col-md-7">
-                        <select className="form-control select2" multiple="" ref={languageIdSelectRef}
-                                name="languageId" id="languageId">
+                        <select className="form-control select2" multiple={true} ref={languagesSelectRef}
+                                name="languages" id="languages">
                           {assistanceDependency['languages'].map((value, index) => (
-                            <option key={"languageId" + index} value={value['id']}>{value['name']}</option>))}
+                            <option key={"languages" + index} value={value['id']}>{value['name']}</option>))}
                         </select>
                       </div>
                     </div>
