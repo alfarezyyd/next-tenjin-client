@@ -4,14 +4,17 @@ import {useEffect, useState} from "react";
 import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
-import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import {Loading} from "@/components/admin/Loading";
 import {useRouter, useSearchParams} from "next/navigation";
 import 'react-toastify/dist/ReactToastify.css';
 import {toast} from "react-toastify";
 
+import '@/../public/assets/css/components.css'
+import {CommonUtil} from "@/common/utils/common-util";
+
 export default function Page() {
   const [accessToken, setAccessToken] = useState(null);
+  const [decodedAccessToken, setDecodedAccessToken] = useState(null);
   const [allMentorAssistance, setAllMentorAssistance] = useState({});
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -42,30 +45,31 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    fetchMentorAssistants();
+    if (accessToken) {
+      fetchMentorAssistants();
+      setDecodedAccessToken(CommonUtil.parseJwt(accessToken));
+    }
   }, [accessToken]);
 
 
   const fetchMentorAssistants = async () => {
-    if (accessToken) {
-      try {
-        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/mentor`, {
-          method: 'GET', includeCredentials: true, headers: {
-            'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
-          },
-        });
-        const responseBody = await responseFetch.json();
-        if (responseFetch.ok) {
-          setAllMentorAssistance(responseBody.result.data);
-          console.log(responseBody.result.data);
-        } else {
-          console.error('Failed to fetch assistance', responseBody);
-        }
-      } catch (error) {
-        console.error('Error fetching experiences:', error);
-      } finally {
-        setLoading(false); // Menghentikan loading ketika data sudah diterima
+    try {
+      const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/mentor`, {
+        method: 'GET', includeCredentials: true, headers: {
+          'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+      const responseBody = await responseFetch.json();
+      if (responseFetch.ok) {
+        setAllMentorAssistance(responseBody.result.data);
+        console.log(responseBody.result.data);
+      } else {
+        console.error('Failed to fetch assistance', responseBody);
       }
+    } catch (error) {
+      console.error('Error fetching experiences:', error);
+    } finally {
+      setLoading(false); // Menghentikan loading ketika data sudah diterima
     }
   }
 
@@ -116,15 +120,14 @@ export default function Page() {
           Kelola layanan asistensi yang ditawarkan mentor. Sesuaikan topik, jadwal, dan detail lainnya agar sesuai
           dengan kebutuhan pengguna.
         </p>
-        <h2 className="section-title">Articles</h2>
-        <p className="section-lead">This article component is based on card and flexbox.</p>
         <div className="row">
           {loading ? (  // Tampilkan loading selama data belum tersedia
             <Loading/>) : (allMentorAssistance.length > 0 ? (allMentorAssistance.map((mentorAssistance) => (
             <div key={`mentorAssistance-${mentorAssistance.id}`} className="col-12 col-md-4 col-lg-4">
               <article className="article article-style-c">
                 <div className="article-header">
-                  <div className="article-image" data-background="../assets/img/news/img13.jpg"></div>
+                  <div className="article-image"
+                       data-background={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${decodedAccessToken.mentorId}/${mentorAssistance.id}/${mentorAssistance.imagePath[0]}`}></div>
                 </div>
                 <div className="article-details">
                   <div className="article-category">
@@ -138,7 +141,7 @@ export default function Page() {
 
                   <p dangerouslySetInnerHTML={{
                     __html: mentorAssistance.description
-                  }}>{}</p>
+                  }}></p>
                   <div className=" d-flex flex-row">
                     <div className="article-user">
                       <img alt="image" src="../assets/img/avatar/avatar-1.png"/>

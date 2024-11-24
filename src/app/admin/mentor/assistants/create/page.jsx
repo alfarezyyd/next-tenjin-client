@@ -12,6 +12,12 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import {useRouter} from "next/navigation";
 
+import 'select2/dist/css/select2.min.css';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+import 'summernote/dist/summernote-bs4.css';
+import 'filepond/dist/filepond.min.css';
+import '@/../public/assets/css/components.css'
+
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -32,7 +38,7 @@ export default function Page() {
     price: '',
     format: 'INDIVIDUAL',
     capacity: 1,
-    languageId: '',
+    languages: [],
     tagId: [],
   });
 
@@ -40,7 +46,7 @@ export default function Page() {
   const categorySelectRef = useRef(null);
   const tagsSelectRef = useRef(null);
   const descriptionRef = useRef(null);
-  const languageIdSelectRef = useRef(null);
+  const languagesSelectRef = useRef(null);
   const formatSelectRef = useRef(null);
 
   useEffect(() => {
@@ -50,10 +56,7 @@ export default function Page() {
 
   useEffect(() => {
     const loadAssets = async () => {
-      await import('select2/dist/css/select2.min.css');
-      await import('bootstrap-daterangepicker/daterangepicker.css');
-      await import('summernote/dist/summernote-bs4.css');
-      await import('filepond/dist/filepond.min.css');
+
       await CommonStyle();
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
@@ -68,9 +71,9 @@ export default function Page() {
           ...prev, tagId: [...formData['tagId'], Number($(tagsSelectRef.current).val())]
         }));
       });
-      $(languageIdSelectRef.current).on("change", () => {
+      $(languagesSelectRef.current).on("change", () => {
         setFormData(prev => ({
-          ...prev, languageId: $(languageIdSelectRef.current).val()
+          ...prev, languages: [...formData.languages, Number($(languagesSelectRef.current).val())]
         }));
       });
       $(formatSelectRef.current).on("change", () => {
@@ -143,7 +146,7 @@ export default function Page() {
         setAssistanceDependency(responseBody['result']['data']);
         let firstCategoryElementId = responseBody['result']['data']['categories'][0]['id'];
         setSelectedCategoryId(firstCategoryElementId);
-        setFormData({...formData, languageId: responseBody['result']['data']['languages'][0]['id']});
+        setFormData({...formData, languages: responseBody['result']['data']['languages'][0]['id']});
         setFilteredTags(responseBody['result']['data']['tags'].filter(value => value['categoryId'] === Number(firstCategoryElementId)));
       } else {
         console.error('Failed to fetch assistance dependency', responseBody);
@@ -166,54 +169,57 @@ export default function Page() {
   }, []);
 
   const handleSubmit = useCallback(async (event) => {
-    event.preventDefault();
-    const formDataPayload = new FormData();
-    files.forEach((file, index) => {
-      formDataPayload.append(`images`, file.file);
-    });
-    Object.entries(formData).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        // Jika value adalah array, iterasi dan append setiap elemennya
-        value.forEach((item) => {
-          formDataPayload.append(`${key}[]`, item); // Tambahkan [] untuk array format
-        });
-      } else {
-        // Jika value bukan array, langsung append
-        formDataPayload.append(key, value);
-      }
-    })
-    formDataPayload.append('categoryId', selectedCategoryId);
-
-    formDataPayload.forEach((value, key) => {
-    })
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
-      method: 'POST', body: formDataPayload, includeCredentials: true, headers: {
-        'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
-      }
-    });
-
-    const responseBody = await response.json();
-
-    if (response.ok) {
-      setErrors({});
-      router.push("/admin/mentor/assistants?notify=success")
-    } else {
-      console.error('Failed to submit data', responseBody);
-      const errorMessages = {};
-      responseBody.errors.message.forEach((error) => {
-        errorMessages[error.path[0]] = error.message;
+      event.preventDefault();
+      const formDataPayload = new FormData();
+      files.forEach((file, index) => {
+        formDataPayload.append(`images`, file.file);
       });
-      setErrors(errorMessages);
-    }
-  }, [formData]);
+      Object.entries(formData).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          // Jika value adalah array, iterasi dan append setiap elemennya
+          value.forEach((item) => {
+            formDataPayload.append(`${key}[]`, item); // Tambahkan [] untuk array format
+          });
+        } else {
+          // Jika value bukan array, langsung append
+          formDataPayload.append(key, value);
+        }
+      })
+      formDataPayload.append('categoryId', selectedCategoryId);
+
+      formDataPayload.forEach((value, key) => {
+        console.log(key, value);
+      })
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
+        method: 'POST', body: formDataPayload, includeCredentials: true, headers: {
+          'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
+        }
+      });
+
+      const responseBody = await response.json();
+
+      if (response.ok) {
+        setErrors({});
+        router.push("/admin/mentor/assistants?notify=success")
+      } else {
+        console.error('Failed to submit data', responseBody);
+        const errorMessages = {};
+        responseBody.errors.message.forEach((error) => {
+          errorMessages[error.path[0]] = error.message;
+        });
+        setErrors(errorMessages);
+      }
+    },
+    [formData]
+  );
 
   const errorFeedback = useMemo(() => ({
     topic: errors.topic ? <div className="invalid-feedback">{errors.topic}</div> : null,
     durationMinutes: errors.durationMinutes ? <div className="invalid-feedback">{errors.durationMinutes}</div> : null,
     price: errors.price ? <div className="invalid-feedback">{errors.price}</div> : null,
     capacity: errors.capacity ? <div className="invalid-feedback">{errors.capacity}</div> : null,
-    languageId: errors.languageId ? <div className="invalid-feedback">{errors.languageId}</div> : null,
+    languages: errors.languages ? <div className="invalid-feedback">{errors.languages}</div> : null,
     format: errors.format ? <div className="invalid-feedback">{errors.format}</div> : null,
     tagId: errors.tagId ? <div className="invalid-feedback">{errors.tagId}</div> : null,
     description: errors.description ? <small className="text-danger">{errors.description}</small> : null,
@@ -375,14 +381,14 @@ export default function Page() {
                       </div>
                     </div>
                     <div className="form-group row mb-4">
-                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="languageId">
+                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="languages">
                         Bahasa
                       </label>
                       <div className="col-sm-12 col-md-7">
-                        <select className="form-control select2" multiple="" ref={languageIdSelectRef}
-                                name="languageId" id="languageId">
+                        <select className="form-control select2" multiple={true} ref={languagesSelectRef}
+                                name="languages" id="languages">
                           {assistanceDependency['languages'].map((value, index) => (
-                            <option key={"languageId" + index} value={value['id']}>{value['name']}</option>))}
+                            <option key={"languages" + index} value={value['id']}>{value['name']}</option>))}
                         </select>
                       </div>
                     </div>
