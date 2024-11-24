@@ -1,14 +1,20 @@
 "use client";
 import AdminWrapper from "@/components/admin/AdminWrapper";
-import {useEffect, useState, useCallback, useMemo, useRef} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import Cookies from "js-cookie";
-import dynamic from "next/dynamic";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
-import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
 import {useRouter} from "next/navigation";
+
+
+// Style
+import 'select2/dist/css/select2.min.css'
+import 'bootstrap-daterangepicker/daterangepicker.css'
+import 'filepond/dist/filepond.min.css'
+import 'summernote/dist/summernote-bs4.css'
+import '@/../public/assets/css/components.css'
 
 
 export default function Page() {
@@ -36,10 +42,7 @@ export default function Page() {
 
   useEffect(() => {
     const loadAssets = async () => {
-      await import('select2/dist/css/select2.min.css');
-      await import('bootstrap-daterangepicker/daterangepicker.css');
-      await import('summernote/dist/summernote-bs4.css');
-      await CommonStyle()
+
       const $ = (await import('jquery')).default;
 
       function updateSelectedStartDate() {

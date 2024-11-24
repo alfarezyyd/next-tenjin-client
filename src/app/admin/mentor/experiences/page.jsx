@@ -9,7 +9,6 @@ import {useRouter, useSearchParams} from "next/navigation";
 
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Image from "next/image";
 
 
 export default function Page() {
