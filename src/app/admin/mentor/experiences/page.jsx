@@ -9,6 +9,7 @@ import {useRouter, useSearchParams} from "next/navigation";
 
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Image from "next/image";
 
 
 export default function Page() {
@@ -115,7 +116,7 @@ export default function Page() {
                 <article key={index} className="postcard light blue">
                   <a className="postcard__img_link" href="#">
                     <img className="postcard__img"
-                         src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/experience-resources/${mentorExperience.mentorId}/${mentorExperience.experienceResource[0].id}/${mentorExperience.experienceResource[0].imagePath}`}
+                         src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/experience-resources/${mentorExperience.mentorId}/${mentorExperience.id}/${mentorExperience.experienceResource[0].imagePath}`}
                          alt="Image Title"/>
                   </a>
                   <div className="postcard__text t-dark">
