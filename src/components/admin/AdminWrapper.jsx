@@ -4,7 +4,9 @@ import AdminSidebar from "./AdminSidebar";
 import AdminFooter from "./AdminFooter";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.css';
-
+// Style
+import '@/../public/assets/css/style.css'
+import '@/../public/assets/css/custom.scss'
 import {useEffect, useState} from 'react';
 import {Loading} from "@/components/admin/Loading";
 import {ToastContainer} from "react-toastify";
