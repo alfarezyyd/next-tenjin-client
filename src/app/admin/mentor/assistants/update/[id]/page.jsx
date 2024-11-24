@@ -43,6 +43,7 @@ export default function Page() {
     capacity: '',
     languages: [],
     tagId: [],
+    deletedFilesName: []
   });
 
   const [errors, setErrors] = useState({});
@@ -178,7 +179,7 @@ export default function Page() {
     }));
   }, []);
 
-  const handleSubmit = useCallback(async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const formDataPayload = new FormData();
     const updatedFiles = files.filter(file =>
@@ -202,7 +203,7 @@ export default function Page() {
     formDataPayload.forEach((value, key) => {
       console.log(key, value);
     })
-
+    console.log(existingAssistance)
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/${existingAssistance.id}`, {
       method: 'PUT', body: formDataPayload, includeCredentials: true, headers: {
         'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
@@ -224,7 +225,7 @@ export default function Page() {
       setErrors(errorMessages);
       console.log(errorMessages);
     }
-  }, [formData]);
+  }
 
   const fetchExistingAssistance = async (id) => {
     if (accessToken) {
@@ -247,14 +248,15 @@ export default function Page() {
             description: existingAssistance.description,
             tagId: [...existingAssistance.tagId],
             languages: [...existingAssistance.languageIds],
-            format: existingAssistance.format
+            format: existingAssistance.format,
+            deletedFilesName: []
           })
           const allFiles = [];
           existingAssistance.imagePath.forEach(image => {
             allFiles.push({
               source: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${existingAssistance.mentorId}/${existingAssistance.id}/${image}`,
               options: {type: 'input'},
-              name: image
+              name: `${image}`,
             })
           })
           setFiles(allFiles);
@@ -328,6 +330,13 @@ export default function Page() {
     tagId: errors.tagId ? <div className="invalid-feedback">{errors.tagId}</div> : null,
     description: errors.description ? <small className="text-danger">{errors.description}</small> : null,
   }), [errors]);
+
+  async function handleRemoveFile(error, file) {
+    console.log(file.file)
+    setFormData((prevFormData) => ({
+      ...prevFormData, deletedFilesName: [...formData.deletedFilesName, file.file.name]
+    }))
+  }
 
   return (<>
     {loading ? (<Loading/>) : (<AdminWrapper>
@@ -508,6 +517,7 @@ export default function Page() {
                       <div className="col-sm-12 col-md-7">
                         <FilePond
                           files={files}
+                          onremovefile={handleRemoveFile}
                           onupdatefiles={setFiles}
                           allowMultiple={true}
                           maxFiles={3}

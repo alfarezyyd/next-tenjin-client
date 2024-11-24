@@ -22,10 +22,6 @@ export default function Page() {
   useEffect(() => {
     // Cek jika ada `notify=success` di query param
     if (searchParams.get('notify') === 'success') {
-      toast.success('Data submitted successfully!', {
-        position: 'top-right', autoClose: 3000,
-      });
-
       // Bersihkan query param setelah menampilkan toast
       router.replace('/admin/mentor/assistants');
     }

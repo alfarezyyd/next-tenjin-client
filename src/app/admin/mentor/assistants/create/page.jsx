@@ -146,7 +146,6 @@ export default function Page() {
         setAssistanceDependency(responseBody['result']['data']);
         let firstCategoryElementId = responseBody['result']['data']['categories'][0]['id'];
         setSelectedCategoryId(firstCategoryElementId);
-        setFormData({...formData, languages: responseBody['result']['data']['languages'][0]['id']});
         setFilteredTags(responseBody['result']['data']['tags'].filter(value => value['categoryId'] === Number(firstCategoryElementId)));
       } else {
         console.error('Failed to fetch assistance dependency', responseBody);
@@ -168,51 +167,53 @@ export default function Page() {
     }));
   }, []);
 
-  const handleSubmit = useCallback(async (event) => {
-      event.preventDefault();
-      const formDataPayload = new FormData();
-      files.forEach((file, index) => {
-        formDataPayload.append(`images`, file.file);
-      });
-      Object.entries(formData).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          // Jika value adalah array, iterasi dan append setiap elemennya
-          value.forEach((item) => {
-            formDataPayload.append(`${key}[]`, item); // Tambahkan [] untuk array format
-          });
-        } else {
-          // Jika value bukan array, langsung append
-          formDataPayload.append(key, value);
-        }
-      })
-      formDataPayload.append('categoryId', selectedCategoryId);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formDataPayload = new FormData();
+    console.log(files)
 
-      formDataPayload.forEach((value, key) => {
-        console.log(key, value);
-      })
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
-        method: 'POST', body: formDataPayload, includeCredentials: true, headers: {
-          'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
-        }
-      });
-
-      const responseBody = await response.json();
-
-      if (response.ok) {
-        setErrors({});
-        router.push("/admin/mentor/assistants?notify=success")
-      } else {
-        console.error('Failed to submit data', responseBody);
-        const errorMessages = {};
-        responseBody.errors.message.forEach((error) => {
-          errorMessages[error.path[0]] = error.message;
+    Object.entries(formData).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        // Jika value adalah array, iterasi dan append setiap elemennya
+        value.forEach((item) => {
+          formDataPayload.append(`${key}[]`, item); // Tambahkan [] untuk array format
         });
-        setErrors(errorMessages);
+      } else {
+        // Jika value bukan array, langsung append
+        formDataPayload.append(key, value);
       }
-    },
-    [formData]
-  );
+    })
+
+    formDataPayload.append('categoryId', selectedCategoryId);
+    console.log(files)
+
+    files.forEach((file, index) => {
+      formDataPayload.append(`images`, file.file);
+    });
+    formDataPayload.forEach((value, key) => {
+      console.log(key, value);
+    })
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
+      method: 'POST', body: formDataPayload, includeCredentials: true, headers: {
+        'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
+      }
+    });
+
+    const responseBody = await response.json();
+
+    if (response.ok) {
+      setErrors({});
+      router.push('/admin/mentor/assistants?notify=success');
+    } else {
+      console.error('Failed to submit data', responseBody);
+      const errorMessages = {};
+      responseBody.errors.message.forEach((error) => {
+        errorMessages[error.path[0]] = error.message;
+      });
+      setErrors(errorMessages);
+    }
+  }
 
   const errorFeedback = useMemo(() => ({
     topic: errors.topic ? <div className="invalid-feedback">{errors.topic}</div> : null,
@@ -408,7 +409,7 @@ export default function Page() {
                           onupdatefiles={setFiles}
                           allowMultiple={true}
                           maxFiles={3}
-                          name="assistanceResources"
+                          name="images"
                           labelIdle='Seret & Letakkan Gambar Anda atau <span class="filepond--label-action">Browse</span>'
                         />
                       </div>
