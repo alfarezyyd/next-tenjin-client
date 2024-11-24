@@ -1,7 +1,6 @@
 "use client"
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
@@ -9,6 +8,9 @@ import {Loading} from "@/components/admin/Loading";
 import 'react-toastify/dist/ReactToastify.css';
 import {useRouter, useSearchParams} from "next/navigation";
 import {toast} from 'react-toastify';
+
+import 'summernote/dist/summernote-bs4.css'
+import '@/../public/assets/css/components.css'
 
 export default function Page() {
   const buttonColors = ['primary', 'danger', 'warning', 'success', 'dark']
@@ -28,7 +30,7 @@ export default function Page() {
     // Cek jika ada `notify=success` di query param
     if (searchParams.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
-        position: 'top-right', autoClose: 10000,
+        position: 'top-right', autoClose: 3000,
       });
 
       // Bersihkan query param setelah menampilkan toast
@@ -39,8 +41,6 @@ export default function Page() {
   useEffect(() => {
     async function loadAssets() {
       const $ = (await import('jquery')).default;
-      await import('summernote/dist/summernote-bs4.css');
-      await CommonStyle();
       await import('summernote/dist/summernote-bs4.js');
       await CommonScript();
       $(descriptionRef.current).on("summernote.change", () => {
