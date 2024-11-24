@@ -1,17 +1,26 @@
 "use client"
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import {useEffect, useRef, useState} from "react";
+
+// Filepond
 import {FilePond, registerPlugin} from 'react-filepond';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+
 import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
-import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
 import {useParams, useRouter} from "next/navigation";
 import {CommonUtil} from "@/common/utils/common-util";
+
+// Style
+import 'select2/dist/css/select2.min.css'
+import 'bootstrap-daterangepicker/daterangepicker.css'
+import 'filepond/dist/filepond.min.css'
+import 'summernote/dist/summernote-bs4.css'
+import '@/../public/assets/css/components.css'
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -23,6 +32,7 @@ export default function Page() {
   const [accessToken, setAccessToken] = useState();
   const router = useRouter();
   const [files, setFiles] = useState([]);
+  const [oldFiles, setOldFiles] = useState([]);
   const [errors, setErrors] = useState({});
 
   // Ref
@@ -35,7 +45,7 @@ export default function Page() {
   const routerParam = useParams();
 
   const [formData, setFormData] = useState({
-    positionName: '', companyName: '', location: '',
+    positionName: '', companyName: '', location: '', deletedFilesName: []
   });
 
   const [formDataRef, setFormDataRef] = useState({
@@ -44,12 +54,6 @@ export default function Page() {
 
   useEffect(() => {
     const loadAssets = async () => {
-      await import('select2/dist/css/select2.min.css');
-      await import('bootstrap-daterangepicker/daterangepicker.css');
-      await import('filepond/dist/filepond.min.css');
-      await import('summernote/dist/summernote-bs4.css');
-      await CommonStyle();
-
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
       await import('summernote/dist/summernote-bs4.js');
@@ -118,7 +122,6 @@ export default function Page() {
   });
 
   useEffect(() => {
-    console.log(routerParam.id)
     if (routerParam.id) {
       const parsedJwt = CommonUtil.parseJwt(accessToken);
       fetchExistingExperiences(routerParam.id, parsedJwt)
@@ -128,7 +131,6 @@ export default function Page() {
 
   const handleChange = (e) => {
     const {name, value} = e.target;
-    console.log(name, value);
     setFormData((prevFormData) => ({
       ...prevFormData, [name]: value,
     }));
@@ -136,9 +138,16 @@ export default function Page() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(formData);
     const form = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
-      form.append(key, value);
+      if (Array.isArray(value)) {
+        // Jika value adalah array, iterasi dan tambahkan setiap item array sebagai entri terpisah
+        value.forEach((item, index) => form.append(`${key}[${index}]`, item));
+      } else {
+        // Jika value bukan array, langsung tambahkan
+        form.append(key, value);
+      }
     });
 
     Object.entries(formDataRef).forEach(([key, value]) => {
@@ -146,7 +155,10 @@ export default function Page() {
     });
 
     form.delete('experienceResources');
-    files.forEach((file, index) => {
+    const updatedFiles = files.filter(file =>
+      !oldFiles.some(oldFile => oldFile.name === file.name)
+    );
+    updatedFiles.forEach((file, index) => {
       form.append(`experienceResources`, file.file);
     });
 
@@ -159,12 +171,11 @@ export default function Page() {
         'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
       }
     });
-
     const responseBody = await fetchResponse.json();
 
     if (fetchResponse.ok) {
       setErrors({});
-      router.push('/admin/mentor/experiences?notify=success'); // Tambahkan query param
+      // router.push('/admin/mentor/experiences?notify=success'); // Tambahkan query param
     } else {
       console.error('Failed to submit data', responseBody);
       const errorMessages = {};
@@ -208,8 +219,12 @@ export default function Page() {
     const responseBody = await fetchResponse.json();
     if (fetchResponse.ok) {
       const resultData = responseBody['result']['data'];
+      console.log(resultData);
       setFormData({
-        companyName: resultData.companyName, location: resultData.location, positionName: resultData.positionName,
+        companyName: resultData.companyName,
+        location: resultData.location,
+        positionName: resultData.positionName,
+        deletedFilesName: []
       })
       setFormDataRef({
         employmentType: resultData.employmentType,
@@ -221,14 +236,23 @@ export default function Page() {
       for (const resourceElement of resultData['experienceResource']) {
         allFiles.push({
           source: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/experience-resources/${parsedJwt.mentorId}/${experienceId}/${resourceElement.imagePath}`,
-          options: {type: 'input'}
+          options: {type: 'input'},
+          name: `${resourceElement.imagePath}`,
         });
       }
       setFiles(allFiles);
-
+      setOldFiles(allFiles);
     } else {
       console.error(responseBody);
     }
+  }
+
+  async function handleRemoveFile(error, file) {
+    console.log(file.file)
+    setFormData({
+      ...formData,
+      deletedFilesName: [...formData.deletedFilesName, file.file.name], // Membuat salinan baru dari array dan menambahkannya
+    });
   }
 
   return (<>
@@ -361,6 +385,7 @@ export default function Page() {
                           files={files}
                           onupdatefiles={setFiles}
                           allowMultiple={true}
+                          onremovefile={handleRemoveFile}
                           maxFiles={3}
                           name="experienceResources"
                           labelIdle='Seret & Letakkan Gambar Anda atau <span class="filepond--label-action">Browse</span>'
