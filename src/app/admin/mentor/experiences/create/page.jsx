@@ -163,7 +163,6 @@ export default function Page() {
       setErrors({});
       router.push('/admin/mentor/experiences?notify=success'); // Tambahkan query param
     } else {
-      console.error('Failed to submit data', responseBody);
       const errorMessages = {};
       responseBody.errors.message.forEach((error) => {
         errorMessages[error.path[0]] = error.message;
@@ -182,7 +181,6 @@ export default function Page() {
       }
     });
     const responseBody = await fetchResponse.json();
-    console.log(responseBody, fetchResponse);
     if (fetchResponse.ok) {
       setEmploymentTypes(responseBody['result']['data'])
       setFormDataRef((prevFormDataRef) => ({
@@ -190,7 +188,6 @@ export default function Page() {
         employmentType: responseBody['result']['data'][0],
       }))
     } else {
-      console.error(responseBody);
     }
   }
 
