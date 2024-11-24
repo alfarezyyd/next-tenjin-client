@@ -1,8 +1,8 @@
 "use client"
 import AdminWrapper from "@/components/admin/AdminWrapper";
-import "../../../../../public/assets/css/custom.scss"
 import {useEffect, useState} from "react";
 import CommonStyle from "@/components/admin/CommonStyle";
+
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
@@ -33,7 +33,6 @@ export default function Page() {
   useEffect(() => {
     async function loadAssets() {
       const $ = (await import('jquery')).default;
-      await CommonStyle();
       await CommonScript();
     }
 

@@ -1,17 +1,25 @@
 "use client"
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import {useEffect, useRef, useState} from "react";
+
+// Filepomd
 import {FilePond, registerPlugin} from 'react-filepond';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+
 import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
-import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
 import {useRouter} from "next/navigation";
 
+// Style
+import 'select2/dist/css/select2.min.css'
+import 'bootstrap-daterangepicker/daterangepicker.css'
+import 'filepond/dist/filepond.min.css'
+import 'summernote/dist/summernote-bs4.css'
+import '@/../public/assets/css/components.css'
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -44,12 +52,6 @@ export default function Page() {
 
   useEffect(() => {
     const loadAssets = async () => {
-      await import('select2/dist/css/select2.min.css');
-      await import('bootstrap-daterangepicker/daterangepicker.css');
-      await import('filepond/dist/filepond.min.css');
-      await import('summernote/dist/summernote-bs4.css');
-      await CommonStyle();
-
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
       await import('summernote/dist/summernote-bs4.js');
@@ -59,7 +61,6 @@ export default function Page() {
       jQueryRef.current = $;
 
       $(employmentTypeRef.current).on("change", () => {
-        console.log($(employmentTypeRef.current).val())
         setFormDataRef((prevFormDataRef) => ({
           ...prevFormDataRef,
           employmentType: ($(employmentTypeRef.current).val()),
@@ -87,7 +88,6 @@ export default function Page() {
       $(endDateRef.current).on("input", updateSelectedEndDate);
 
       $(descriptionRef.current).on("summernote.change", () => {
-        console.log($(descriptionRef.current).val())
         setFormDataRef((prevFormDataRef) => ({
           ...prevFormDataRef,
           description: ($(descriptionRef.current).val()),
@@ -124,7 +124,6 @@ export default function Page() {
 
   const handleChange = (e) => {
     const {name, value} = e.target;
-    console.log(name, value);
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -148,11 +147,6 @@ export default function Page() {
       form.append(`experienceResources`, file.file);
     });
 
-    console.log(form);
-    for (let [key, value] of form.entries()) {
-      console.log(key, value);
-    }
-
     const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/experiences`, {
       method: 'POST',
       body: form,
@@ -166,7 +160,6 @@ export default function Page() {
     const responseBody = await fetchResponse.json();
 
     if (fetchResponse.ok) {
-      console.log('Data submitted successfully', responseBody);
       setErrors({});
       router.push('/admin/mentor/experiences?notify=success'); // Tambahkan query param
     } else {
@@ -176,7 +169,6 @@ export default function Page() {
         errorMessages[error.path[0]] = error.message;
       });
       setErrors(errorMessages);
-      console.log(errorMessages);
     }
   };
 
