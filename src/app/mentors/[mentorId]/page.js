@@ -15,13 +15,13 @@ import {
   Tab,
   Tabs
 } from "@nextui-org/react";
-import {MdOutlineChat} from "react-icons/md";
 import {Loading} from "@/components/admin/Loading";
-import Link from "next/link";
-import {PiHandWavingFill} from "react-icons/pi";
 import {LandingContext} from "@/components/LandingProvider";
 import Cookies from "js-cookie";
 import {CommonUtil} from "@/common/utils/common-util";
+import {BsInfoSquareFill} from "react-icons/bs";
+import {PiHandWavingFill} from "react-icons/pi";
+import {MdOutlineChat} from "react-icons/md";
 
 export default function Page({}) {
   const [mentorData, setMentorData] = useState({});
@@ -52,7 +52,6 @@ export default function Page({}) {
 
   async function initiateCheckout() {
     localStorage.setItem("checkoutItem", "");
-    console.log(activeCategory)
     localStorage.setItem("checkoutItem", JSON.stringify({
       topic: activeCategory['topic'],
       assistantId: activeCategory['id'],
@@ -90,7 +89,7 @@ export default function Page({}) {
   return (loading ? <Loading/> : (
     <LandingWrapper>
       <div id="upper-mentor"
-           className='mx-auto max-w-7xl py-8 lg:px-4 md:px-2 sm:px-0 bg-faqblue rounded-2xl mt-12'>
+           className='mx-auto max-w-7xl py-8 lg:px-4 md:px-2 sm:px-0 bg-faqblue rounded-2xl mt-12 relative z-0'>
         <div className="w-full mx-4 lg:mx-0">
           <div
             className="mx-auto w-full max-w-6xl rounded-2xl bg-white py-6 px-6 mb-5 flex flex-row gap-5 justify-between">
@@ -158,7 +157,7 @@ export default function Page({}) {
                             radius="lg"
                             alt={item.title}
                             className="object-cover h-[140px] w-full"
-                            src={`${process.env.NEXT_PUBLIC_BASE_URL}/`}
+                            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${activeCategory?.category.logo}`}
                           />
                         </CardBody>
                         <CardFooter className="text-small justify-between">
@@ -188,9 +187,9 @@ export default function Page({}) {
                                     <div className="relative col-span-6 md:col-span-4">
                                       <Image
                                         alt="Album cover"
-                                        className="object-cover w-20"
+                                        className="w-14 h-18"
                                         shadow="md"
-                                        src="https://nextui.org/images/album-cover.png"
+                                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${activeCategory?.category.logo}`}
                                       />
                                     </div>
 
@@ -213,7 +212,7 @@ export default function Page({}) {
                         <div className="flex flex-row mt-5">
                           <Image
                             alt="NextUI hero Image"
-                            src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+                            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${activeCategory?.category.logo}`}
                             className="w-32 h-40"
                           />
                           <div className="flex flex-col ml-5 gap-4">
@@ -241,7 +240,8 @@ export default function Page({}) {
                                   className="w-48 h-16 disabled">
                             <span className="font-bold text-2xl">Order</span>
                           </Button>
-                          <Button variant="solid" size="lg" radius="full" onClick={() => {
+                          <Button isDisabled={decodedAccessToken?.uniqueId !== null} variant="solid" size="lg"
+                                  radius="full" onClick={() => {
                             toggleChat()
                             setChatData((prevChatData) => {
                               const updatedChatData = {...prevChatData}; // Salin data lama (spread operator untuk objek)
@@ -266,33 +266,28 @@ export default function Page({}) {
                       </CardBody>
                     </Card>
                     <Card className="max-w">
-                      <CardHeader className="flex gap-3">
-                        <Image
-                          alt="nextui logo"
-                          height={40}
-                          radius="sm"
-                          src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
-                          width={40}
-                        />
+                      <CardHeader className="flex gap-3 relative z-0">
+                        <BsInfoSquareFill className={"text-3xl fill-sky-400"}/>
                         <div className="flex flex-col">
-                          <h1 className="text-2xl font-bold text-back">Biodata</h1>
+                          <h1 className="text-2xl font-bold text-back">Informasi Assistensi</h1>
                         </div>
                       </CardHeader>
                       <Divider/>
                       <div className="p-2 rounded-md">
-                        <CardBody className="bg-gray-200 ">
-                          <p>Make beautiful websites regardless of your design experience.</p>
+                        <CardBody className="bg-gray-200 rounded-xl">
+                          <p dangerouslySetInnerHTML={{__html: activeCategory?.description}}></p>
                         </CardBody>
                       </div>
                       <Divider/>
                       <CardFooter>
-                        <Link href="https://github.com/nextui-org/nextui">
-                          Visit source code on GitHub.
-                        </Link>
+                        {activeCategory?.AssistanceTag.map(tag => (
+                          <Chip color="primary" key={`assistance-tag${tag.tagId}`}>{tag.tag.name}</Chip>
+                        ))}
+
                       </CardFooter>
                     </Card>
                     <Card className="max-w">
-                      <CardHeader className="flex gap-3">
+                      <CardHeader className="flex gap-3 relative z-0">
                         <Image
                           alt="nextui logo"
                           height={40}

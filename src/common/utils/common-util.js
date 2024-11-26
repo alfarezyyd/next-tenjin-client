@@ -16,10 +16,10 @@ export class CommonUtil {
   static isTokenExpired(token) {
     if (!token) return true;
 
-    const {exp} = this.parseJwt(token.value); // Decode token untuk mendapatkan `exp`
+    const {exp} = this.parseJwt(token.value ?? token); // Decode token untuk mendapatkan `exp`
     if (!exp) return true;
-
     const currentTime = Math.floor(Date.now() / 1000); // Waktu sekarang dalam detik
+
     return exp < currentTime; // `true` jika sudah kedaluwarsa, `false` jika masih valid
   }
 
