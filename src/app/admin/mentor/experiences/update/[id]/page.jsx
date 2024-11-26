@@ -21,6 +21,7 @@ import 'bootstrap-daterangepicker/daterangepicker.css'
 import 'filepond/dist/filepond.min.css'
 import 'summernote/dist/summernote-bs4.css'
 import '@/../public/assets/css/components.css'
+import {toast} from "react-toastify";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -172,18 +173,16 @@ export default function Page() {
       }
     });
     const responseBody = await fetchResponse.json();
-
     if (fetchResponse.ok) {
       setErrors({});
-      // router.push('/admin/mentor/experiences?notify=success'); // Tambahkan query param
+      router.push('/admin/mentor/experiences?notify=success'); // Tambahkan query param
     } else {
-      console.error('Failed to submit data', responseBody);
       const errorMessages = {};
-      responseBody.errors.message.forEach((error) => {
+      responseBody.errors?.message.forEach((error) => {
         errorMessages[error.path[0]] = error.message;
       });
       setErrors(errorMessages);
-      console.log(errorMessages);
+      toast.error(responseBody.message ?? 'Terdapat kesalahan dalam operasi')
     }
   };
 
