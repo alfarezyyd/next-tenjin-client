@@ -42,7 +42,7 @@ export default function AdminWrapper({children}) {
     {loading ? (<Loading/>) : (<div id="app">
       <div className="main-wrapper">
         <div className="navbar-bg"></div>
-        <AdminNavbar/>
+        <AdminNavbar parsedJwt={parsedAccessToken}/>
         {accessToken && <AdminSidebar parsedJwt={parsedAccessToken}/>}
         <div className="main-content">
           {children}

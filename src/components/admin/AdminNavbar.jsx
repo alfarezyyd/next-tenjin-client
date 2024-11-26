@@ -1,6 +1,8 @@
 import Cookies from "js-cookie";
+import Link from "next/link";
+import {CommonUtil} from "@/common/utils/common-util";
 
-export default function AdminNavbar() {
+export default function AdminNavbar({parsedJwt}) {
   return (<nav className="navbar navbar-expand-lg main-navbar">
     <form className="form-inline mr-auto">
       <ul className="navbar-nav mr-3">
@@ -143,19 +145,19 @@ export default function AdminNavbar() {
       <li className="dropdown"><a href="#" data-toggle="dropdown"
                                   className="nav-link dropdown-toggle nav-link-lg nav-link-user">
         <img alt="image" src="/assets/img/avatar/avatar-1.png" className="rounded-circle mr-1"/>
-        <div className="d-sm-none d-lg-inline-block">Hi, Ujang Maman</div>
+        <div className="d-sm-none d-lg-inline-block">Hi, {parsedJwt?.name}</div>
       </a>
         <div className="dropdown-menu dropdown-menu-right">
-          <div className="dropdown-title">Logged in 5 min ago</div>
+          <div className="dropdown-title">Logged
+            in {parsedJwt && CommonUtil.diffForHumans((new Date(parsedJwt?.iat * 1000)))} min
+            ago
+          </div>
           <a href="features-profile.html" className="dropdown-item has-icon">
             <i className="far fa-user"></i> Profile
           </a>
-          <a href="features-activities.html" className="dropdown-item has-icon">
-            <i className="fas fa-bolt"></i> Activities
-          </a>
-          <a href="features-settings.html" className="dropdown-item has-icon">
+          <Link href="/admin/settings/general-data" className="dropdown-item has-icon">
             <i className="fas fa-cog"></i> Settings
-          </a>
+          </Link>
           <div className="dropdown-divider"></div>
           <a href="" className="dropdown-item has-icon text-danger" onClick={(e) => {
             e.preventDefault();
