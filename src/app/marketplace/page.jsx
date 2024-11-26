@@ -2,9 +2,6 @@
 import "../globals.css"
 import Banner from "./components/Banner";
 import NFt4 from "@/../public/assets/img/nfts/Nft1.png";
-import avatar1 from "../../../public/assets/img/avatars/avatar1.png";
-import avatar2 from "../../../public/assets/img/avatars/avatar2.png";
-import avatar3 from "../../../public/assets/img/avatars/avatar3.png";
 
 import tableDataTopCreators from "./variables/tableDataTopCreators.json";
 import {tableColumnsTopCreators} from "./variables/tableColumnsTopCreators";
@@ -14,6 +11,7 @@ import LandingWrapper from "@/components/landing/LandingWrapper";
 import {useEffect, useState} from "react";
 import {Loading} from "@/components/admin/Loading";
 import HistoryCard from "@/app/marketplace/components/HistoryCard";
+import {FaArrowAltCircleRight} from "react-icons/fa";
 
 const Marketplace = () => {
   const [assistants, setAssistants] = useState();
@@ -110,6 +108,11 @@ const Marketplace = () => {
                   <div className="mb-5 mt-5 flex items-center justify-between px-[26px]">
                     <h4 className="text-2xl font-bold text-navy-700 dark:text-white">
                       {assistant.name}
+                    </h4>
+                    <h4
+                      className="flex flex-row gap-3 items-center text-lg font-bold text-navy-700 dark:text-white p-2 px-3 rounded-full bg-white dark:bg-navy-700 hover:bg-primary-400">
+                      Lihat Semua
+                      <FaArrowAltCircleRight/>
                     </h4>
                   </div>
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
