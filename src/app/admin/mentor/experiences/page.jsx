@@ -147,7 +147,7 @@ export default function Page() {
                       </div>
                       <div className="d-flex flex-row" style={{gap: 5 + "px"}}>
                         <a
-                          href={`${process.env.NEXT_PUBLIC_BASE_URL}/admin/mentor/experiences/update/${mentorExperience.id}`}
+                          href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/experiences/update/${mentorExperience.id}`}
                           className="btn btn-primary btn-icon icon-left text-white">
                           <i className="fas fa-pen mr-2"></i>Update
                         </a>

@@ -57,7 +57,7 @@ export default function Login() {
       const responseBody = await response.json();
       if (response.ok) {
         Cookies.set('accessToken', responseBody['result']['data']['accessToken']);
-        push(`${process.env.NEXT_PUBLIC_BASE_URL}/admin/dashboard`);  // Redirect to the dashboard or another protected route
+        push(`${process.env.NEXT_PUBLIC_BASE_URL}admin/dashboard`);  // Redirect to the dashboard or another protected route
       } else {
         switch (response.status) {
           case 404: {
@@ -90,7 +90,7 @@ export default function Login() {
       const responseBody = await response.json();
       if (response.ok) {
         Cookies.set('accessToken', responseBody['result']['data']['accessToken']);
-        push(`${process.env.NEXT_PUBLIC_BASE_URL}/admin/dashboard`);  // Redirect to the dashboard or another protected route
+        push(`${process.env.NEXT_PUBLIC_BASE_URL}admin/dashboard`);  // Redirect to the dashboard or another protected route
       } else {
         switch (response.status) {
           case 404: {
@@ -193,7 +193,7 @@ export default function Login() {
             Not registered yet?
           </span>
         <a
-          href={`${process.env.NEXT_PUBLIC_BASE_URL}/auth/register`}
+          href={`${process.env.NEXT_PUBLIC_BASE_URL}auth/register`}
           className="ml-1 text-sm font-medium text-brand-500 hover:text-brand-600 dark:text-white"
         >
           Create an account

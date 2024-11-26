@@ -40,7 +40,7 @@ export default function Page() {
                          alt="image" width={400}/>
                   <h2 className="mt-0">Terima Kasih atas Partisipasi Anda!</h2>
 
-                  <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/admin/dashboard`} className="btn btn-primary mt-3">Kembali
+                  <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/dashboard`} className="btn btn-primary mt-3">Kembali
                     ke Admin</Link>
                 </div>
               </div>

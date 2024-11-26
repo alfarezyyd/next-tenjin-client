@@ -166,7 +166,7 @@ export default function Page() {
                     <div className="card-footer">
                       <div className="d-flex flex-row" style={{gap: 5}}>
                         <a
-                          href={`${process.env.NEXT_PUBLIC_BASE_URL}/admin/mentor/educations/update/${mentorEducation.id}`}
+                          href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/educations/update/${mentorEducation.id}`}
                           className="btn btn-info">Edit</a>
                         <button className="btn btn-danger" onClick={() => {
                           triggerDeleteEducation(mentorEducation.id)

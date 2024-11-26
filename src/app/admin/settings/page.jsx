@@ -60,7 +60,7 @@ export default function Page() {
                   <div className="card-body">
                     <h4>Informasi Pribadi</h4>
                     <p>Pengaturan mengenai data pribadi Anda yang harus dilengkapi sebelum melakukan order</p>
-                    <a href={`${process.env.NEXT_PUBLIC_BASE_URL}/admin/settings/general-data`} className="card-cta">Change
+                    <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/settings/general-data`} className="card-cta">Change
                       Setting <i
                         className="fas fa-chevron-right"></i></a>
                   </div>

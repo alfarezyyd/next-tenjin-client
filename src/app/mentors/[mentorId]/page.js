@@ -63,7 +63,7 @@ export default function Page({}) {
       minutesDurations: activeCategory['durationMinutes'],
       note: "Testing",
     }));
-    push(`${process.env.NEXT_PUBLIC_BASE_URL}/checkout`)
+    push(`${process.env.NEXT_PUBLIC_BASE_URL}checkout`)
   }
 
   const fetchMentorData = async (mentorId) => {
