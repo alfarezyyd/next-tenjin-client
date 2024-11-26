@@ -227,7 +227,7 @@ export default function Page({}) {
                               <Image src={"/assets/coin.svg"} alt="Star" width={50}/>
                               <div className="flex flex-col">
                                 <div className="text-base text-amber-400"><span
-                                  className="text-xl font-bold">1</span> /30 Menit
+                                  className="text-xl font-bold">{activeCategory?.price}</span> /{activeCategory?.durationMinutes} Menit
                                 </div>
                                 <div className="text-xs line-through text-gray-400">1/30 Menit</div>
                               </div>
