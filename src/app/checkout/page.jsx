@@ -11,7 +11,7 @@ import {
   TimeInput,
   useDisclosure
 } from "@nextui-org/react"
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import Cookies from "js-cookie";
 
 import {CommonUtil} from "@/common/utils/common-util";
@@ -33,21 +33,36 @@ export default function Page() {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedInfoDate, setSelectedInfoDate] = useState(null);
+  const calendarRef = useRef(null);
+  const [event, setEvent] = useState(null);
 
   const [totalPrice, setTotalPrice] = useState(0);
   const handleIncrement = () => {
+
     setCount(count + 1);
-    setTotalPrice((count + 1) * checkoutItem['price']);
+    setTotalPrice((count + 1) * Number(checkoutItem['price']));
   }
   const handleDecrement = () => {
-    if (count > 0) {
+    if (count > 1) {
       setCount(count - 1);
-      setTotalPrice((count - 1) * checkoutItem['price']);
+      setTotalPrice((count - 1) * Number(checkoutItem['price']));
     }
   };
-  useEffect(() => {
 
-  }, [totalPrice]);
+  useEffect(() => {
+    console.log(checkoutItem)
+    if (checkoutItem?.sessionStartTimestamp) {
+
+      const eventEnd = new Date(checkoutItem.sessionStartTimestamp); // Salinan eventStart
+      eventEnd.setMinutes(eventEnd.getMinutes() + (checkoutItem['minutesDurations'] * count));
+
+      setCheckoutItem(prevState => ({
+        ...prevState, sessionEndTimestamp: eventEnd
+      }))
+      event.setEnd(eventEnd)
+    }
+  }, [count]);
+
   useEffect(() => {
     setAccessToken(Cookies.get("accessToken"));
     // You can also change below url value to any script url you wish to load,
@@ -124,7 +139,6 @@ export default function Page() {
 // Gabungkan tanggal dan waktu menjadi ISO string
     const dateNow = `${selectedInfoDate.startStr.substring(0, 10)}T${String(selectedTime.hour).padStart(2, '0')}:${String(selectedTime.minute).padStart(2, '0')}:00`
 
-
     const eventStart = new Date(dateNow);
     setCheckoutItem(prevState => ({
       ...prevState, sessionStartTimestamp: eventStart
@@ -135,10 +149,9 @@ export default function Page() {
     setCheckoutItem(prevState => ({
       ...prevState, sessionEndTimestamp: eventEnd
     }))
-
-    selectedInfoDate.view.calendar.addEvent({
-      title: 'Testing', start: dateNow, end: eventEnd, allDay: false
-    })
+    setEvent(selectedInfoDate.view.calendar.addEvent({
+      title: loggedUser.name, start: dateNow, end: eventEnd, allDay: false
+    }))
     onOpenChange()
   }
 
@@ -221,6 +234,7 @@ export default function Page() {
             </div>
             <div className="mt-2">
               <FullCalendar
+                ref={calendarRef}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 initialView="timeGridDay"
                 height={400}
@@ -309,7 +323,11 @@ export default function Page() {
               <div className="mt-6 flex items-center justify-between">
                 <p className="text-sm font-medium text-gray-900">Total</p>
                 <p
-                  className="text-2xl font-semibold text-gray-900">Rp {totalPrice === 0 ? checkoutItem['price'] : totalPrice + (Number((totalPrice === 0 ? checkoutItem['price'] : totalPrice) * 0.1).toFixed(1))}</p>
+                  className="text-2xl font-semibold text-gray-900">
+                  Rp{' '}
+                  {totalPrice === 0
+                    ? checkoutItem['price']
+                    : (totalPrice + totalPrice * 0.1).toFixed(1)}                </p>
               </div>
             </div>
             <button onClick={triggerPayment}

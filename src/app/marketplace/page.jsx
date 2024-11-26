@@ -1,5 +1,4 @@
 "use client"
-import "../globals.css"
 import Banner from "./components/Banner";
 import NFt4 from "@/../public/assets/img/nfts/Nft1.png";
 

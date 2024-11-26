@@ -8,6 +8,7 @@ import {CommonUtil} from "@/common/utils/common-util";
 import Cookies from "js-cookie";
 import {LandingContext, LandingProvider} from "@/components/LandingProvider";
 import {initializeSocket} from "@/components/chat/socket";
+import '@/app/globals.css'
 
 export default function LandingWrapper({children}) {
   const [accessToken, setAccessToken] = useState();
