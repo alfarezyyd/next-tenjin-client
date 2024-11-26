@@ -5,7 +5,6 @@ import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import {Loading} from "@/components/admin/Loading";
-import 'react-toastify/dist/ReactToastify.css';
 import {useRouter, useSearchParams} from "next/navigation";
 import {toast} from 'react-toastify';
 

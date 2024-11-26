@@ -6,7 +6,6 @@ import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
 import {useRouter, useSearchParams} from "next/navigation";
-import 'react-toastify/dist/ReactToastify.css';
 import {toast} from "react-toastify";
 
 import '@/../public/assets/css/components.css'

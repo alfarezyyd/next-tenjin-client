@@ -7,7 +7,6 @@ import {Loading} from "@/components/admin/Loading";
 import Cookies from "js-cookie";
 import {CommonUtil} from "@/common/utils/common-util";
 import {toast} from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
 import {useRouter, useSearchParams} from "next/navigation";
 
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';

@@ -7,7 +7,6 @@ import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
 import {toast} from "react-toastify";
 import {useRouter, useSearchParams} from "next/navigation";
-import 'react-toastify/dist/ReactToastify.css';
 import Image from "next/image";
 
 

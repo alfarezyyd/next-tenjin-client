@@ -8,7 +8,6 @@ import {Loading} from "@/components/admin/Loading";
 import {useRouter, useSearchParams} from "next/navigation";
 
 import {toast} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function Page() {

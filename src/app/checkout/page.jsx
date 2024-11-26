@@ -13,7 +13,6 @@ import {
 } from "@nextui-org/react"
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
-import 'react-toastify/dist/ReactToastify.css';
 
 import {CommonUtil} from "@/common/utils/common-util";
 import {Loading} from "@/components/admin/Loading";

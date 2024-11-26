@@ -5,9 +5,7 @@ import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
-import 'react-toastify/dist/ReactToastify.css';
 import AdminFullWrapper from "@/components/admin/AdminFullWrapper";
-import 'react-toastify/dist/ReactToastify.css';
 import {toast} from "react-toastify";
 import {useRouter} from "next/navigation";
 
