@@ -1,10 +1,10 @@
 import {IoHeart, IoHeartOutline} from "react-icons/io5";
 import {useState} from "react";
 import Card from "@/components/card/index";
-import Image from "next/image";
 import Link from "next/link";
+import {Image} from "@nextui-org/react";
 
-const NftCard = ({title, author, price, image, mentorId, assistantId, extra, durationMinutes}) => {
+const NftCard = ({title, author, price, image, mentorId, extra, durationMinutes, assistantId}) => {
   const [heart, setHeart] = useState(true);
   return (<Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/mentors/${mentorId}`}>
     <Card
@@ -13,8 +13,10 @@ const NftCard = ({title, author, price, image, mentorId, assistantId, extra, dur
       <div className="h-full w-full">
         <div className="relative w-full">
           <Image
-            src={image}
-            className="mb-3 h-full w-full rounded-xl 3xl:h-full 3xl:w-full"
+            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets//assistants/${mentorId}/${assistantId}/${image}`}
+            sizes={"contain"}
+            isZoomed={true}
+            className="mb-3 rounded-xl object-fill 3xl:h-full 3xl:w-full"
             alt=""
           />
           <button
@@ -38,9 +40,9 @@ const NftCard = ({title, author, price, image, mentorId, assistantId, extra, dur
             <p className="text-lg font-medium text-gray-600 md:mt-2">
               By {author}{" "}
             </p>
-            <div className="flex flex-row gap-3 mt-2">
-              <Image src={"/assets/coin.svg"} alt="Star" width={40} height={40}/>
-              <p className="mt-1 text-3xl font-bold text-amber-300 ">
+            <div className="flex flex-row items-center gap-3 mt-2">
+              <Image src={"/assets/coin.svg"} alt="Star" width={30} height={30}/>
+              <p className="mt-1 text-2xl font-bold text-amber-300 ">
                 {price} <span className='text-xl text-black font-semibold'>/{durationMinutes} menit</span>
               </p>
             </div>

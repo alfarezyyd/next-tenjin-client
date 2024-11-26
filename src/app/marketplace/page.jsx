@@ -13,6 +13,7 @@ import NftCard from "@/components/card/NftCard";
 import LandingWrapper from "@/components/landing/LandingWrapper";
 import {useEffect, useState} from "react";
 import {Loading} from "@/components/admin/Loading";
+import HistoryCard from "@/app/marketplace/components/HistoryCard";
 
 const Marketplace = () => {
   const [assistants, setAssistants] = useState();
@@ -115,13 +116,13 @@ const Marketplace = () => {
                     {assistant.Assistance.map((assistant, index) => (
                       <NftCard
                         key={`assistants-${index}`}
-                        bidders={[avatar1, avatar2, avatar3]}
                         title={assistant.topic}
                         author={assistant.mentor.user.name}
-                        price="0.91"
-                        mentorId={assistant.mentor.id}
+                        price={assistant.price}
                         assistantId={assistant.id}
-                        image={NFt4}
+                        mentorId={assistant.mentor.id}
+                        durationMinutes={assistant.durationMinutes}
+                        image={assistant.AssistanceResource[0].imagePath}
                       />
                     ))}
                   </div>
@@ -137,7 +138,7 @@ const Marketplace = () => {
               tableData={tableDataTopCreators}
               columnsData={tableColumnsTopCreators}
             />
-            {/*<HistoryCard/>*/}
+            <HistoryCard/>
           </div>
         </div>
 
