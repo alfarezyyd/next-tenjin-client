@@ -22,6 +22,7 @@ import timeGridPlugin from '@fullcalendar/timegrid' // a plugin!
 import interactionPlugin from '@fullcalendar/interaction'
 import {Time} from "@internationalized/date";
 import {Bounce, toast} from "react-toastify";
+import {useRouter} from "next/navigation";
 
 
 export default function Page() {
@@ -35,6 +36,7 @@ export default function Page() {
   const [selectedInfoDate, setSelectedInfoDate] = useState(null);
   const calendarRef = useRef(null);
   const [event, setEvent] = useState(null);
+  const {push} = useRouter();
 
   const [totalPrice, setTotalPrice] = useState(0);
   const handleIncrement = () => {
@@ -120,12 +122,24 @@ export default function Page() {
       });
       let responseBody = await responseFetch.json();
       if (responseFetch.ok) {
-        console.log('Data submitted successfully', responseBody);
-
-        window.snap.pay(responseBody['result']['data'], {
-          onClose: () => {
-            alert('Your payment is postponed, you can continue this order next time');
-          }
+        const transactionToken = responseBody['result']['data']
+        window.snap.pay(transactionToken, {
+          onSuccess: function (result) {
+            console.log('Payment success:', result);
+            push(`admin/orders/${transactionToken}`)
+          },
+          onPending: function (result) {
+            console.log('Payment pending:', result);
+            push(`admin/orders`)
+          },
+          onError: function (result) {
+            console.error('Payment error:', result);
+            alert('Terjadi kesalahan saat memproses pembayaran.');
+          },
+          onClose: function (result) {
+            console.log('Payment pending:', result);
+            push(`admin/orders`)
+          },
         });
       } else {
         console.error('Failed to submit data', responseBody);
