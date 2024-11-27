@@ -57,7 +57,6 @@ export default function Page() {
     const loadAssets = async () => {
       const $ = (await import('jquery')).default;
 
-      await CommonStyle();
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
       if (!$.fn.summernote) {

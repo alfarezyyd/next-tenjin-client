@@ -75,7 +75,6 @@ export default function Page() {
 
     async function loadAssets() {
       const $ = (await import('jquery')).default;
-      await CommonStyle();
       await CommonScript();
     }
 

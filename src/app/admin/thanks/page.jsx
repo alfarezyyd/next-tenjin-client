@@ -12,7 +12,7 @@ export default function Page() {
   useEffect(() => {
     async function loadAssets() {
       const $ = (await import('jquery')).default;
-      await CommonStyle();
+
       await CommonScript();
     }
 

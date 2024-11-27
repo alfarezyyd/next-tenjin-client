@@ -23,7 +23,7 @@ export default function Page() {
   useEffect(() => {
     const loadAssets = async () => {
       const $ = (await import('jquery')).default;
-      await CommonStyle();
+
       await CommonScript();
     }
     if (typeof window !== 'undefined') {

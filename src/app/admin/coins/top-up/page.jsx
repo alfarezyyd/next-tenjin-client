@@ -1,7 +1,6 @@
 "use client"
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import React, {useEffect, useState} from "react";
-import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
@@ -75,7 +74,6 @@ export default function Page() {
 
     async function loadAssets() {
       const $ = (await import('jquery')).default;
-      await CommonStyle();
       await CommonScript();
     }
 
@@ -123,13 +121,14 @@ export default function Page() {
           {loading ? (  // Tampilkan loading selama data belum tersedia
             <Loading/>) : (<div className='d-flex flex-row'>
             <div className="col-12 col-md-6 col-lg-3 pl-0">
-              {orderHistory?.length > 0 ? (orderHistory.map((item, index) => (<div className="card card-primary">
-                <div className="card-body">
-                  <p className='mb-0'>Total Harga: {item.totalPrice}</p>
-                  <p className='mb-0'>Jumlah Koin: {item.coinAmount}</p>
-                  <p className='mb-0'>Tanggal: {item.createdAt.substring(0, 10)}</p>
-                </div>
-              </div>))) : <></>}
+              {orderHistory?.length > 0 ? (orderHistory.map((item, index) => (
+                <div className="card card-primary">
+                  <div className="card-body">
+                    <p className='mb-0'>Total Harga: {item.totalPrice}</p>
+                    <p className='mb-0'>Jumlah Koin: {item.coinAmount}</p>
+                    <p className='mb-0'>Tanggal: {item.createdAt.substring(0, 10)}</p>
+                  </div>
+                </div>))) : <></>}
             </div>
             <div className="col-12 col-md-6 col-lg-9 pr-0">
               <div className="card card-primary">

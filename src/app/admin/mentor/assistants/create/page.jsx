@@ -57,7 +57,6 @@ export default function Page() {
   useEffect(() => {
     const loadAssets = async () => {
 
-      await CommonStyle();
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
       await import('summernote/dist/summernote-bs4.js');

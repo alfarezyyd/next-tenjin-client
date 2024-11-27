@@ -44,7 +44,7 @@ export default function Page() {
     const loadAssets = async () => {
       const $ = (await import("jquery")).default;
       await import('filepond/dist/filepond.min.css');
-      await CommonStyle();
+
       await CommonScript();
     };
 
