@@ -1,0 +1,16 @@
+@media print {
+  body * {
+    visibility: hidden; /* Sembunyikan semua elemen */
+  }
+
+  .section-body, .section-body * {
+    visibility: visible; /* Tampilkan hanya .section-body */
+  }
+
+  .section-body {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Sesuaikan lebar sesuai kebutuhan */
+  }
+}

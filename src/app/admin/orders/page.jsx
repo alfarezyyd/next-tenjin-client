@@ -3,7 +3,6 @@ import AdminWrapper from "@/components/admin/AdminWrapper";
 import {useEffect, useState} from "react";
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
-import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import {Loading} from "@/components/admin/Loading";
 import Image from "next/image";
 import '@/../public/assets/css/components.css'
@@ -181,9 +180,10 @@ export default function Page() {
                           initiatePayment(mentorAssistance['transactionToken'])
                         }} className="btn  btn-primary float-right mt-1">Continue</a>
                       </>)}
-                      {mentorAssistance.orderStatus === "FINISHED" && (<a href="#" onClick={() => {
-                        downloadInvoice(mentorAssistance['transactionToken'])
-                      }} className="btn  btn-success float-right mt-1">Invoice</a>)}
+                      {mentorAssistance.orderStatus === "FINISHED" &&
+                        (<a
+                          href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/orders/${mentorAssistance.transactionToken.toString()}`}
+                          className="btn  btn-success float-right mt-1">Invoice</a>)}
                     </div>
                   </div>
                 </div>
