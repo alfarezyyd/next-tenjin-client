@@ -11,7 +11,7 @@ import CommonScript from "@/components/admin/CommonScript";
 import {CommonUtil} from "@/common/utils/common-util";
 import Cookies from "js-cookie";
 import {useRouter} from "next/navigation";
-
+import '@/../public/assets/css/components.css'
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -283,7 +283,8 @@ export default function Page() {
                       <div className="col-6">
                         <br/>
                         <small>
-                          Anda harus membuat nomor PIN untuk menjadi mentor agar akun anda menjadi lebih aman
+                          Nomor PIN terdiri dari 6 digit angka. Anda harus membuat PIN untuk menjadi mentor agar
+                          akun anda menjadi lebih aman.
                         </small>
                       </div>
                     </div>
