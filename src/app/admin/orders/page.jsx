@@ -1,12 +1,12 @@
 "use client"
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import {useEffect, useState} from "react";
-import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import {Loading} from "@/components/admin/Loading";
 import Image from "next/image";
+import '@/../public/assets/css/components.css'
 
 
 export default function Page() {
@@ -31,7 +31,6 @@ export default function Page() {
 
     async function loadAssets() {
       const $ = (await import('jquery')).default;
-      await CommonStyle();
       await CommonScript();
     }
 
@@ -93,6 +92,32 @@ export default function Page() {
     return currentTime - orderTime > twentyFourHoursInMs;
   };
 
+  async function downloadInvoice(transactionToken) {
+    console.log(transactionToken);
+    if (accessToken) {
+      try {
+        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/orders/invoice`, {
+          method: 'POST', includeCredentials: true, headers: {
+            'Accept': 'application/json', 'Content-Type': 'application/json', // Penting untuk JSON
+            'Authorization': `Bearer ${accessToken}`,
+          }, body: JSON.stringify({transactionToken: transactionToken}),
+        });
+        const responseBody = await responseFetch.json();
+        console.log(responseBody);
+        if (responseFetch.ok) {
+          setAllOrder(responseBody.result.data);
+          console.log(responseBody.result.data);
+        } else {
+          console.error('Failed to fetch experiences', responseBody);
+        }
+      } catch (error) {
+        console.error('Error fetching experiences:', error);
+      } finally {
+        setLoading(false); // Menghentikan loading ketika data sudah diterima
+      }
+    }
+  }
+
   return (<AdminWrapper>
     <section className="section">
       <div className="section-header">
@@ -110,6 +135,16 @@ export default function Page() {
         <p className="section-lead">Kelola dan pantau pesanan Anda dengan mudah. Lihat status, detail, dan riwayat
           transaksi semuanya di satu halaman.</p>
         <div className="row">
+          <div className="container">
+            <div className="col-12 col-md-12 col-lg-6 alert alert-warning alert-has-icon mx-auto">
+              <div className="alert-icon"><i className="far fa-lightbulb"></i></div>
+              <div className="alert-body">
+                <div className="alert-title">Perhatian</div>
+                Jika Anda sudah membayar namun invoice tidak dapat dilihat, mohon tunggu beberapa saat dan cek secara
+                berkala. Apabila terdapat kesalahan, mohon hubungi Admin untuk mendapatkan arahan.
+              </div>
+            </div>
+          </div>
           {loading ? (  // Tampilkan loading selama data belum tersedia
             <Loading/>) : (allOrder.length > 0 ? (allOrder.map((mentorAssistance) => (
             <div className="col-12 col-md-12 col-lg-12" key={`mentorAssistance-${mentorAssistance.id}`}>
@@ -140,12 +175,15 @@ export default function Page() {
                         </div>
                         <div className="text-job">{mentorAssistance.assistance.mentor.user.gender}</div>
                       </div>
-                      {!isOrderExpired(mentorAssistance.createdAt) && (<>
+                      {!isOrderExpired(mentorAssistance.createdAt) && (mentorAssistance.orderStatus !== "FINISHED") && (<>
                         <a href="#" className="btn btn-outline-primary float-right mt-1 ml-2">Cancel</a>
                         <a href="#" onClick={() => {
                           initiatePayment(mentorAssistance['transactionToken'])
                         }} className="btn  btn-primary float-right mt-1">Continue</a>
                       </>)}
+                      {mentorAssistance.orderStatus === "FINISHED" && (<a href="#" onClick={() => {
+                        downloadInvoice(mentorAssistance['transactionToken'])
+                      }} className="btn  btn-success float-right mt-1">Invoice</a>)}
                     </div>
                   </div>
                 </div>

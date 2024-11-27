@@ -122,6 +122,7 @@ export default function Page() {
       });
       let responseBody = await responseFetch.json();
       if (responseFetch.ok) {
+        localStorage.setItem("checkoutItem", "");
         const transactionToken = responseBody['result']['data']
         window.snap.pay(transactionToken, {
           onSuccess: function (result) {
