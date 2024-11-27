@@ -14,7 +14,7 @@ export default function AdminSidebar({parsedJwt}) {
       </div>
       <ul className="sidebar-menu">
         <li className="menu-header">Dashboard</li>
-        <li className={`nav-item ${pathNames[0] === 'admin' && pathNames[1] === '' ? 'active' : ''}`}>
+        <li className={`nav-item ${pathNames[0] === 'admin' && pathNames[1] === 'dashboard' ? 'active' : ''}`}>
           <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/dashboard`}>
             <i className="fas fa-fire"></i>
             <span>Dashboard</span>
