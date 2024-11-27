@@ -109,7 +109,7 @@ const Marketplace = () => {
                       {assistant.name}
                     </h4>
                     <h4
-                      className="flex flex-row gap-3 items-center text-lg font-bold text-navy-700 dark:text-white p-2 px-3 rounded-full bg-white dark:bg-navy-700 hover:bg-primary-400">
+                      className="flex flex-row gap-3 items-center text-lg font-bold text-navy-700 dark:text-white p-2 px-3 rounded-full bg-white dark:bg-navy-700 hover:bg-primary-400 hover:text-white transition-all transition-duration-400">
                       Lihat Semua
                       <FaArrowAltCircleRight/>
                     </h4>
