@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
 import AdminWrapper from "@/components/admin/AdminWrapper";
-import CommonStyle from "@/components/admin/CommonStyle";
+
 import CommonScript from "@/components/admin/CommonScript";
 import {FilePond, registerPlugin} from "react-filepond";
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';

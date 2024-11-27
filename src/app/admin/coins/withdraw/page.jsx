@@ -1,7 +1,6 @@
 "use client"
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import React, {useEffect, useState} from "react";
-import CommonStyle from "@/components/admin/CommonStyle";
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";

@@ -1,5 +1,7 @@
 import AdminWrapper from "@/components/admin/AdminWrapper";
 
+import '@/../public/assets/css/components.css'
+
 export default function Page() {
   return (
     <AdminWrapper>

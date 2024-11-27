@@ -1,6 +1,6 @@
 "use client"
 import {useEffect, useState} from "react";
-import CommonStyle from "@/components/admin/CommonStyle";
+
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {CommonUtil} from "@/common/utils/common-util";

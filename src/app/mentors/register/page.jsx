@@ -5,7 +5,7 @@ import {FilePond, registerPlugin} from 'react-filepond';
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-import CommonStyle from "@/components/admin/CommonStyle";
+
 import {Loading} from "@/components/admin/Loading";
 import CommonScript from "@/components/admin/CommonScript";
 import {CommonUtil} from "@/common/utils/common-util";

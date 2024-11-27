@@ -1,7 +1,7 @@
 "use client"
 import AdminFullWrapper from "@/components/admin/AdminFullWrapper";
 import {useEffect, useState} from "react";
-import CommonStyle from "@/components/admin/CommonStyle";
+
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {Image} from "@nextui-org/react";
