@@ -99,8 +99,7 @@ export default class MultipleItems extends Component {
 
 
     return (
-      <div className="bg-wework py-32">
-
+      <div id={"our-mentors-section"} className="bg-wework py-32">
         <div className='mx-auto max-w-2xl lg:max-w-7xl sm:py-4 lg:px-8 '>
 
           <div className="text-center">
