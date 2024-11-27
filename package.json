@@ -16,6 +16,7 @@
     "@fullcalendar/interaction": "^6.1.10",
     "@fullcalendar/react": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
+    "fullcalendar": "^3.10.0",
     "@headlessui/react": "^1.7.14",
     "@heroicons/react": "^2.1.5",
     "@internationalized/date": "^3.5.6",
