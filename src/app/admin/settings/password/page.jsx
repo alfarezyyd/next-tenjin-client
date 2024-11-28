@@ -138,7 +138,7 @@ export default function Page() {
                       <h4>General Settings</h4>
                     </div>
                     <div className="card-body">
-                      {decodedAccessToken.isExternal && (
+                      {decodedAccessToken?.isExternal && (
                         <div className="alert alert-warning col-8 mx-auto">
                           <div className="alert-title">Warning</div>
                           Karena akun anda terdeteksi login dari autoritas lain seperti Google, anda
@@ -157,7 +157,7 @@ export default function Page() {
                                    className={`form-control ${errors.oldPassword ? 'is-invalid' : ''}`}
                                    id="oldPassword"
                                    autoComplete={"on"}
-                                   disabled={Boolean(decodedAccessToken.isExternal)}
+                                   disabled={Boolean(decodedAccessToken?.isExternal)}
                                    onChange={handleChange}/>
                             <div className="input-group-append">
                               <div className="input-group-text" onClick={() => {
@@ -181,7 +181,7 @@ export default function Page() {
                                    className={`form-control ${errors.newPassword ? 'is-invalid' : ''}`}
                                    id="newPassword"
                                    autoComplete={"on"}
-                                   disabled={Boolean(decodedAccessToken.isExternal)}
+                                   disabled={Boolean(decodedAccessToken?.isExternal)}
                                    onChange={handleChange}/>
                             <div className="input-group-append">
                               <div className="input-group-text" onClick={() => {
@@ -203,7 +203,7 @@ export default function Page() {
                           <div className="input-group">
                             <input type={toggleVisibility ? "text" : "password"} name="confirmPassword"
                                    autoComplete={"on"}
-                                   disabled={Boolean(decodedAccessToken.isExternal)}
+                                   disabled={Boolean(decodedAccessToken?.isExternal)}
                                    className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
                                    id="confirmPassword"
                                    onChange={handleChange}/>
