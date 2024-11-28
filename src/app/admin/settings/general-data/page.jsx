@@ -14,6 +14,7 @@ import {FilePond, registerPlugin} from 'react-filepond';
 
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import Link from "next/link";
 
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -59,7 +60,6 @@ export default function Page() {
     const loadAssets = async () => {
       const $ = (await import('jquery')).default;
       await import('filepond/dist/filepond.min.css');
-
       await CommonScript();
     }
     if (typeof window !== 'undefined') {
@@ -100,12 +100,11 @@ export default function Page() {
             options: {type: 'input'}
           }]);
         }
-
         console.log(file)
-        setLoadingData(false);
       } else {
         console.error(responseBody);
       }
+      setLoadingData(false);
     }
   }
 
@@ -143,8 +142,9 @@ export default function Page() {
 
   }
 
-  return (<>
-      {loading ? (<Loading/>) : (<AdminWrapper>
+  return (
+    loading && loadingData ? (<Loading/>) : (
+      <AdminWrapper>
         <section className="section">
           <div className="section-header">
             <div className="section-header-back">
@@ -174,11 +174,18 @@ export default function Page() {
                   <div className="card-body">
                     <ul className="nav nav-pills flex-column">
                       <li className="nav-item"><a href="#" className="nav-link active">General</a></li>
-                      <li className="nav-item"><a href="#" className="nav-link">SEO</a></li>
-                      <li className="nav-item"><a href="#" className="nav-link">Email</a></li>
-                      <li className="nav-item"><a href="#" className="nav-link">System</a></li>
-                      <li className="nav-item"><a href="#" className="nav-link">Security</a></li>
-                      <li className="nav-item"><a href="#" className="nav-link">Automation</a></li>
+                      <li className="nav-item"><Link href="/admin/settings/password"
+                                                     className="nav-link">Password</Link>
+                      </li>
+                      {
+                        currentUser?.Mentor && (
+                          <>
+                            <li className="nav-item"><a href="#" className="nav-link">Email</a></li>
+                            <li className="nav-item"><a href="#" className="nav-link">System</a></li>
+                          </>
+                        )
+                      }
+
                     </ul>
                   </div>
                 </div>
@@ -273,8 +280,6 @@ export default function Page() {
             </div>
           </div>
         </section>
-      </AdminWrapper>)}
-    </>
-
+      </AdminWrapper>)
   )
 }
