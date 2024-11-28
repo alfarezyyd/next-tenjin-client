@@ -5,6 +5,15 @@ export function middleware(request) {
   const {pathname} = request.nextUrl;
   const token = request.cookies.get('accessToken');
 
+  // Jika sudah memiliki accessToken, larang akses ke halaman login, register, atau forgot password
+  if (token && !CommonUtil.isTokenExpired(token)) {
+    // Cek apakah user mencoba mengakses halaman login, register, atau forgot password
+    if (pathname.startsWith('/auth')) {
+      const dashboardUrl = new URL('/admin/dashboard', request.url); // Atur ke halaman yang sesuai
+      return NextResponse.redirect(dashboardUrl);
+    }
+  }
+
   // Pastikan token berupa string
   if (pathname.startsWith('/admin/mentor')) {
     if (!token || CommonUtil.isTokenExpired(token)) {
@@ -20,16 +29,16 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  // Lainnya
-  if (!token || CommonUtil.isTokenExpired(token)) {
-    const loginUrl = new URL('/auth/login', request.url);
-    return NextResponse.redirect(loginUrl);
+  if (pathname.startsWith('/admin')) {
+    if (!token || CommonUtil.isTokenExpired(token)) {
+      const loginUrl = new URL('/auth/login', request.url);
+      return NextResponse.redirect(loginUrl);
+    }
   }
-
   return NextResponse.next();
 }
 
 // Middleware config
 export const config = {
-  matcher: ['/admin/:path*', '/admin/mentor/:path*', '/checkout'],
+  matcher: ['/admin/:path*', '/admin/mentor/:path*', '/checkout', '/auth/:path*'],
 };
