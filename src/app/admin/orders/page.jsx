@@ -151,10 +151,18 @@ export default function Page() {
                   <Image src={`/images/authentication/login.jpg`} alt=""
                          className="w-100 h-100 m-0 p-0 object-cover" width={500}
                          height={500}/>
-                  {/* Overlay muncul jika order expired */}
-                  {isOrderExpired(mentorAssistance.createdAt) && (<div className="expired-overlay">
-                    <span className="expired-text">Expired</span>
-                  </div>)}
+                  {mentorAssistance.orderStatus === "FINISHED" ? (
+                    <div className="expired-overlay">
+                      <span className="expired-text">LUNAS</span>
+                    </div>) : (
+                    isOrderExpired(mentorAssistance.createdAt) &&
+                    (
+                      <div className="expired-overlay">
+                        <span className="expired-text">Expired</span>
+                      </div>
+                    )
+                  )}
+
                 </div>
                 <div className="col-8">
                   <div className="article-details">
