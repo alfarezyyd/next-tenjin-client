@@ -4,19 +4,19 @@ import Card from "@/components/card/index";
 import Link from "next/link";
 import {Image} from "@nextui-org/react";
 
-const NftCard = ({title, author, price, image, mentorId, extra, durationMinutes, assistantId}) => {
+const NftCard = ({title, author, price, image, uniqueId, mentorId, extra, durationMinutes, assistantId}) => {
   const [heart, setHeart] = useState(true);
-  return (<Link href={`${process.env.NEXT_PUBLIC_BASE_URL}mentors/${mentorId}`}>
+  return (<Link href={`${process.env.NEXT_PUBLIC_BASE_URL}mentors/${uniqueId} `}>
     <Card
       extra={`flex flex-col w-full h-full !p-4 3xl:p-![18px] bg-white ${extra}`}
     >
       <div className="h-full w-full">
         <div className="relative w-full">
           <Image
-            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets//assistants/${mentorId}/${assistantId}/${image}`}
+            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${mentorId}/${assistantId}/${image}`}
             sizes={"contain"}
             isZoomed={true}
-            className="mb-3 rounded-xl object-fill 3xl:h-full 3xl:w-full"
+            className="mb-3 rounded-xl object-fill 3xl:h-full 3xl:w-full z-0"
             alt=""
           />
           <button

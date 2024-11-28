@@ -1,6 +1,5 @@
 "use client"
 import Banner from "./components/Banner";
-import NFt4 from "@/../public/assets/img/nfts/Nft1.png";
 
 import tableDataTopCreators from "./variables/tableDataTopCreators.json";
 import {tableColumnsTopCreators} from "./variables/tableColumnsTopCreators";
@@ -27,6 +26,7 @@ const Marketplace = () => {
     let responseBody = await responseFetch.json();
     if (responseFetch.ok) {
       setAssistants(responseBody['result']['data']);
+      console.log(responseBody['result']['data']);
     } else {
       console.error('Failed to fetch assistance dependency', responseBody);
     }
@@ -85,13 +85,12 @@ const Marketplace = () => {
               {assistants && assistants.length > 0 ?
                 assistants.map((assistant, index) => (
                   <NftCard
-                    key={`assistants-tre${index}`}
+                    key={`assistants-tre-${index}`}
                     title={assistant.topic}
-                    author={assistant.mentorName}
+                    author={assistant.mentor?.user?.name}
                     price={assistant.price}
-                    image={NFt4}
-                    mentorId={assistant.mentorId}
                     assistantId={assistant.id}
+                    mentorId={assistant.mentor?.user?.uniqueId}
                     durationMinutes={assistant.durationMinutes}
                   />
                 ))
@@ -118,10 +117,11 @@ const Marketplace = () => {
                       <NftCard
                         key={`assistants-${index}`}
                         title={assistant.topic}
-                        author={assistant.mentor.user.name}
+                        author={assistant.mentor?.user?.name}
                         price={assistant.price}
                         assistantId={assistant.id}
-                        mentorId={assistant.mentor.id}
+                        uniqueId={assistant.mentor?.user?.uniqueId}
+                        mentorId={assistant.mentor?.id}
                         durationMinutes={assistant.durationMinutes}
                         image={assistant.AssistanceResource[0].imagePath}
                       />
