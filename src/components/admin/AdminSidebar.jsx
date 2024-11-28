@@ -1,5 +1,4 @@
 import {usePathname} from "next/navigation";
-import {CommonUtil} from "@/common/utils/common-util";
 
 export default function AdminSidebar({parsedJwt}) {
   const pathname = usePathname();
@@ -33,11 +32,13 @@ export default function AdminSidebar({parsedJwt}) {
             <span>Pengaturan</span>
           </a>
         </li>
-        <li className="nav-item dropdown">
+        <li className={`nav-item dropdown ${pathNames[0] === 'admin' && pathNames[1] === 'finance' ? 'active' : ''}`}>
           <a href="#" className="nav-link has-dropdown"><i className="fa-solid fa-coins"></i> <span>Keuangan</span></a>
           <ul className="dropdown-menu">
-            <li><a className="nav-link" href="/admin/coins/top-up">Isi Saldo Koin</a></li>
-            <li><a className="nav-link" href="/admin/coins/withdraw">Menarik Saldo</a></li>
+            <li><a className="nav-link" href="/admin/finance/top-up">Isi Saldo Koin</a></li>
+            <li className={`nav-item ${pathNames[1] === 'finance' ? 'active' : ''}`}>
+              <a className="nav-link" href="/admin/finance/withdraw">Menarik
+                Saldo</a></li>
           </ul>
         </li>
 
