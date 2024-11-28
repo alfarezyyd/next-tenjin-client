@@ -2,26 +2,32 @@
 import CommonScript from "@/components/admin/CommonScript";
 import {useEffect, useRef, useState} from "react";
 import 'fullcalendar/dist/fullcalendar.min.css'
-import '@/../public/assets/css/components.css'
 import {Loading} from "@/components/admin/Loading";
 import {useRouter} from "next/navigation";
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import Cookies from "js-cookie";
 import {CommonUtil} from "@/common/utils/common-util";
+import 'select2/dist/css/select2.min.css'
+import '@/../public/assets/css/components.css'
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
   const [accessToken, setAccessToken] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [decodedAccessToken, setDecodedAccessToken] = useState(null);
-  const [calendar, setCalendar] = useState(null);
+  const selectScheduleRef = useRef(null);
+  const [scheduleType, setScheduleType] = useState(null);
   const calendarRef = useRef(null);
   const router = useRouter();
   useEffect(() => {
     async function loadAssets() {
       const $ = (await import('jquery')).default;
+      $(selectScheduleRef.current).on("change", () => {
+        setScheduleType($(selectScheduleRef.current).val());
+      })
       window.jQuery = $
       await import('fullcalendar/dist/fullcalendar.min')
+      await import('select2/dist/js/select2.min')
       await fullCalendarInitiation($)
       await CommonScript();
       setAccessToken(Cookies.get('accessToken'));
@@ -47,7 +53,7 @@ export default function Page() {
 
   async function fetchCurrentUser() {
     try {
-      const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/users/${decodedAccessToken.uniqueId}`, {
+      const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/users/specific/${decodedAccessToken.uniqueId}`, {
         method: 'GET', includeCredentials: true, headers: {
           'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
         },
@@ -75,33 +81,46 @@ export default function Page() {
   }
 
   useEffect(() => {
+    console.log(scheduleType)
+
+  }, [scheduleType]);
+
+  useEffect(() => {
     const initializeCalendar = async () => {
-      if (calendarRef.current && currentUser) {
-        const $ = window.jQuery;
-        const calendar = $(calendarRef.current).fullCalendar('getCalendar');
-        calendar.removeEvents(); // Hapus semua event lama
-        console.log(calendar)
-        const allEvent = [];
-        // Tambahkan event berdasarkan jadwal pengguna
-        currentUser.userSpecificSchedule.schedule.forEach((schedule) => {
-          allEvent.push({
-            title: schedule.title,
-            start: schedule.start,
-            end: schedule.end,
-            allDay: false,
-            backgroundColor: "#f56954",
-            borderColor: "#f56954",
-            textColor: '#fff'
-          })
-        });
-        allEvent.forEach(event => {
-          calendar.renderEvent(event, true); // Tambahkan event baru
-        });
+      if (scheduleType === "mentor") {
+        await processEventData(currentUser?.userSpecificSchedule?.mentorSchedule)
+      } else {
+        await processEventData(currentUser?.userSpecificSchedule?.schedule)
       }
     };
 
     initializeCalendar();
-  }, [currentUser]);
+  }, [currentUser, scheduleType]);
+
+  const processEventData = async (rawSchedule) => {
+    if (calendarRef.current && currentUser) {
+      const $ = window.jQuery;
+      const calendar = $(calendarRef.current).fullCalendar('getCalendar');
+      calendar.removeEvents(); // Hapus semua event lama
+      console.log(calendar)
+      const allEvent = [];
+      // Tambahkan event berdasarkan jadwal pengguna
+      rawSchedule.forEach((schedule) => {
+        allEvent.push({
+          title: schedule.title,
+          start: schedule.start,
+          end: schedule.end,
+          allDay: false,
+          backgroundColor: "#f56954",
+          borderColor: "#f56954",
+          textColor: '#fff'
+        })
+      });
+      allEvent.forEach(event => {
+        calendar.renderEvent(event, true); // Tambahkan event baru
+      });
+    }
+  }
 
   return (loading ? (<Loading/>) : (<AdminWrapper>
     <section className="section">
@@ -176,9 +195,20 @@ export default function Page() {
         <div className="row">
           <div className="col-lg-8">
             <div className="card">
-              <div className="card-header">
-                <h4>Schedule</h4>
+              <div className="card-header d-flex flex-row">
+                <div className="col-md-8">
+                  <h4>Schedule</h4>
+                </div>
+                <div className="col-md-4 col-sm-4 d-flex flex justify-content-end">
+                  <select className="form-control select2 col-md-2" ref={selectScheduleRef}>
+                    <option value={"user"}>Jadwal Pengguna</option>
+                    {currentUser?.userDetail?.Mentor &&
+                      <option value={"mentor"}>Jadwal Mentor</option>
+                    }
+                  </select>
+                </div>
               </div>
+
               <div className="card-body">
                 <div className="fc-overflow">
                   <div id="myEvent" ref={calendarRef}></div>
