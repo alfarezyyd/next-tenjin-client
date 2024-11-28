@@ -25,7 +25,6 @@ export default function Page() {
     // (change the value according to your client-key)
     const myMidtransClientKey = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY;
     scriptTag.setAttribute('data-client-key', myMidtransClientKey);
-    setLoading(false)
     document.body.appendChild(scriptTag);
 
     async function loadAssets() {
@@ -35,6 +34,7 @@ export default function Page() {
 
     if (typeof window !== 'undefined') {
       loadAssets();
+      setLoading(false)
     }
     console.log(Cookies.get("accessToken"))
     setAccessToken(Cookies.get("accessToken"));
@@ -42,7 +42,6 @@ export default function Page() {
       document.body.removeChild(scriptTag);
     }
   }, []);
-
 
   async function initiatePayment(snapToken) {
     window.snap.pay(snapToken, {
