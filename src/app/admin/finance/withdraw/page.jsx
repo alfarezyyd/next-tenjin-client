@@ -61,10 +61,8 @@ export default function Page() {
     const responseBody = await fetchResponse.json();
 
     if (fetchResponse.ok) {
-      console.log(responseBody);
-      console.log('Data submitted successfully', responseBody);
+      toast.success("Withdraw request successfully created! please wait")
     } else {
-      console.log(responseBody);
 
       if (responseBody.errors) {
         const errorMessages = {};
@@ -87,7 +85,6 @@ export default function Page() {
   useEffect(() => {
     if (decodedAccessToken) {
       fetchUserData();
-      console.log(decodedAccessToken);
     }
   }, [decodedAccessToken]);
 
@@ -101,7 +98,6 @@ export default function Page() {
     const responseBody = await fetchResponse.json();
     if (fetchResponse.ok) {
       setUserData(responseBody['result']['data']);
-      console.log(responseBody['result']['data']);
     } else {
       console.error('Failed to submit data', responseBody);
     }

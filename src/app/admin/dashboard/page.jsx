@@ -67,7 +67,6 @@ export default function Page() {
       const responseBody = await responseFetch.json();
       if (responseFetch.ok) {
         setCurrentUser(responseBody.result.data);
-        console.log(responseBody.result.data);
       } else {
         console.error('Failed to fetch skill', responseBody);
       }
@@ -87,7 +86,6 @@ export default function Page() {
   }
 
   useEffect(() => {
-    console.log(scheduleType)
 
   }, [scheduleType]);
 
@@ -116,7 +114,6 @@ export default function Page() {
       const $ = window.jQuery;
       const calendar = $(calendarRef.current).fullCalendar('getCalendar');
       calendar.removeEvents(); // Hapus semua event lama
-      console.log(calendar)
       const allEvent = [];
       // Tambahkan event berdasarkan jadwal pengguna
       rawSchedule.forEach((schedule) => {

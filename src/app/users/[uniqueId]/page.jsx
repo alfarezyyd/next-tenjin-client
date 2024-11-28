@@ -20,7 +20,6 @@ const Page = () => {
   async function fetchAllAssistance() {
     setLoading(true)
     if (routerParam.uniqueId) {
-      console.log(routerParam.uniqueId);
       let responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors/${routerParam.uniqueId}`, {
         method: 'GET',
         headers: {
@@ -30,7 +29,6 @@ const Page = () => {
       let responseBody = await responseFetch.json();
       if (responseFetch.ok) {
         setMentorData(responseBody['result']['data']);
-        console.log(responseBody['result']['data']);
       } else {
         console.error('Failed to fetch assistance dependency', responseBody);
       }

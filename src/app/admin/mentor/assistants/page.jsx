@@ -55,7 +55,6 @@ export default function Page() {
       const responseBody = await responseFetch.json();
       if (responseFetch.ok) {
         setAllMentorAssistance(responseBody.result.data);
-        console.log(responseBody.result.data);
       } else {
         console.error('Failed to fetch assistance', responseBody);
       }
@@ -80,7 +79,6 @@ export default function Page() {
             position: 'top-right', autoClose: 3000,
           })
           setAllMentorAssistance(allMentorAssistance.filter(value => value.id !== id));
-          console.log(responseBody.result.data);
         } else {
           console.error('Failed to fetch assistance', responseBody);
         }

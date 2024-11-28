@@ -50,10 +50,8 @@ export default function Page() {
         },
       });
       const responseBody = await responseFetch.json();
-      console.log(responseBody);
       if (responseFetch.ok) {
         setOrder(responseBody.result.data)
-        console.log(responseBody.result.data);
       } else {
         console.error('Failed to fetch experiences', responseBody);
       }

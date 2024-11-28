@@ -118,12 +118,10 @@ export default function Page() {
       return form;
     };
     const formDataPayload = convertIntoFormData(formData);
-    console.log(profilePhoto[0]);
     formDataPayload.append("photo", profilePhoto[0].file);
     formDataPayload.append("identityCard", identityCard);
     formDataPayload.append("curriculumVitae", curriculumVitae);
     for (var pair of formDataPayload.entries()) {
-      console.log(pair[0], pair[1]);
     }
     const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors`, {
       method: 'POST', body: formDataPayload, includeCredentials: true, headers: {

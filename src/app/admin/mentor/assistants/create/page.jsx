@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
 import AdminWrapper from "@/components/admin/AdminWrapper";
-  
+
 import CommonScript from "@/components/admin/CommonScript";
 import {FilePond, registerPlugin} from "react-filepond";
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
@@ -169,7 +169,6 @@ export default function Page() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formDataPayload = new FormData();
-    console.log(files)
 
     Object.entries(formData).forEach(([key, value]) => {
       if (Array.isArray(value)) {
@@ -184,14 +183,11 @@ export default function Page() {
     })
 
     formDataPayload.append('categoryId', selectedCategoryId);
-    console.log(files)
 
     files.forEach((file, index) => {
       formDataPayload.append(`images`, file.file);
-      console.log(file.file)
     });
     formDataPayload.forEach((value, key) => {
-      console.log(key, value);
     })
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {

@@ -45,13 +45,11 @@ export default function Page() {
     const responseBody = await fetchResponse.json();
 
     if (fetchResponse.ok) {
-      console.log(responseBody);
       window.snap.pay(responseBody['result']['data'], {
         onClose: () => {
           alert('Your payment is postponed, you can continue this order next time');
         }
       })
-      console.log('Data submitted successfully', responseBody);
     } else {
       console.error('Failed to submit data', responseBody);
     }

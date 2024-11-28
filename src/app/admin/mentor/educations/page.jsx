@@ -58,9 +58,7 @@ export default function Page() {
         });
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
-          console.log(responseBody)
           setAllMentorEducation(responseBody.result.data);
-          console.log(responseBody.result.data);
         } else {
           console.error('Failed to fetch education', responseBody);
         }

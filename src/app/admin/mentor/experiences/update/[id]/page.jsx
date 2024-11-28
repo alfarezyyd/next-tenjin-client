@@ -139,7 +139,6 @@ export default function Page() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formData);
     const form = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       if (Array.isArray(value)) {
@@ -164,7 +163,6 @@ export default function Page() {
     });
 
     for (let [key, value] of form.entries()) {
-      console.log(key, value);
     }
 
     const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/experiences/${routerParam.id}`, {
@@ -218,7 +216,6 @@ export default function Page() {
     const responseBody = await fetchResponse.json();
     if (fetchResponse.ok) {
       const resultData = responseBody['result']['data'];
-      console.log(resultData);
       setFormData({
         companyName: resultData.companyName,
         location: resultData.location,
@@ -247,7 +244,6 @@ export default function Page() {
   }
 
   async function handleRemoveFile(error, file) {
-    console.log(file.file)
     setFormData({
       ...formData,
       deletedFilesName: [...formData.deletedFilesName, file.file.name], // Membuat salinan baru dari array dan menambahkannya

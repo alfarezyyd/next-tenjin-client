@@ -52,7 +52,6 @@ export default function Page() {
   };
 
   useEffect(() => {
-    console.log(checkoutItem)
     if (checkoutItem?.sessionStartTimestamp) {
 
       const eventEnd = new Date(checkoutItem.sessionStartTimestamp); // Salinan eventStart
@@ -126,11 +125,9 @@ export default function Page() {
         const transactionToken = responseBody['result']['data']
         window.snap.pay(transactionToken, {
           onSuccess: function (result) {
-            console.log('Payment success:', result);
             push(`admin/orders/${transactionToken}`)
           },
           onPending: function (result) {
-            console.log('Payment pending:', result);
             push(`admin/orders`)
           },
           onError: function (result) {
@@ -138,7 +135,6 @@ export default function Page() {
             alert('Terjadi kesalahan saat memproses pembayaran.');
           },
           onClose: function (result) {
-            console.log('Payment pending:', result);
             push(`admin/orders`)
           },
         });
@@ -149,8 +145,6 @@ export default function Page() {
   }
 
   async function handleDateSelect() {
-    console.log(selectedTime)
-    console.log(selectedInfoDate)
 // Gabungkan tanggal dan waktu menjadi ISO string
     const dateNow = `${selectedInfoDate.startStr.substring(0, 10)}T${String(selectedTime.hour).padStart(2, '0')}:${String(selectedTime.minute).padStart(2, '0')}:00`
 

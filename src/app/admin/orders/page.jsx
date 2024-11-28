@@ -36,7 +36,6 @@ export default function Page() {
       loadAssets();
       setLoading(false)
     }
-    console.log(Cookies.get("accessToken"))
     setAccessToken(Cookies.get("accessToken"));
     return () => {
       document.body.removeChild(scriptTag);
@@ -64,10 +63,8 @@ export default function Page() {
           },
         });
         const responseBody = await responseFetch.json();
-        console.log(responseBody);
         if (responseFetch.ok) {
           setAllOrder(responseBody.result.data);
-          console.log(responseBody.result.data);
         } else {
           console.error('Failed to fetch experiences', responseBody);
         }
@@ -91,7 +88,6 @@ export default function Page() {
   };
 
   async function downloadInvoice(transactionToken) {
-    console.log(transactionToken);
     if (accessToken) {
       try {
         const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/orders/invoice`, {
@@ -101,10 +97,8 @@ export default function Page() {
           }, body: JSON.stringify({transactionToken: transactionToken}),
         });
         const responseBody = await responseFetch.json();
-        console.log(responseBody);
         if (responseFetch.ok) {
           setAllOrder(responseBody.result.data);
-          console.log(responseBody.result.data);
         } else {
           console.error('Failed to fetch experiences', responseBody);
         }

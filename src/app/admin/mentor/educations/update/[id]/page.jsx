@@ -69,21 +69,18 @@ export default function Page() {
       $(endDateRef.current).on("input", updateSelectedEndDate);
 
       $(descriptionRef.current).on("summernote.change", () => {
-        console.log($(descriptionRef.current).val())
         setFormDataRef((prevFormDataRef) => ({
           ...prevFormDataRef, description: ($(descriptionRef.current).val()),
         }));
       });
 
       $(activityRef.current).on("summernote.change", () => {
-        console.log($(activityRef.current).val())
         setFormDataRef((prevFormDataRef) => ({
           ...prevFormDataRef, activity: ($(activityRef.current).val()),
         }));
       });
 
       $(societyRef.current).on("summernote.change", () => {
-        console.log($(societyRef.current).val())
         setFormDataRef((prevFormDataRef) => ({
           ...prevFormDataRef, society: ($(societyRef.current).val()),
         }));
@@ -126,7 +123,6 @@ export default function Page() {
     const responseBody = await fetchResponse.json();
 
     if (fetchResponse.ok) {
-      console.log('Data submitted successfully', responseBody);
       setErrors({});
       router.push('/admin/mentor/educations?notify=success'); // Tambahkan query param
     } else {
@@ -136,7 +132,6 @@ export default function Page() {
         errorMessages[error.path[0]] = error.message;
       });
       setErrors(errorMessages);
-      console.log(errorMessages);
     }
   }, [formData, formDataRef]);
 

@@ -43,7 +43,6 @@ export default function Page() {
         }
       }
     } catch (e) {
-      console.log(e)
     }
   }
 

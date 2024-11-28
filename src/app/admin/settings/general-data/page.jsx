@@ -33,7 +33,6 @@ export default function Page() {
   useEffect(() => {
     // Cek jika ada `notify=success` di query param
     if (searchParams.get('notify') === 'success') {
-      console.log("ada")
       toast.success('Data submitted successfully!', {
         position: 'top-right', autoClose: 100000,
       });
@@ -47,7 +46,6 @@ export default function Page() {
 
   function handleChange(e) {
     const {name, value} = e.target;
-    console.log(name, value);
 
     // Update payloadRequest state
     setPayloadRequest((prevPayloadRequest) => ({
@@ -83,7 +81,6 @@ export default function Page() {
         }
       });
       const responseBody = await fetchResponse.json();
-      console.log(responseBody, fetchResponse);
       if (fetchResponse.ok) {
         const currentUser = responseBody.result.data
         setCurrentUser(currentUser);
@@ -100,7 +97,6 @@ export default function Page() {
             options: {type: 'input'}
           }]);
         }
-        console.log(file)
       } else {
         console.error(responseBody);
       }
@@ -116,13 +112,10 @@ export default function Page() {
       Object.entries(payloadRequest).forEach(([key, value]) => {
         form.append(key, value);
       });
-      console.log(payloadRequest);
-      console.log(form)
 
       form.append('photo', file[0].file)
 
       form.forEach((value, key) => {
-        console.log(key, value);
       })
       const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/users/settings/general-data`, {
         method: 'PUT', includeCredentials: true, headers: {
@@ -130,10 +123,8 @@ export default function Page() {
         }, body: form,
       });
       const responseBody = await fetchResponse.json();
-      console.log(responseBody, fetchResponse);
       if (fetchResponse.ok) {
         setCurrentUser(responseBody.result.data);
-        console.log(responseBody.result.data);
         setLoadingData(false);
       } else {
         console.error(responseBody);

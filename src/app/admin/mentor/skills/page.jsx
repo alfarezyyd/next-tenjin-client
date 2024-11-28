@@ -110,9 +110,7 @@ export default function Page() {
         });
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
-          console.log(responseBody)
           setAllMentorSkill(responseBody.result.data);
-          console.log(responseBody.result.data);
         } else {
           console.error('Failed to fetch skill', responseBody);
         }

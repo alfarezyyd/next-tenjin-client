@@ -27,7 +27,6 @@ const Marketplace = () => {
     let responseBody = await responseFetch.json();
     if (responseFetch.ok) {
       setAssistants(responseBody['result']['data']);
-      console.log(responseBody['result']['data']);
     } else {
       console.error('Failed to fetch assistance dependency', responseBody);
     }

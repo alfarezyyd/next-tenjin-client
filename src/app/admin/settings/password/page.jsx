@@ -31,7 +31,6 @@ export default function Page() {
     setPayloadRequest((prevPayloadRequest) => ({
       ...prevPayloadRequest, [name]: value,
     }));
-    console.log(payloadRequest)
   }
 
 
@@ -51,7 +50,6 @@ export default function Page() {
   useEffect(() => {
     if (accessToken) {
       setDecodedAccessToken(CommonUtil.parseJwt(accessToken));
-      console.log(CommonUtil.parseJwt(accessToken));
     }
   }, [accessToken]);
 
@@ -59,14 +57,12 @@ export default function Page() {
   async function handlePasswordSetting(e) {
     e.preventDefault()
     if (accessToken) {
-      console.log(payloadRequest)
       const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/users/settings/change-password`, {
         method: 'PUT', includeCredentials: true, headers: {
           'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json',
         }, body: JSON.stringify(payloadRequest),
       });
       const responseBody = await fetchResponse.json();
-      console.log(responseBody, fetchResponse);
       if (fetchResponse.ok) {
         toast.success("Password changed successfully!")
       } else {

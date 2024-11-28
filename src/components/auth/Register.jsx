@@ -48,7 +48,6 @@ export default function Register() {
         errorMessages[error.path[0]] = error.message;
       });
       setUserError(errorMessages);
-      console.log(errorMessages);
     }
   };
 

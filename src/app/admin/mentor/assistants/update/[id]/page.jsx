@@ -72,7 +72,6 @@ export default function Page() {
         }));
       });
       $(languagesSelectRef.current).on("change", () => {
-        console.log($(languagesSelectRef.current).val());
         setFormData(prev => ({
           ...prev, languages: $(languagesSelectRef.current).val()
         }));
@@ -83,7 +82,6 @@ export default function Page() {
         }));
       })
       $(descriptionRef.current).on("summernote.change", () => {
-        console.log($(descriptionRef.current).val());
         setFormData(prev => ({
           ...prev, description: $(descriptionRef.current).val()
         }));
@@ -181,7 +179,6 @@ export default function Page() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formDataPayload = new FormData();
-    console.log(files, oldFiles)
     const updatedFiles = files.filter(file =>
       !oldFiles.some(oldFile => oldFile.name === file.file.name)
     );
@@ -201,7 +198,6 @@ export default function Page() {
     })
     formDataPayload.append('categoryId', selectedCategoryId);
     formDataPayload.forEach((value, key) => {
-      console.log(key, value);
     })
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/${existingAssistance.id}`, {
       method: 'PUT', body: formDataPayload, includeCredentials: true, headers: {
@@ -212,7 +208,6 @@ export default function Page() {
     const responseBody = await response.json();
 
     if (response.ok) {
-      console.log('Data submitted successfully', responseBody);
       setErrors({});
       // router.push("/admin/mentor/assistants?notify=success")
     } else {
@@ -222,7 +217,6 @@ export default function Page() {
         errorMessages[error.path[0]] = error.message;
       });
       setErrors(errorMessages);
-      console.log(errorMessages);
     }
   }
 
@@ -238,7 +232,6 @@ export default function Page() {
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
           const existingAssistance = responseBody.result.data;
-          console.log(existingAssistance)
           setFormData({
             topic: existingAssistance.topic,
             capacity: existingAssistance.capacity,
@@ -331,7 +324,6 @@ export default function Page() {
   }), [errors]);
 
   async function handleRemoveFile(error, file) {
-    console.log(file)
     setFormData((prevFormData) => ({
       ...prevFormData, deletedFilesName: [...formData.deletedFilesName, file.file.name]
     }))

@@ -31,7 +31,6 @@ export default function LandingWrapper({children}) {
   useEffect(() => {
     if (accessToken) {
       setDecodedAccessToken(CommonUtil.parseJwt(accessToken));
-      console.log(CommonUtil.parseJwt(accessToken));
     }
   }, [accessToken]);
 
@@ -44,7 +43,6 @@ export default function LandingWrapper({children}) {
   useEffect(() => {
     if (socket && decodedAccessToken) {
       socket.on("allRelatedUsers", (relatedUser) => {
-        console.log("allRelatedUsers", relatedUser);
         setChatData((prevChatData) => {
           const updatedChatData = {...prevChatData}; // Salin data lama (spread operator untuk objek)
           relatedUser.forEach((relatedUserElement) => {
@@ -64,7 +62,6 @@ export default function LandingWrapper({children}) {
     }
   }, [socket, decodedAccessToken]);
   useEffect(() => {
-    console.log(activeChat);
   }, [activeChat])
 
   useEffect(() => {
@@ -133,7 +130,6 @@ export default function LandingWrapper({children}) {
   };
 
   async function handleActiveChat(chatData) {
-    console.log("active" + chatData)
     setActiveChat({
       name: chatData.name,
       messages: chatData.messages,

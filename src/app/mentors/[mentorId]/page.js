@@ -73,7 +73,6 @@ export default function Page({}) {
     });
     let responseBody = await responseFetch.json();
     if (responseFetch.ok) {
-      console.log(responseBody)
       setMentorData(responseBody['result']['data']);
       setActiveCategory(responseBody['result']['data']['Assistance'][0]);
     } else {
@@ -148,7 +147,6 @@ export default function Page({}) {
                         key={`assistant-${index}`}
                         shadow="sm"
                         isPressable
-                        onPress={() => console.log("item pressed")}
                         className="w-32 inline-block"
                       >
                         <CardBody className="overflow-hidden p-0">

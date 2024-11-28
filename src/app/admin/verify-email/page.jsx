@@ -58,7 +58,6 @@ export default function Page() {
   async function verifyOneTimePassword(e) {
     e.preventDefault();
     if (accessToken) {
-      console.log("accessToken", oneTimePassword);
       const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}authentication/self/verify-otp/${oneTimePassword}`, {
         method: 'POST', includeCredentials: true, headers: {
           'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`
@@ -74,7 +73,6 @@ export default function Page() {
       } else {
         toast.error('An error occurred. Please try again!', {position: 'top-right', autoClose: 3000});
       }
-      console.log(responseBody);
 
     }
 
