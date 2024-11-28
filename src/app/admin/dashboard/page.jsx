@@ -16,7 +16,10 @@ export default function Page() {
   const [currentUser, setCurrentUser] = useState(null);
   const [decodedAccessToken, setDecodedAccessToken] = useState(null);
   const selectScheduleRef = useRef(null);
+  const selectLastFiveOrderRef = useRef(null);
   const [scheduleType, setScheduleType] = useState(null);
+  const [lastFiveOrderType, setLastFiveOrderType] = useState(null);
+  const [lastFiveOrder, setLastFiveOrder] = useState(null);
   const calendarRef = useRef(null);
   const router = useRouter();
   useEffect(() => {
@@ -24,6 +27,9 @@ export default function Page() {
       const $ = (await import('jquery')).default;
       $(selectScheduleRef.current).on("change", () => {
         setScheduleType($(selectScheduleRef.current).val());
+      })
+      $(selectLastFiveOrderRef.current).on("change", () => {
+        setLastFiveOrderType($(selectLastFiveOrderRef.current).val());
       })
       window.jQuery = $
       await import('fullcalendar/dist/fullcalendar.min')
@@ -97,6 +103,14 @@ export default function Page() {
     initializeCalendar();
   }, [currentUser, scheduleType]);
 
+  useEffect(() => {
+    if (lastFiveOrderType === "mentor") {
+      setLastFiveOrder(currentUser?.userSpecificSchedule?.lastFiveMentorOrders)
+    } else {
+      setLastFiveOrder(currentUser?.userSpecificSchedule?.lastFiveOrders)
+    }
+  }, [lastFiveOrderType]);
+
   const processEventData = async (rawSchedule) => {
     if (calendarRef.current && currentUser) {
       const $ = window.jQuery;
@@ -123,223 +137,147 @@ export default function Page() {
   }
 
   return (loading ? (<Loading/>) : (<AdminWrapper>
-    <section className="section">
-      <div className="section-body">
-        <div className="row">
-          <div className="col-lg-4 col-md-4 col-sm-12">
-            <div className="card card-statistic-2">
-              <div className="card-icon shadow-primary bg-primary">
-                <i className="fas fa-dollar-sign"></i>
-              </div>
-              <div className="card-wrap">
-                <div className="card-header">
-                  <h4>Balance</h4>
+      <section className="section">
+        <div className="section-body">
+          <div className="row">
+            <div className="col-lg-4 col-md-4 col-sm-12">
+              <div className="card card-statistic-2">
+                <div className="card-icon shadow-primary bg-primary">
+                  <i className="fas fa-dollar-sign"></i>
                 </div>
-                <div className="card-body">
-                  Rp. {currentUser?.userDetail?.totalBalance}
+                <div className="card-wrap">
+                  <div className="card-header">
+                    <h4>Balance</h4>
+                  </div>
+                  <div className="card-body">
+                    Rp. {currentUser?.userDetail?.totalBalance}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-4 col-md-4 col-sm-12">
+              <div className="card card-statistic-2">
+                <div className="card-stats">
+                  <div className="card-stats-title">Order Statistics</div>
+                  <div className="card-stats-items">
+                    <div className="card-stats-item">
+                      <div
+                        className="card-stats-item-count">{currentUser?.userSpecificSchedule?.countOrder?.failed}</div>
+                      <div className="card-stats-item-label">Failed</div>
+                    </div>
+                    <div className="card-stats-item">
+                      <div
+                        className="card-stats-item-count">{currentUser?.userSpecificSchedule?.countOrder?.process}</div>
+                      <div className="card-stats-item-label">Process</div>
+                    </div>
+                    <div className="card-stats-item">
+                      <div
+                        className="card-stats-item-count">{currentUser?.userSpecificSchedule?.countOrder?.completed}</div>
+                      <div className="card-stats-item-label">Completed</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-icon shadow-primary bg-primary">
+                  <i className="fas fa-archive"></i>
+                </div>
+                <div className="card-wrap">
+                  <div className="card-header">
+                    <h4>Total Orders</h4>
+                  </div>
+                  <div className="card-body">
+                    {currentUser?.userSpecificSchedule?.countOrder && Object.values(currentUser?.userSpecificSchedule?.countOrder).reduce((acc, value) => acc + value, 0)}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-4 col-md-4 col-sm-12">
+              <div className="card card-statistic-2">
+                <div className="card-icon shadow-primary bg-primary">
+                  <i className="fas fa-shopping-bag"></i>
+                </div>
+                <div className="card-wrap">
+                  <div className="card-header">
+                    <h4>Total Profit</h4>
+                  </div>
+                  <div className="card-body">
+                    Rp.
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-lg-4 col-md-4 col-sm-12">
-            <div className="card card-statistic-2">
-              <div className="card-stats">
-                <div className="card-stats-title">Order Statistics</div>
-                <div className="card-stats-items">
-                  <div className="card-stats-item">
-                    <div
-                      className="card-stats-item-count">{currentUser?.userSpecificSchedule?.countOrder?.failed}</div>
-                    <div className="card-stats-item-label">Failed</div>
+          <div className="row">
+            <div className="col-lg-8">
+              <div className="card">
+                <div className="card-header d-flex flex-row">
+                  <div className="col-md-8">
+                    <h4>Schedule</h4>
                   </div>
-                  <div className="card-stats-item">
-                    <div
-                      className="card-stats-item-count">{currentUser?.userSpecificSchedule?.countOrder?.process}</div>
-                    <div className="card-stats-item-label">Process</div>
-                  </div>
-                  <div className="card-stats-item">
-                    <div
-                      className="card-stats-item-count">{currentUser?.userSpecificSchedule?.countOrder?.completed}</div>
-                    <div className="card-stats-item-label">Completed</div>
+                  <div className="col-md-4 col-sm-4 d-flex flex justify-content-end">
+                    <select className="form-control select2 col-md-2" ref={selectScheduleRef}>
+                      <option value={"user"}>Jadwal Pengguna</option>
+                      {currentUser?.userDetail?.Mentor &&
+                        <option value={"mentor"}>Jadwal Mentor</option>
+                      }
+                    </select>
                   </div>
                 </div>
-              </div>
-              <div className="card-icon shadow-primary bg-primary">
-                <i className="fas fa-archive"></i>
-              </div>
-              <div className="card-wrap">
-                <div className="card-header">
-                  <h4>Total Orders</h4>
-                </div>
+
                 <div className="card-body">
-                  {currentUser?.userSpecificSchedule?.countOrder && Object.values(currentUser?.userSpecificSchedule?.countOrder).reduce((acc, value) => acc + value, 0)}
+                  <div className="fc-overflow">
+                    <div id="myEvent" ref={calendarRef}></div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="col-lg-4 col-md-4 col-sm-12">
-            <div className="card card-statistic-2">
-              <div className="card-icon shadow-primary bg-primary">
-                <i className="fas fa-shopping-bag"></i>
-              </div>
-              <div className="card-wrap">
-                <div className="card-header">
-                  <h4>Total Profit</h4>
+            <div className="col-lg-4">
+              <div className="card gradient-bottom">
+                <div className="card-header d-flex flex-row">
+                  <div className="col-md-8 col-lg-6">
+                    <h4>Last 5 Orders</h4>
+                  </div>
+                  <div className="col-md-4 col-lg-6 col-sm-6 d-flex flex justify-content-end">
+                    <select className="form-control select2 col-md-2" ref={selectLastFiveOrderRef}>
+                      <option value={"user"}>Pengguna</option>
+                      {currentUser?.userDetail?.Mentor &&
+                        <option value={"mentor"}>Mentor</option>
+                      }
+                    </select>
+                  </div>
                 </div>
-                <div className="card-body">
-                  Rp.
+                <div className="card-body" id="top-5-scroll">
+                  {lastFiveOrder?.length > 0 && lastFiveOrder.map((item, index) => {
+                    return (
+                      <li className="media" key={`last-five-orders-${index}`}>
+                        <img className="mr-3 rounded" width="55" src="../assets/img/products/product-3-50.png"
+                             alt="product"/>
+                        <div className="media-body">
+                          <div className="float-right">
+                            <div className="font-weight-600 text-muted text-small">86 Sales</div>
+                          </div>
+                          <div className="media-title">{item.assistance.topic}</div>
+                          <div className="mt-1">
+                          </div>
+                        </div>
+                      </li>
+                    )
+                  })}
+                </div>
+                <div className="card-footer pt-3 d-flex justify-content-center">
+                  <div className="budget-price justify-content-center">
+                    <div className="budget-price-square bg-primary" data-width="20"></div>
+                    <div className="budget-price-label">Selling Price</div>
+                  </div>
+                  <div className="budget-price justify-content-center">
+                    <div className="budget-price-square bg-danger" data-width="20"></div>
+                    <div className="budget-price-label">Budget Price</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="row">
-          <div className="col-lg-8">
-            <div className="card">
-              <div className="card-header d-flex flex-row">
-                <div className="col-md-8">
-                  <h4>Schedule</h4>
-                </div>
-                <div className="col-md-4 col-sm-4 d-flex flex justify-content-end">
-                  <select className="form-control select2 col-md-2" ref={selectScheduleRef}>
-                    <option value={"user"}>Jadwal Pengguna</option>
-                    {currentUser?.userDetail?.Mentor &&
-                      <option value={"mentor"}>Jadwal Mentor</option>
-                    }
-                  </select>
-                </div>
-              </div>
-
-              <div className="card-body">
-                <div className="fc-overflow">
-                  <div id="myEvent" ref={calendarRef}></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4">
-            <div className="card gradient-bottom">
-              <div className="card-header">
-                <h4>Top 5 Products</h4>
-
-              </div>
-              <div className="card-body" id="top-5-scroll">
-                <ul className="list-unstyled list-unstyled-border">
-                  <li className="media">
-                    <img className="mr-3 rounded" width="55" src="../assets/img/products/product-3-50.png"
-                         alt="product"/>
-                    <div className="media-body">
-                      <div className="float-right">
-                        <div className="font-weight-600 text-muted text-small">86 Sales</div>
-                      </div>
-                      <div className="media-title">oPhone S9 Limited</div>
-                      <div className="mt-1">
-                        <div className="budget-price">
-                          <div className="budget-price-square bg-primary" data-width="64%"></div>
-                          <div className="budget-price-label">$68,714</div>
-                        </div>
-                        <div className="budget-price">
-                          <div className="budget-price-square bg-danger" data-width="43%"></div>
-                          <div className="budget-price-label">$38,700</div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="media">
-                    <img className="mr-3 rounded" width="55" src="../assets/img/products/product-4-50.png"
-                         alt="product"/>
-                    <div className="media-body">
-                      <div className="float-right">
-                        <div className="font-weight-600 text-muted text-small">67 Sales</div>
-                      </div>
-                      <div className="media-title">iBook Pro 2018</div>
-                      <div className="mt-1">
-                        <div className="budget-price">
-                          <div className="budget-price-square bg-primary" data-width="84%"></div>
-                          <div className="budget-price-label">$107,133</div>
-                        </div>
-                        <div className="budget-price">
-                          <div className="budget-price-square bg-danger" data-width="60%"></div>
-                          <div className="budget-price-label">$91,455</div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="media">
-                    <img className="mr-3 rounded" width="55" src="../assets/img/products/product-1-50.png"
-                         alt="product"/>
-                    <div className="media-body">
-                      <div className="float-right">
-                        <div className="font-weight-600 text-muted text-small">63 Sales</div>
-                      </div>
-                      <div className="media-title">Headphone Blitz</div>
-                      <div className="mt-1">
-                        <div className="budget-price">
-                          <div className="budget-price-square bg-primary" data-width="34%"></div>
-                          <div className="budget-price-label">$3,717</div>
-                        </div>
-                        <div className="budget-price">
-                          <div className="budget-price-square bg-danger" data-width="28%"></div>
-                          <div className="budget-price-label">$2,835</div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="media">
-                    <img className="mr-3 rounded" width="55" src="../assets/img/products/product-3-50.png"
-                         alt="product"/>
-                    <div className="media-body">
-                      <div className="float-right">
-                        <div className="font-weight-600 text-muted text-small">28 Sales</div>
-                      </div>
-                      <div className="media-title">oPhone X Lite</div>
-                      <div className="mt-1">
-                        <div className="budget-price">
-                          <div className="budget-price-square bg-primary" data-width="45%"></div>
-                          <div className="budget-price-label">$13,972</div>
-                        </div>
-                        <div className="budget-price">
-                          <div className="budget-price-square bg-danger" data-width="30%"></div>
-                          <div className="budget-price-label">$9,660</div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="media">
-                    <img className="mr-3 rounded" width="55" src="../assets/img/products/product-5-50.png"
-                         alt="product"/>
-                    <div className="media-body">
-                      <div className="float-right">
-                        <div className="font-weight-600 text-muted text-small">19 Sales</div>
-                      </div>
-                      <div className="media-title">Old Camera</div>
-                      <div className="mt-1">
-                        <div className="budget-price">
-                          <div className="budget-price-square bg-primary" data-width="35%"></div>
-                          <div className="budget-price-label">$7,391</div>
-                        </div>
-                        <div className="budget-price">
-                          <div className="budget-price-square bg-danger" data-width="28%"></div>
-                          <div className="budget-price-label">$5,472</div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div className="card-footer pt-3 d-flex justify-content-center">
-                <div className="budget-price justify-content-center">
-                  <div className="budget-price-square bg-primary" data-width="20"></div>
-                  <div className="budget-price-label">Selling Price</div>
-                </div>
-                <div className="budget-price justify-content-center">
-                  <div className="budget-price-square bg-danger" data-width="20"></div>
-                  <div className="budget-price-label">Budget Price</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </AdminWrapper>))
+      </section>
+    </AdminWrapper>
+  ))
 }
