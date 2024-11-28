@@ -13,8 +13,6 @@ import {
 } from "@nextui-org/react"
 import {useEffect, useRef, useState} from "react";
 import Cookies from "js-cookie";
-
-import {CommonUtil} from "@/common/utils/common-util";
 import {Loading} from "@/components/admin/Loading";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
@@ -22,7 +20,8 @@ import timeGridPlugin from '@fullcalendar/timegrid' // a plugin!
 import interactionPlugin from '@fullcalendar/interaction'
 import {Time} from "@internationalized/date";
 import {Bounce, toast} from "react-toastify";
-import {useRouter} from "next/navigation";
+import {redirect, useRouter} from "next/navigation";
+import {CommonUtil} from "@/common/utils/common-util";
 
 
 export default function Page() {
@@ -86,6 +85,9 @@ export default function Page() {
 
   useEffect(() => {
     fetchCurrentUser();
+    if (!localStorage.getItem("checkoutItem")) {
+      redirect("/marketplace")
+    }
     const checkoutItem = JSON.parse(localStorage.getItem("checkoutItem"));
     if (checkoutItem) {
       setCheckoutItem(checkoutItem);
@@ -96,6 +98,13 @@ export default function Page() {
     const user = CommonUtil.parseJwt(accessToken);
     setLoggedUser(user);
   };
+
+  useEffect(() => {
+    // Cek apakah checkoutItem ada di localStorage
+    // Jika checkoutItem kosong, redirect ke halaman lain
+    redirect("/"); // Redirect ke halaman beranda atau halaman lainnya
+  }, [push]);
+
 
   async function triggerPayment() {
     if (accessToken) {
@@ -126,15 +135,12 @@ export default function Page() {
         window.snap.pay(transactionToken, {
           onSuccess: function (result) {
             push(`admin/orders/${transactionToken}`)
-          },
-          onPending: function (result) {
+          }, onPending: function (result) {
             push(`admin/orders`)
-          },
-          onError: function (result) {
+          }, onError: function (result) {
             console.error('Payment error:', result);
             alert('Terjadi kesalahan saat memproses pembayaran.');
-          },
-          onClose: function (result) {
+          }, onClose: function (result) {
             push(`admin/orders`)
           },
         });
@@ -265,9 +271,7 @@ export default function Page() {
                 selectable={true}
                 displayEventEnd={true}
                 slotLabelFormat={{
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false, // Pastikan format 24 jam
+                  hour: '2-digit', minute: '2-digit', hour12: false, // Pastikan format 24 jam
                 }}/>
             </div>
           </div>
@@ -334,9 +338,7 @@ export default function Page() {
                 <p
                   className="text-2xl font-semibold text-gray-900">
                   Rp{' '}
-                  {totalPrice === 0
-                    ? checkoutItem['price']
-                    : (totalPrice + totalPrice * 0.1).toFixed(1)}                </p>
+                  {totalPrice === 0 ? checkoutItem['price'] : (totalPrice + totalPrice * 0.1).toFixed(1)}                </p>
               </div>
             </div>
             <button onClick={triggerPayment}

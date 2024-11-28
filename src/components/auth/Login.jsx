@@ -39,7 +39,7 @@ export default function Login() {
       Cookies.set('accessToken', token);
 
       // Redirect ke halaman dashboard setelah login
-      router.push('/admin/dashboard');
+      window.location.href = '/admin/dashboard';
     } else {
       // Jika tidak ada token, redirect ke halaman login
       router.push('/auth/login');
