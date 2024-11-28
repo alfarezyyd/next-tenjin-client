@@ -143,10 +143,7 @@ const Marketplace = () => {
             <HistoryCard/>
           </div>
         </div>
-
-
       </div>
-
     </LandingWrapper>
   );
 };
