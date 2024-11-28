@@ -6,7 +6,7 @@ const products = [
   {
     id: 1,
     section: "Menu",
-    link: ['Home', 'Popular', 'About', 'Contact'],
+    link: ['Home', 'About Us', 'Vision', 'Our Mentors'],
   },
   {
     id: 2,
@@ -16,12 +16,12 @@ const products = [
   {
     id: 3,
     section: "Pages",
-    link: ['404', 'Instructions', 'License']
+    link: ['Marketplace', 'Login', 'Register']
   },
   {
     id: 4,
-    section: "Others",
-    link: ['Styleguide', 'Changelog']
+    section: "Contact Tenjin",
+    link: ['admin@tenjin.net', 'Changelog']
   }
 ]
 
