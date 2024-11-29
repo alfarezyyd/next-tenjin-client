@@ -3855,6 +3855,18 @@ filepond-plugin-image-preview@^4.6.12:
   resolved "https://registry.npmjs.org/filepond-plugin-image-preview/-/filepond-plugin-image-preview-4.6.12.tgz"
   integrity sha512-Y8ETX5QVV0mbPB0586UH8AUmG9tZg8PuN5bdEAIlZVJFTct5ebViJ7+Am94/VhTPjLqZjBf1zmDq5JU6XRsZKw==
 
+filepond-plugin-pdf-preview@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/filepond-plugin-pdf-preview/-/filepond-plugin-pdf-preview-1.0.4.tgz#22ef4c20c106e031b585121edb6c70056dd7dd0a"
+  integrity sha512-i1sMTfPMTirm5LWYfAihmbr/Ef9UWRNWNL3aKtmluZ+iTAtcNsJJOnXtbptRrF2ngrbr9vpXF5q9/bnCKkbuTA==
+  dependencies:
+    filepond "^4.25.1"
+
+filepond@^4.25.1:
+  version "4.32.4"
+  resolved "https://registry.yarnpkg.com/filepond/-/filepond-4.32.4.tgz#f075f5a7c1e712c3be4d2f00a45dd9d4630a74ef"
+  integrity sha512-LWSktO75keiU/EPx7bVbKadtiGfbmWaRtngu78ANrrqZ+0nfps7PpI0zXv4ynLKAhgzeSmtqsjwQu1nHBej/9A==
+
 filepond@^4.31.1:
   version "4.31.1"
   resolved "https://registry.npmjs.org/filepond/-/filepond-4.31.1.tgz"
