@@ -1,18 +1,22 @@
 "use client"
 import {FcGoogle} from "react-icons/fc";
 import {Button, Input} from "@nextui-org/react";
-import {useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
+import {useState} from "react";
+import {redirect, useRouter} from "next/navigation";
 import Cookies from "js-cookie";
+import {EyeFilledIcon} from "@/components/auth/EyeFilledIcon";
+import {EyeSlashFilledIcon} from "@/components/auth/EyeSlashFilledIcon";
 
 export default function Register() {
   const {push} = useRouter();
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
 
   const [registerRequest, setRegisterRequest] = useState({
     name: '',
     email: '',
     password: '',
-    confirm_password: '',
+    confirmPassword: '',
   });
   const [userError, setUserError] = useState('');
 
@@ -30,7 +34,6 @@ export default function Register() {
     const serverResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}authentication/self/register`, {
       method: 'POST',
       headers: {
-        Referer: '127.0.0.1:8000',
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
@@ -40,11 +43,11 @@ export default function Register() {
 
     if (serverResponse.ok) {
       Cookies.set('accessToken', responseBody['result']['data']['accessToken']);
-      push('/admin/dashboard');  // Redirect to the dashboard or another protected route
+      redirect('/admin/dashboard');  // Redirect to the dashboard or another protected route
     } else {
+      console.log(responseBody)
       const errorMessages = {};
-      const userError = await serverResponse.json()
-      userError.errors.message.forEach((error) => {
+      responseBody.errors.message.forEach((error) => {
         errorMessages[error.path[0]] = error.message;
       });
       setUserError(errorMessages);
@@ -102,8 +105,12 @@ export default function Register() {
           <Input
             label="Password"
             name="password"
-            type="password"
-
+            type={isVisible ? "text" : "password"}
+            endContent={<button className="focus:outline-none" type="button" onClick={toggleVisibility}
+                                aria-label="toggle password visibility">
+              {isVisible ? (<EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none"/>) : (
+                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none"/>)}
+            </button>}
 
             onChange={handleChange}
             fullWidth
@@ -114,15 +121,20 @@ export default function Register() {
           />
           <Input
             label="Confirm Password"
-            name="confirm_password"
-            type="password"
+            name="confirmPassword"
+            type={isVisible ? "text" : "password"}
+            endContent={<button className="focus:outline-none" type="button" onClick={toggleVisibility}
+                                aria-label="toggle password visibility">
+              {isVisible ? (<EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none"/>) : (
+                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none"/>)}
+            </button>}
 
             onChange={handleChange}
             fullWidth
             className="mb-3"
             required
-            isInvalid={!!userError.confirm_password}
-            errorMessage={userError.confirm_password ? userError.confirm_password : ""}
+            isInvalid={!!userError.confirmPassword}
+            errorMessage={userError.confirmPassword ? userError.confirmPassword : ""}
           />
 
           <div className="mb-4 flex items-center justify-between px-2">
@@ -144,9 +156,9 @@ export default function Register() {
           </Button>
         </form>
         <div className="mt-4">
-          <span className=" text-sm font-medium text-navy-700 dark:text-gray-600">
-            Already have an account?
-          </span>
+              <span className=" text-sm font-medium text-navy-700 dark:text-gray-600">
+              Already have an account?
+              </span>
           <a
             href="/auth/login"
             className="ml-1 text-sm font-medium text-brand-500 hover:text-brand-600 dark:text-white"

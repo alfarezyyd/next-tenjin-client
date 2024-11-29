@@ -4,6 +4,8 @@ import {useEffect, useState} from "react";
 import {FilePond, registerPlugin} from 'react-filepond';
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import FilePondPluginPdfPreview from "filepond-plugin-pdf-preview";
+
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
 import {Loading} from "@/components/admin/Loading";
@@ -14,15 +16,15 @@ import {useRouter} from "next/navigation";
 import '@/../public/assets/css/components.css'
 
 // Register the plugins
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginPdfPreview);
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
   const [currentStep, setCurrentStep] = useState(1); // State untuk mengelola langkah wizard
   const [loggedUser, setLoggedUser] = useState({});
   const [profilePhoto, setProfilePhoto] = useState([]);
-  const [identityCard, setIdentityCard] = useState();
-  const [curriculumVitae, setCurriculumVitae] = useState();
+  const [identityCard, setIdentityCard] = useState([]);
+  const [curriculumVitae, setCurriculumVitae] = useState([]);
   const [formData, setFormData] = useState({
     mentorAddress: {
       street: "",
@@ -62,16 +64,6 @@ export default function Page() {
     setLoggedUser(user);
   };
 
-  function handleFileBrowser(event) {
-    let fieldVal = event.target.value;
-    fieldVal = fieldVal.replace("C:\\fakepath\\", "");
-
-    if (fieldVal) {
-      // Set the label's text using the DOM API
-      event.target.nextSibling.setAttribute('data-content', fieldVal);
-      event.target.nextSibling.textContent = fieldVal;
-    }
-  }
 
   // Fungsi untuk mengubah nilai form
   const handleChange = (e, objectName) => {
@@ -119,8 +111,8 @@ export default function Page() {
     };
     const formDataPayload = convertIntoFormData(formData);
     formDataPayload.append("photo", profilePhoto[0].file);
-    formDataPayload.append("identityCard", identityCard);
-    formDataPayload.append("curriculumVitae", curriculumVitae);
+    formDataPayload.append("identityCard", identityCard[0].file);
+    formDataPayload.append("curriculumVitae", curriculumVitae[0].file);
     for (var pair of formDataPayload.entries()) {
     }
     const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors`, {
@@ -130,8 +122,9 @@ export default function Page() {
     })
     const responseBody = await fetchResponse.json();
     if (fetchResponse.ok) {
-      Cookies.set(responseBody['result']['data']['accessToken'])
-      router.push('/admin/mentors?notify=success'); // Tambahkan query param
+      Cookies.set("accessToken", "")
+      Cookies.set('accessToken', responseBody['result']['data']['accessToken'])
+      // router.push('/admin/mentors?notify=success'); // Tambahkan query param
     } else {
       setCurrentStep(1);
       const errorMessages = {};
@@ -146,8 +139,22 @@ export default function Page() {
     }
   };
 
+  function convertToTitleCase(text) {
+    return text.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase());
+  }
+
   // Fungsi untuk navigasi ke langkah berikutnya
   const nextStep = () => {
+    // if (currentStep === 1) {
+    //   const isComplete = Object.values({
+    //     ...formData.mentorAddress,
+    //     pin: formData.pin
+    //   }).every(value => value.trim() !== "");
+    //   if (!isComplete) {
+    //     toast.error('Mohon isi semua data dengan benar')
+    //     setCurrentStep((prevStep) => prevStep - 1);
+    //   }
+    // }
     setCurrentStep((prevStep) => prevStep + 1);
   };
 
@@ -157,430 +164,443 @@ export default function Page() {
   };
 
   return (<>
-    {loading ? <Loading/> : (<AdminFullWrapper>
-      <section className="section">
-        <div className="section-header">
-          <h1 className='mx-auto'>PENDAFTARAN MENTOR</h1>
-        </div>
-
-        <div className="section-body">
-          <h2 className="section-title">Formulir Pendaftaran untuk Menjadi Mentor TENJIN</h2>
-          <p className="section-lead">
-            Dengan mengisi formulir ini, Anda dapat melakukan pengajuan untuk menjadi mentor pada platform TENJIN
-          </p>
-          <div className="card">
-            <div className="card-header">
-              <h4 className="mx-auto">Isilah Formulir Berikut dengan Baik dan Benar!</h4>
-            </div>
-            <div className="card-body">
-              <div className="row mt-4">
-                <div className="col-12 col-lg-8 offset-lg-2">
-                  <div className="wizard-steps">
-                    <div className={`wizard-step wizard-step-${currentStep === 1 ? 'active' : ''}`}>
-                      <div className="wizard-step-icon">
-                        <i className="far fa-user"></i>
-                      </div>
-                      <div className="wizard-step-label">
-                        Data Diri
-                      </div>
-                    </div>
-                    <div className={`wizard-step wizard-step-${currentStep === 2 ? 'active' : ''}`}>
-                      <div className="wizard-step-icon">
-                        <i className="fas fa-box-open"></i>
-                      </div>
-                      <div className="wizard-step-label">
-                        Dokumen Pendukung
-                      </div>
-                    </div>
-                    <div className={`wizard-step wizard-step-${currentStep === 3 ? 'active' : ''}`}>
-                      <div className="wizard-step-icon">
-                        <i className="fas fa-server"></i>
-                      </div>
-                      <div className="wizard-step-label">
-                        Data Keuangan
-                      </div>
-                    </div>
-                    <div
-                      className={`wizard-step wizard-step-success wizard-step-${currentStep === 4 ? 'active' : ''}`}>
-                      <div className="wizard-step-icon">
-                        <i className="fas fa-check"></i>
-                      </div>
-                      <div className="wizard-step-label">
-                        Konfirmasi Data
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <form className="wizard-content mt-2" onSubmit={handleSubmit}>
-                <div className="wizard-pane">
-                  {currentStep === 1 && (<>
-                    <div className="row col-md-9 mx-auto">
-                      <div className="form-group col-6">
-                        <label htmlFor="full_name">Nama Lengkap</label>
-                        <input type="text"
-                               className='form-control'
-                               id="full_name" placeholder="Nama Lengkap"
-                               name="full_name" disabled value={loggedUser.name}/>
-                        <div className="invalid-feedback">
-                        </div>
-                      </div>
-
-                      <div className="form-group col-6">
-                        <label htmlFor="email">Email</label>
-                        <input type="text"
-                               className="form-control"
-                               id="email" disabled value={loggedUser.email}
-                               name="email"/>
-                        <small>Anda harus memverifikasi e-mail terlebih <br/> dahulu apabila belum pada
-                          halaman <a
-                            href="">Verifikasi
-                            Email</a> </small>
-                      </div>
-                    </div>
-                    <div className="row col-md-9 mx-auto">
-                      <div className="form-group col-6">
-                        <label htmlFor="telephone">Nomor Telepon</label>
-                        <input type="text"
-                               className="form-control"
-                               id="telephone" disabled value={loggedUser.telephone ?? '+62 '}
-                               name="telephone"/>
-                        <small>Jika nomor kosong, silahkan tambahkan pada settings</small>
-                      </div>
-
-                      <div className="form-group col-6">
-                        <label>Jenis Kelamin</label>
-                        <div className="selectgroup w-100">
-                          <label className="selectgroup-item" htmlFor="MAN">
-                            <input type="radio" name="gender" id="MAN" value="MAN" disabled
-                                   className="selectgroup-input"
-                                   checked={loggedUser.gender === 'MAN'}/>
-                            <span className="selectgroup-button">Laki-Laki</span>
-                          </label>
-                          <label className="selectgroup-item" htmlFor="WOMAN">
-                            <input type="radio" name="gender" id="WOMAN" value="100" disabled
-                                   className="selectgroup-input"
-                                   checked={loggedUser.gender === 'WOMAN'}/>
-                            <span className="selectgroup-button">Wanita</span>
-                          </label>
-                        </div>
-                      </div>
-
-                    </div>
-                    <div className="row col-md-9 mx-auto">
-                      <div className="form-group col-6">
-                        <label htmlFor="pin">PIN (Personal Identification Number)</label>
-                        <input type="text"
-                               className="form-control"
-                               id="pin" placeholder="Nomor PIN"
-                               name="pin"
-                               onChange={handleChange}/>
-                        <div className="invalid-feedback">
-                        </div>
-                      </div>
-                      <div className="col-6">
-                        <br/>
-                        <small>
-                          Nomor PIN terdiri dari 6 digit angka. Anda harus membuat PIN untuk menjadi mentor agar
-                          akun anda menjadi lebih aman.
-                        </small>
-                      </div>
-                    </div>
-                    <div className="row col-md-9 mx-auto">
-                      <div className="row col-md-9 form-divider">Alamat Lengkap</div>
-                      <div className="form-group col-6">
-                        <label htmlFor="street">Jalan</label>
-                        <input
-                          type="text"
-                          className={`form-control ${errors.street ? "is-invalid" : ""}`}
-                          id="street"
-                          placeholder="Nama Jalan"
-                          name="street"
-                          value={formData.mentorAddress.street}
-                          onChange={(e) => {
-                            handleChange(e, "mentorAddress")
-                          }}
-                        />
-                        {errors.street && <div className="invalid-feedback">{errors.street}</div>}
-                      </div>
-
-                      <div className="form-group col-6">
-                        <label htmlFor="village">Desa</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="village"
-                          placeholder="Nama Desa"
-                          name="village"
-                          value={formData.mentorAddress.village}
-                          onChange={(e) => {
-                            handleChange(e, "mentorAddress")
-                          }}/>
-                        <div className="invalid-feedback">{errors.village}</div>
-                      </div>
-                    </div>
-
-                    <div className="row col-md-9 mx-auto">
-                      <div className="form-group col-6">
-                        <label htmlFor="neighbourhoodNumber">RT</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="neighbourhoodNumber"
-                          name="neighbourhoodNumber"
-                          placeholder="Nomor RT"
-                          value={formData.mentorAddress.neighbourhoodNumber}
-                          onChange={(e) => {
-                            handleChange(e, "mentorAddress")
-                          }}
-                        />
-                        <div className="invalid-feedback">{errors.neighbourhoodNumber}</div>
-                      </div>
-                      <div className="form-group col-6">
-                        <label htmlFor="hamletNumber">RW</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="hamletNumber"
-                          name="hamletNumber"
-                          placeholder="Nomor RW"
-                          value={formData.mentorAddress.hamletNumber}
-                          onChange={(e) => {
-                            handleChange(e, "mentorAddress")
-                          }}
-                        />
-                        <div className="invalid-feedback">{errors.hamletNumber}</div>
-                      </div>
-                    </div>
-
-                    <div className="row col-md-9 mx-auto">
-                      <div className="form-group col-6">
-                        <label htmlFor="urbanVillage">Kelurahan</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="urbanVillage"
-                          name="urbanVillage"
-                          placeholder="Nama Kelurahan"
-                          value={formData.mentorAddress.urbanVillage}
-                          onChange={(e) => {
-                            handleChange(e, "mentorAddress")
-                          }}
-                        />
-                        <div className="invalid-feedback">{errors.urbanVillage}</div>
-                      </div>
-                      <div className="form-group col-6">
-                        <label htmlFor="subDistrict">Kecamatan</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="subDistrict"
-                          name="subDistrict"
-                          placeholder="Nama Kecamatan"
-                          value={formData.mentorAddress.subDistrict}
-                          onChange={(e) => {
-                            handleChange(e, "mentorAddress")
-                          }}
-                        />
-                        <div className="invalid-feedback">{errors.subDistrict}</div>
-                      </div>
-                    </div>
-
-                    <div className="row col-md-9 mx-auto">
-                      <div className="form-group col-6">
-                        <label htmlFor="district">Kota/Kabupaten</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="district"
-                          name="district"
-                          placeholder="Nama Kota/Kabupaten"
-                          value={formData.mentorAddress.district}
-                          onChange={(e) => {
-                            handleChange(e, "mentorAddress")
-                          }}
-                        />
-                        <div className="invalid-feedback">{errors.district}</div>
-                      </div>
-                      <div className="form-group col-6">
-                        <label htmlFor="province">Provinsi</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="province"
-                          name="province"
-                          placeholder="Nama Provinsi"
-                          value={formData.mentorAddress.province}
-                          onChange={(e) => {
-                            handleChange(e, "mentorAddress")
-                          }}
-                        />
-                        <div className="invalid-feedback">{errors.province}</div>
-                      </div>
-                    </div>
-                    <div className="row col-md-9 mx-auto">
-                      <div className="form-group col-12">
-                        <label>Foto Formal 3x4</label>
-                        <FilePond
-                          files={profilePhoto}
-                          onupdatefiles={setProfilePhoto}
-                          allowMultiple={false}
-                          maxFiles={1}
-                          name="profilePhoto"
-                          labelIdle='Seret & Letakkan Gambar Anda atau <span class="filepond--label-action">Browse</span>'
-                        />
-                      </div>
-                    </div>
-                  </>)}
-                  {currentStep === 2 && (<>
-                    <div className="row col-md-9 mx-auto">
-                      <div className="form-group col-lg-6 col-md-6 col-sm-12">
-                        <label htmlFor="identityCard">KTP (Kartu Tanda Penduduk)</label>
-                        <div className="custom-file">
-                          <input type="file" className="custom-file-input" name="identityCard"
-                                 onChange={(e) => {
-                                   handleChange(e)
-                                   handleFileBrowser(e)
-                                   setIdentityCard(e.target.files[0])
-                                 }}
-                                 id="identityCard"/>
-                          <label className="custom-file-label" htmlFor="identityCard">Choose file</label>
-                        </div>
-                        <div className="invalid-feedback">
-                        </div>
-                      </div>
-                      <div className="form-group col-lg-6 col-md-6 col-sm-12">
-                        <label htmlFor="identityCardAction">Action</label>
-                        <div className="d-flex flex-row">
-                          <a href="#" className="btn btn-icon icon-left btn-primary"><i
-                            className="far fa-edit"></i> Lihat</a>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row col-md-9 mx-auto">
-                      <div className="form-group col-6">
-                        <label htmlFor="curriculumVitae">CV (Curriculum Vitae)</label>
-                        <div className="custom-file">
-                          <input type="file" className="custom-file-input" id="curriculumVitae"
-                                 name="curriculumVitae"
-                                 onChange={(e) => {
-                                   handleChange(e)
-                                   handleFileBrowser(e)
-                                   setCurriculumVitae(e.target.files[0])
-                                 }}/>
-                          <label className="custom-file-label" htmlFor="curriculumVitae">Choose file</label>
-                        </div>
-                        <div className="invalid-feedback">
-                        </div>
-                      </div>
-                      <div className="form-group col-6">
-                        <label htmlFor="curriculumVitae_action">Action</label>
-                        <div className="d-flex flex-row">
-                          <a href="#" className="btn btn-icon icon-left btn-primary"><i
-                            className="far fa-edit"></i> Lihat</a>
-                        </div>
-                        <div className="invalid-feedback">
-                        </div>
-                      </div>
-                    </div>
-                  </>)}
-                  {currentStep === 3 && (<>
-                    <div className="row col-md-9 mx-auto">
-                      <div className="form-group col-6">
-                        <label htmlFor="accountHolderName">Nama Pemilik Rekening</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="accountHolderName"
-                          name="accountHolderName"
-                          placeholder="Nama Pemilik Rekening"
-                          value={formData.mentorBankAccount.accountHolderName}
-                          onChange={(e) => {
-                            handleChange(e, "mentorBankAccount")
-                          }}
-                        />
-                        <div className="invalid-feedback">{errors.accountHolderName}</div>
-                      </div>
-                      <div className="form-group col-6">
-                        <label htmlFor="bankName">Nama Bank</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="bankName"
-                          name="bankName"
-                          placeholder="Nama Bank"
-                          value={formData.mentorBankAccount.bankName}
-                          onChange={(e) => {
-                            handleChange(e, "mentorBankAccount")
-                          }}
-                        />
-                        <div className="invalid-feedback">{errors.bankName}</div>
-                      </div>
-                    </div>
-
-                    <div className="row col-md-9 mx-auto">
-                      <div className="form-group col-6">
-                        <label htmlFor="accountNumber">Nomor Rekening</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="accountNumber"
-                          name="accountNumber"
-                          placeholder="Nomor Rekening"
-                          value={formData.mentorBankAccount.accountNumber}
-                          onChange={(e) => {
-                            handleChange(e, "mentorBankAccount")
-                          }}
-                        />
-                        <div className="invalid-feedback">{errors.accountNumber}</div>
-                      </div>
-                      <div className="form-group col-6">
-                        <label htmlFor="paymentRecipientEmail">Email Penerima Pembayaran</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="paymentRecipientEmail"
-                          name="paymentRecipientEmail"
-                          placeholder="Email Penerima Pembayaran"
-                          value={formData.mentorBankAccount.paymentRecipientEmail}
-                          onChange={(e) => {
-                            handleChange(e, "mentorBankAccount")
-                          }}
-                        />
-                        <div className="invalid-feedback">{errors.paymentRecipientEmail}</div>
-                      </div>
-                    </div>
-                  </>)}
-                  {currentStep === 4 && (<div className="row col-md-9 mx-auto">
-                    <div className="card card-primary">
-                      <div className="card-header">
-                        <h4 className="mx-auto">Summary</h4>
-                      </div>
-                      <div className="card-body">
-                        <p>Card <code>.card-primary</code></p>
-                      </div>
-                    </div>
-                  </div>)}
-                  <div className="row col-md-9 mx-auto">
-                    <div className="col-lg-6 col-md-8">
-                      {currentStep > 1 && (<a onClick={prevStep}
-                                              className="btn btn-icon icon-right btn-secondary"><i
-                        className="fas fa-arrow-left"></i> Previous</a>)}
-                    </div>
-                    <div className="col-lg-6 col-md-8 text-right">
-                      {currentStep < 4 ? (<a onClick={nextStep} className="btn btn-icon icon-right btn-primary">Next <i
-                        className="fas fa-arrow-right"></i></a>) : (
-                        <button type="submit" className="btn btn-success">Submit</button>)}
-                    </div>
-                  </div>
-
-                </div>
-              </form>
-            </div>
-
+      {loading ? <Loading/> : (<AdminFullWrapper>
+        <section className="section">
+          <div className="section-header">
+            <h1 className='mx-auto'>PENDAFTARAN MENTOR</h1>
           </div>
-        </div>
-      </section>
-    </AdminFullWrapper>)}
-  </>)
+
+          <div className="section-body">
+            <h2 className="section-title">Formulir Pendaftaran untuk Menjadi Mentor TENJIN</h2>
+            <p className="section-lead">
+              Dengan mengisi formulir ini, Anda dapat melakukan pengajuan untuk menjadi mentor pada platform TENJIN
+            </p>
+            <div className="card">
+              <div className="card-header">
+                <h4 className="mx-auto">Isilah Formulir Berikut dengan Baik dan Benar!</h4>
+              </div>
+              <div className="card-body">
+                <div className="row mt-4">
+                  <div className="col-12 col-lg-8 offset-lg-2">
+                    <div className="wizard-steps">
+                      <div className={`wizard-step wizard-step-${currentStep === 1 ? 'active' : ''}`}>
+                        <div className="wizard-step-icon">
+                          <i className="far fa-user"></i>
+                        </div>
+                        <div className="wizard-step-label">
+                          Data Diri
+                        </div>
+                      </div>
+                      <div className={`wizard-step wizard-step-${currentStep === 2 ? 'active' : ''}`}>
+                        <div className="wizard-step-icon">
+                          <i className="fas fa-box-open"></i>
+                        </div>
+                        <div className="wizard-step-label">
+                          Dokumen Pendukung
+                        </div>
+                      </div>
+                      <div className={`wizard-step wizard-step-${currentStep === 3 ? 'active' : ''}`}>
+                        <div className="wizard-step-icon">
+                          <i className="fas fa-server"></i>
+                        </div>
+                        <div className="wizard-step-label">
+                          Data Keuangan
+                        </div>
+                      </div>
+                      <div
+                        className={`wizard-step wizard-step-success wizard-step-${currentStep === 4 ? 'active' : ''}`}>
+                        <div className="wizard-step-icon">
+                          <i className="fas fa-check"></i>
+                        </div>
+                        <div className="wizard-step-label">
+                          Konfirmasi Data
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <form className="wizard-content mt-2" onSubmit={handleSubmit}>
+                  <div className="wizard-pane">
+                    {currentStep === 1 && (<>
+                      <div className="row col-md-9 mx-auto">
+                        <div className="form-group col-6">
+                          <label htmlFor="full_name">Nama Lengkap</label>
+                          <input type="text"
+                                 className='form-control'
+                                 id="full_name" placeholder="Nama Lengkap"
+                                 name="full_name" disabled value={loggedUser.name}/>
+                          <div className="invalid-feedback">
+                          </div>
+                        </div>
+
+                        <div className="form-group col-6">
+                          <label htmlFor="email">Email</label>
+                          <input type="text"
+                                 className="form-control"
+                                 id="email" disabled value={loggedUser.email}
+                                 name="email"/>
+                          <small>Anda harus memverifikasi e-mail terlebih <br/> dahulu apabila belum pada
+                            halaman <a
+                              href="">Verifikasi
+                              Email</a> </small>
+                        </div>
+                      </div>
+                      <div className="row col-md-9 mx-auto">
+                        <div className="form-group col-6">
+                          <label htmlFor="telephone">Nomor Telepon</label>
+                          <input type="text"
+                                 className="form-control"
+                                 id="telephone" disabled value={loggedUser.telephone ?? '+62 '}
+                                 name="telephone"/>
+                          <small>Jika nomor kosong, silahkan tambahkan pada settings</small>
+                        </div>
+
+                        <div className="form-group col-6">
+                          <label>Jenis Kelamin</label>
+                          <div className="selectgroup w-100">
+                            <label className="selectgroup-item" htmlFor="MAN">
+                              <input type="radio" name="gender" id="MAN" value="MAN" disabled
+                                     className="selectgroup-input"
+                                     checked={loggedUser.gender === 'MAN'}/>
+                              <span className="selectgroup-button">Laki-Laki</span>
+                            </label>
+                            <label className="selectgroup-item" htmlFor="WOMAN">
+                              <input type="radio" name="gender" id="WOMAN" value="100" disabled
+                                     className="selectgroup-input"
+                                     checked={loggedUser.gender === 'WOMAN'}/>
+                              <span className="selectgroup-button">Wanita</span>
+                            </label>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div className="row col-md-9 mx-auto">
+                        <div className="form-group col-6">
+                          <label htmlFor="pin">PIN (Personal Identification Number)</label>
+                          <input type="text"
+                                 className="form-control"
+                                 id="pin" placeholder="Nomor PIN"
+                                 name="pin"
+                                 onChange={handleChange}/>
+                          <div className="invalid-feedback">
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <br/>
+                          <small>
+                            Nomor PIN terdiri dari 6 digit angka. Anda harus membuat PIN untuk menjadi mentor agar
+                            akun anda menjadi lebih aman.
+                          </small>
+                        </div>
+                      </div>
+                      <div className="row col-md-9 mx-auto">
+                        <div className="row col-md-9 form-divider">Alamat Lengkap</div>
+                        <div className="form-group col-6">
+                          <label htmlFor="street">Jalan</label>
+                          <input
+                            type="text"
+                            className={`form-control ${errors.street ? "is-invalid" : ""}`}
+                            id="street"
+                            placeholder="Nama Jalan"
+                            name="street"
+                            value={formData.mentorAddress.street}
+                            onChange={(e) => {
+                              handleChange(e, "mentorAddress")
+                            }}
+                          />
+                          {errors.street && <div className="invalid-feedback">{errors.street}</div>}
+                        </div>
+
+                        <div className="form-group col-6">
+                          <label htmlFor="village">Desa</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="village"
+                            placeholder="Nama Desa"
+                            name="village"
+                            value={formData.mentorAddress.village}
+                            onChange={(e) => {
+                              handleChange(e, "mentorAddress")
+                            }}/>
+                          <div className="invalid-feedback">{errors.village}</div>
+                        </div>
+                      </div>
+
+                      <div className="row col-md-9 mx-auto">
+                        <div className="form-group col-6">
+                          <label htmlFor="neighbourhoodNumber">RT</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="neighbourhoodNumber"
+                            name="neighbourhoodNumber"
+                            placeholder="Nomor RT"
+                            value={formData.mentorAddress.neighbourhoodNumber}
+                            onChange={(e) => {
+                              handleChange(e, "mentorAddress")
+                            }}
+                          />
+                          <div className="invalid-feedback">{errors.neighbourhoodNumber}</div>
+                        </div>
+                        <div className="form-group col-6">
+                          <label htmlFor="hamletNumber">RW</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="hamletNumber"
+                            name="hamletNumber"
+                            placeholder="Nomor RW"
+                            value={formData.mentorAddress.hamletNumber}
+                            onChange={(e) => {
+                              handleChange(e, "mentorAddress")
+                            }}
+                          />
+                          <div className="invalid-feedback">{errors.hamletNumber}</div>
+                        </div>
+                      </div>
+
+                      <div className="row col-md-9 mx-auto">
+                        <div className="form-group col-6">
+                          <label htmlFor="urbanVillage">Kelurahan</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="urbanVillage"
+                            name="urbanVillage"
+                            placeholder="Nama Kelurahan"
+                            value={formData.mentorAddress.urbanVillage}
+                            onChange={(e) => {
+                              handleChange(e, "mentorAddress")
+                            }}
+                          />
+                          <div className="invalid-feedback">{errors.urbanVillage}</div>
+                        </div>
+                        <div className="form-group col-6">
+                          <label htmlFor="subDistrict">Kecamatan</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="subDistrict"
+                            name="subDistrict"
+                            placeholder="Nama Kecamatan"
+                            value={formData.mentorAddress.subDistrict}
+                            onChange={(e) => {
+                              handleChange(e, "mentorAddress")
+                            }}
+                          />
+                          <div className="invalid-feedback">{errors.subDistrict}</div>
+                        </div>
+                      </div>
+
+                      <div className="row col-md-9 mx-auto">
+                        <div className="form-group col-6">
+                          <label htmlFor="district">Kota/Kabupaten</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="district"
+                            name="district"
+                            placeholder="Nama Kota/Kabupaten"
+                            value={formData.mentorAddress.district}
+                            onChange={(e) => {
+                              handleChange(e, "mentorAddress")
+                            }}
+                          />
+                          <div className="invalid-feedback">{errors.district}</div>
+                        </div>
+                        <div className="form-group col-6">
+                          <label htmlFor="province">Provinsi</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="province"
+                            name="province"
+                            placeholder="Nama Provinsi"
+                            value={formData.mentorAddress.province}
+                            onChange={(e) => {
+                              handleChange(e, "mentorAddress")
+                            }}
+                          />
+                          <div className="invalid-feedback">{errors.province}</div>
+                        </div>
+                      </div>
+                      <div className="row col-md-9 mx-auto">
+                        <div className="form-group col-12">
+                          <label>Foto Formal 3x4</label>
+                          <FilePond
+                            files={profilePhoto}
+                            onupdatefiles={(files) => {
+                              setProfilePhoto(files);
+                              const file = files[0].file; // Ambil file asli
+                              const previewURL = URL.createObjectURL(file); // Buat blob URL
+                            }}
+                            allowMultiple={false}
+                            maxFiles={1}
+                            name="profilePhoto"
+                            labelIdle='Seret & Letakkan Gambar Anda atau <span class="filepond--label-action">Browse</span>'
+                          />
+                        </div>
+                      </div>
+                    </>)}
+                    {currentStep === 2 && (<>
+                      <div className="row col-md-9 mx-auto">
+                        <div className="form-group col-lg-8 col-md-12 col-sm-12">
+                          <label htmlFor="identityCard">KTP (Kartu Tanda Penduduk)</label>
+                          <FilePond
+                            files={identityCard}
+                            onupdatefiles={setIdentityCard}
+                            allowMultiple={false}
+                            acceptedFileTypes={["application/pdf", "image/jpeg", "image/png"]}
+                            maxFiles={1}
+                            name="identityCard"
+                            labelIdle='Seret & Letakkan Gambar Anda atau <span class="filepond--label-action">Browse</span>'
+                          />
+                          <div className="invalid-feedback">
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row col-md-9 mx-auto">
+                        <div className="form-group col-lg-8 col-md-12 col-sm-12">
+                          <label htmlFor="curriculumVitae">CV (Curriculum Vitae)</label>
+                          <FilePond
+                            files={curriculumVitae}
+                            onupdatefiles={setCurriculumVitae}
+                            allowMultiple={false}
+                            acceptedFileTypes={["application/pdf", "image/jpeg", "image/png"]}
+                            maxFiles={1}
+                            name="curriculumVitae"
+                            labelIdle='Seret & Letakkan Gambar Anda atau <span class="filepond--label-action">Browse</span>'
+                          />
+                          <div className="invalid-feedback">
+                          </div>
+                        </div>
+                      </div>
+                    </>)}
+                    {currentStep === 3 && (<>
+                      <div className="row col-md-9 mx-auto">
+                        <div className="form-group col-6">
+                          <label htmlFor="accountHolderName">Nama Pemilik Rekening</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="accountHolderName"
+                            name="accountHolderName"
+                            placeholder="Nama Pemilik Rekening"
+                            value={formData.mentorBankAccount.accountHolderName}
+                            onChange={(e) => {
+                              handleChange(e, "mentorBankAccount")
+                            }}
+                          />
+                          <div className="invalid-feedback">{errors.accountHolderName}</div>
+                        </div>
+                        <div className="form-group col-6">
+                          <label htmlFor="bankName">Nama Bank</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="bankName"
+                            name="bankName"
+                            placeholder="Nama Bank"
+                            value={formData.mentorBankAccount.bankName}
+                            onChange={(e) => {
+                              handleChange(e, "mentorBankAccount")
+                            }}
+                          />
+                          <div className="invalid-feedback">{errors.bankName}</div>
+                        </div>
+                      </div>
+
+                      <div className="row col-md-9 mx-auto">
+                        <div className="form-group col-6">
+                          <label htmlFor="accountNumber">Nomor Rekening</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="accountNumber"
+                            name="accountNumber"
+                            placeholder="Nomor Rekening"
+                            value={formData.mentorBankAccount.accountNumber}
+                            onChange={(e) => {
+                              handleChange(e, "mentorBankAccount")
+                            }}
+                          />
+                          <div className="invalid-feedback">{errors.accountNumber}</div>
+                        </div>
+                        <div className="form-group col-6">
+                          <label htmlFor="paymentRecipientEmail">Email Penerima Pembayaran</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="paymentRecipientEmail"
+                            name="paymentRecipientEmail"
+                            placeholder="Email Penerima Pembayaran"
+                            value={formData.mentorBankAccount.paymentRecipientEmail}
+                            onChange={(e) => {
+                              handleChange(e, "mentorBankAccount")
+                            }}
+                          />
+                          <div className="invalid-feedback">{errors.paymentRecipientEmail}</div>
+                        </div>
+                      </div>
+                    </>)}
+                    {currentStep === 4 && (<div className="row col-md-9 mx-auto">
+                      <div className="card card-primary col-12">
+                        <div className="card-header">
+                          <h4 className="mx-auto">Summary</h4>
+                        </div>
+                        <div className="card-body">
+                          <div className="card card-primary col-12">
+                            <div className="card-header">
+                              <h4 className="mx-auto">Address</h4>
+                            </div>
+                            <div className="card-body">
+                              <ul className="list-group list-group-flush">
+                                {Object.entries(formData.mentorAddress).map(([key, value]) => (
+                                  <li key={`mentor-addresses-result-${key}`}
+                                      className="list-group-item">{convertToTitleCase(key)} : {value}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                          <div className="card card-primary col-12">
+                            <div className="card-header">
+                              <h4 className="mx-auto">Bank</h4>
+                            </div>
+                            <div className="card-body">
+                              <ul className="list-group list-group-flush">
+                                {Object.entries(formData.mentorBankAccount).map(([key, value]) => (
+                                  <li key={`mentor-addresses-result-${key}`}
+                                      className="list-group-item">{convertToTitleCase(key)} : {value}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>)}
+                    <div className="row col-md-9 mx-auto">
+                      <div className="col-lg-6 col-md-8">
+                        {currentStep > 1 && (<a onClick={prevStep}
+                                                className="btn btn-icon icon-right btn-secondary"><i
+                          className="fas fa-arrow-left"></i> Previous</a>)}
+                      </div>
+                      <div className="col-lg-6 col-md-8 text-right">
+                        {currentStep < 4 ? (
+                          <a onClick={nextStep} className="btn btn-icon icon-right btn-primary">Next <i
+                            className="fas fa-arrow-right"></i></a>) : (
+                          <button type="submit" className="btn btn-success">Submit</button>)}
+                      </div>
+                    </div>
+
+                  </div>
+                </form>
+              </div>
+
+            </div>
+          </div>
+        </section>
+      </AdminFullWrapper>)}
+    </>
+  )
 }
