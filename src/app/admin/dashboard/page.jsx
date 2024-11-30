@@ -148,8 +148,10 @@ export default function Page() {
           borderColor: "#f56954",
           textColor: '#fff',
           extendedProps: {
-            isFalse: true,
-            isTrue: true
+            meetingPasskey: schedule.meetingPasskey,
+            meetingPlatform: schedule.meetingPlatform,
+            meetingLink: schedule.meetingLink,
+            mentorName: schedule.mentorName,
           }
         })
       });
@@ -307,18 +309,22 @@ export default function Page() {
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title mx-auto">Informasi Topik</h5>
+              <h5 className="modal-title text-center">Informasi Topik</h5>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div className="modal-body">
               <ul className="list-group list-group-flush">
-                <li className="list-group-item">Topik: justo odio</li>
-                <li className="list-group-item">Tanggal: ac facilisis in</li>
-                <li className="list-group-item">Morbi leo risus</li>
-                <li className="list-group-item">Porta ac consectetur ac</li>
-                <li className="list-group-item">Vestibulum at eros</li>
+                <li className="list-group-item">Topik: {selectedEvent?.title}</li>
+                <li className="list-group-item">Tanggal: {selectedEvent?.start._i.substring(0, 10)}</li>
+                <li className="list-group-item">Nama Mentor: {selectedEvent?.extendedProps.mentorName}</li>
+                <li
+                  className="list-group-item">Waktu: {selectedEvent?.start._i.substring(11, 16)} - {selectedEvent?.end._i.substring(11, 16)} WIB
+                </li>
+                <li className="list-group-item">Meeting Platform: {selectedEvent?.extendedProps.meetingPlatform}</li>
+                <li className="list-group-item">Meeting Passkey: {selectedEvent?.extendedProps.meetingPasskey}</li>
+                <li className="list-group-item">Meeting Link: {selectedEvent?.extendedProps.meetingLink}</li>
               </ul>
             </div>
             <div className="modal-footer bg-whitesmoke br">
