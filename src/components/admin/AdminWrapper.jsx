@@ -40,15 +40,17 @@ export default function AdminWrapper({children}) {
 
   return (<>
     {loading ? (<Loading/>) : (<div id="app">
-      <div className="main-wrapper">
-        <div className="navbar-bg"></div>
-        <AdminNavbar parsedJwt={parsedAccessToken}/>
-        {accessToken && <AdminSidebar parsedJwt={parsedAccessToken}/>}
-        <div className="main-content">
-          {children}
+        <div className="main-wrapper">
+          <div className="navbar-bg"></div>
+          <AdminNavbar parsedJwt={parsedAccessToken}/>
+          {accessToken && <AdminSidebar parsedJwt={parsedAccessToken}/>}
+          <div className="main-content">
+            {children}
+          </div>
+          <AdminFooter/>
         </div>
-        <AdminFooter/>
+
       </div>
-    </div>)}
+    )}
   </>);
 }

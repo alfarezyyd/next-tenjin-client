@@ -23,6 +23,7 @@ export default function Page() {
   const [lastFiveOrder, setLastFiveOrder] = useState(null);
   const calendarRef = useRef(null);
   const searchParams = useSearchParams();
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const router = useRouter();
   useEffect(() => {
@@ -37,6 +38,7 @@ export default function Page() {
       window.jQuery = $
       await import('fullcalendar/dist/fullcalendar.min')
       await import('select2/dist/js/select2.min')
+
       await fullCalendarInitiation($)
       await CommonScript();
       setAccessToken(Cookies.get('accessToken'));
@@ -95,7 +97,12 @@ export default function Page() {
     $("#myEvent").fullCalendar({
       height: 'auto', header: {
         left: 'prev,next today', center: 'title', right: 'month,agendaWeek,agendaDay,listWeek'
-      }, editable: true
+      }, editable: true,
+      eventClick: ((event) => {
+        console.log(event)
+        setSelectedEvent(event)
+        $('#prizePopup').modal('show');
+      }),
     })
   }
 
@@ -124,6 +131,7 @@ export default function Page() {
   }, [lastFiveOrderType]);
 
   const processEventData = async (rawSchedule) => {
+    console.log(rawSchedule);
     if (calendarRef.current && currentUser) {
       const $ = window.jQuery;
       const calendar = $(calendarRef.current).fullCalendar('getCalendar');
@@ -138,7 +146,11 @@ export default function Page() {
           allDay: false,
           backgroundColor: "#f56954",
           borderColor: "#f56954",
-          textColor: '#fff'
+          textColor: '#fff',
+          extendedProps: {
+            isFalse: true,
+            isTrue: true
+          }
         })
       });
       allEvent.forEach(event => {
@@ -148,6 +160,8 @@ export default function Page() {
   }
 
   return (loading ? (<Loading/>) : (<AdminWrapper>
+
+
       <section className="section">
         <div className="section-body">
           <div className="row">
@@ -289,6 +303,31 @@ export default function Page() {
           </div>
         </div>
       </section>
+      <div id="prizePopup" className="modal fade" tabIndex="-1" role="dialog">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title mx-auto">Informasi Topik</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <ul className="list-group list-group-flush">
+                <li className="list-group-item">Topik: justo odio</li>
+                <li className="list-group-item">Tanggal: ac facilisis in</li>
+                <li className="list-group-item">Morbi leo risus</li>
+                <li className="list-group-item">Porta ac consectetur ac</li>
+                <li className="list-group-item">Vestibulum at eros</li>
+              </ul>
+            </div>
+            <div className="modal-footer bg-whitesmoke br">
+              <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" className="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </AdminWrapper>
   ))
 }
