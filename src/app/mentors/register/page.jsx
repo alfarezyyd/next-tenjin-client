@@ -124,7 +124,7 @@ export default function Page() {
     if (fetchResponse.ok) {
       Cookies.set("accessToken", "")
       Cookies.set('accessToken', responseBody['result']['data']['accessToken'])
-      // router.push('/admin/mentors?notify=success'); // Tambahkan query param
+      router.push('/admin/dashboard?notify=success'); // Tambahkan query param
     } else {
       setCurrentStep(1);
       const errorMessages = {};

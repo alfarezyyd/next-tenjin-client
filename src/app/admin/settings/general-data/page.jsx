@@ -130,6 +130,7 @@ export default function Page() {
       if (fetchResponse.ok) {
         setCurrentUser(responseBody.result.data);
         setLoadingData(false);
+        Cookies.set("accessToken", responseBody.res)
         toast.success("Your general data successfully updated!")
       } else {
         console.error(responseBody);

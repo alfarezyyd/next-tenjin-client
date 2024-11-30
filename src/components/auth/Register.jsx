@@ -2,7 +2,7 @@
 import {FcGoogle} from "react-icons/fc";
 import {Button, Input} from "@nextui-org/react";
 import {useState} from "react";
-import {redirect, useRouter} from "next/navigation";
+import {useRouter} from "next/navigation";
 import Cookies from "js-cookie";
 import {EyeFilledIcon} from "@/components/auth/EyeFilledIcon";
 import {EyeSlashFilledIcon} from "@/components/auth/EyeSlashFilledIcon";
@@ -43,7 +43,7 @@ export default function Register() {
 
     if (serverResponse.ok) {
       Cookies.set('accessToken', responseBody['result']['data']['accessToken']);
-      redirect('/admin/dashboard');  // Redirect to the dashboard or another protected route
+      window.location.href = '/admin/dashboard';
     } else {
       console.log(responseBody)
       const errorMessages = {};

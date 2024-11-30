@@ -15,6 +15,7 @@ export default function Login() {
   });
   const [userError, setUserError] = useState({});
   const [isVisible, setIsVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -45,39 +46,8 @@ export default function Login() {
       router.push('/auth/login');
     }
   }, [searchParams, router]);
-
-  const handleGoogleAuthentication = async () => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}authentication/google`, {
-        method: 'GET', headers: {
-          Accept: 'application/json',
-        }
-      })
-
-      const responseBody = await response.json();
-      if (response.ok) {
-        Cookies.set('accessToken', responseBody['result']['data']['accessToken']);
-        push(`${process.env.NEXT_PUBLIC_BASE_URL}admin/dashboard`);  // Redirect to the dashboard or another protected route
-      } else {
-        switch (response.status) {
-          case 404: {
-            setUserError({
-              email: "User with this email not found"
-            })
-            break;
-          }
-          default: {
-            setUserError({
-              email: "User with this email not valid", password: "User password incorrect"
-            })
-          }
-        }
-      }
-    } catch (e) {
-    }
-  }
-
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     setUserError({});
     try {
@@ -90,7 +60,8 @@ export default function Login() {
       const responseBody = await response.json();
       if (response.ok) {
         Cookies.set('accessToken', responseBody['result']['data']['accessToken']);
-        push(`${process.env.NEXT_PUBLIC_BASE_URL}admin/dashboard`);  // Redirect to the dashboard or another protected route
+        window.location.href = '/admin/dashboard';
+
       } else {
         switch (response.status) {
           case 404: {
@@ -123,7 +94,9 @@ export default function Login() {
         Enter your email and password to sign in!
       </p>
       <Button as={Link} href={`${process.env.NEXT_PUBLIC_BACKEND_URL}authentication/google`} type="button"
-              className="mb-6 flex h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-[#F4F7FE] hover:cursor-pointer">
+              isLoading={loading}
+              className="mb-6 flex h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-[#F4F7FE]
+        hover:cursor-pointer">
         <div className="rounded-full text-xl">
           <FcGoogle/>
         </div>
