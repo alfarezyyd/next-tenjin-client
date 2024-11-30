@@ -1,0 +1,199 @@
+"use client"
+import AdminWrapper from "@/components/admin/AdminWrapper";
+import {useEffect, useState} from "react";
+import CommonScript from "@/components/admin/CommonScript";
+import Cookies from "js-cookie";
+import {Loading} from "@/components/admin/Loading";
+import {useRouter, useSearchParams} from "next/navigation";
+import {toast} from "react-toastify";
+
+import '@/../public/assets/css/components.css'
+import {CommonUtil} from "@/common/utils/common-util";
+
+export default function Page() {
+  const [accessToken, setAccessToken] = useState(null);
+  const [decodedAccessToken, setDecodedAccessToken] = useState(null);
+  const [allMentorOrder, setAllMentorOrder] = useState({});
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    // Cek jika ada `notify=success` di query param
+    if (searchParams.get('notify') === 'success') {
+      // Bersihkan query param setelah menampilkan toast
+      router.replace('/admin/mentor/assistants');
+    }
+  }, [searchParams, router]);
+
+  useEffect(() => {
+    async function loadAssets() {
+      const $ = (await import('jquery')).default;
+      await CommonScript();
+    }
+
+    if (typeof window !== 'undefined') {
+      loadAssets();
+    }
+    setAccessToken(Cookies.get("accessToken"));
+  }, []);
+
+  useEffect(() => {
+    if (accessToken) {
+      fetchMentorWaitingOrder();
+      setDecodedAccessToken(CommonUtil.parseJwt(accessToken));
+    }
+  }, [accessToken]);
+
+
+  const fetchMentorWaitingOrder = async () => {
+    try {
+      const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors/orders`, {
+        method: 'GET', includeCredentials: true, headers: {
+          'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+      const responseBody = await responseFetch.json();
+      if (responseFetch.ok) {
+        setAllMentorOrder(responseBody.result.data);
+        console.log(responseBody.result.data);
+      } else {
+        console.error('Failed to fetch assistance', responseBody);
+      }
+    } catch (error) {
+      console.error('Error fetching experiences:', error);
+    } finally {
+      setLoading(false); // Menghentikan loading ketika data sudah diterima
+    }
+  }
+
+  async function triggerDeleteAssistant(id) {
+    if (accessToken) {
+      try {
+        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/${id}`, {
+          method: 'DELETE', includeCredentials: true, headers: {
+            'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+        const responseBody = await responseFetch.json();
+        if (responseFetch.ok) {
+          toast.success('Data deleted successfully!', {
+            position: 'top-right', autoClose: 3000,
+          })
+          setAllMentorOrder(allMentorOrder.filter(value => value.id !== id));
+        } else {
+          console.error('Failed to fetch assistance', responseBody);
+        }
+      } catch (error) {
+        console.error('Error fetching experiences:', error);
+      } finally {
+        setLoading(false); // Menghentikan loading ketika data sudah diterima
+      }
+    }
+  }
+
+  useEffect(() => {
+
+  }, [allMentorOrder])
+
+  async function triggerUpdateBooking(orderId, condition) {
+    if (accessToken) {
+      try {
+        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors/orders/booking`, {
+          method: 'POST', includeCredentials: true, headers: {
+            'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json',
+          }, body: JSON.stringify({
+            orderId: orderId,
+            bookingCondition: condition
+          }),
+        });
+        const responseBody = await responseFetch.json();
+        if (responseFetch.ok) {
+          toast.success('Booking successfully approved!', {
+            position: 'top-right', autoClose: 3000,
+          })
+          setAllMentorOrder(allMentorOrder.filter(value => value.id !== orderId));
+        } else {
+          console.error('Failed to fetch assistance', responseBody);
+        }
+      } catch (error) {
+        console.error('Error fetching experiences:', error);
+      } finally {
+        setLoading(false); // Menghentikan loading ketika data sudah diterima
+      }
+    }
+
+  }
+
+  return (<AdminWrapper>
+    <section className="section">
+      <div className="section-header">
+        <h1>Data Booking</h1>
+        <div className="section-header-breadcrumb">
+          <div className="breadcrumb-item active"><a href="#">Admin</a></div>
+          <div className="breadcrumb-item"><a href="#">Mentor</a></div>
+          <div className="breadcrumb-item">Pendidikan</div>
+        </div>
+      </div>
+
+      <div className="section-body">
+        <h2 className="section-title">Overview</h2>
+        <p className="section-lead w-50">
+          Pantau dan kelola jadwal booking mentor dengan mudah. Lihat detail booking, atur jadwal, konfirmasi, atau
+          batalkan pertemuan langsung dari satu halaman.
+        </p>
+        <div className="row">
+          {loading ? (  // Tampilkan loading selama data belum tersedia
+            <Loading/>) : (
+
+            allMentorOrder.length ? allMentorOrder.map((value, index) => (
+              <div className="col-12 col-md-6 col-lg-4" key={`mentor-order-${index}`}>
+                <div className="card card-info">
+                  <div className="card-body">
+                    <ul className="list-group">
+                      <div>
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                          Nama Cohort
+                          <span className="badge badge-primary badge-pill">{value.user.name}</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                          Tanggal
+                          <span
+                            className="badge badge-primary badge-pill">{value.sessionStartTimestamp.substring(0, 10)}</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                          Waktu
+                          <span
+                            className="badge badge-primary badge-pill">{value.sessionStartTimestamp.substring(11, 16)} - {value.sessionEndTimestamp.substring(11, 16)}</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                          Topic
+                          <span className="badge badge-primary badge-pill">{value.assistance.topic}</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                          Status
+                          <span className="badge badge-primary badge-pill">{value.orderCondition}</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                          <button className="btn btn-sm btn-primary" onClick={() => {
+                            triggerUpdateBooking(value.id, "APPROVE")
+                          }}>Setujui
+                          </button>
+                          <button className="btn btn-sm btn-danger" onClick={() => {
+                            triggerUpdateBooking(value.id, "REJECT")
+                          }}>Tolak
+                          </button>
+                        </li>
+                      </div>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )) : (
+              <Loading/>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </AdminWrapper>)
+}

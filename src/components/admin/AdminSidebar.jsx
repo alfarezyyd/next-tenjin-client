@@ -118,6 +118,24 @@ export default function AdminSidebar({parsedJwt}) {
               </li>
             </ul>
           </li>
+          <li className={`nav-item ${pathNames[2] === 'bookings' ? 'active' : ''}`}>
+            <a href="#" className="nav-link has-dropdown" data-toggle="dropdown">
+              <i className="fas fa-calendar-check"></i>
+              <span>Booking</span>
+            </a>
+            <ul className="dropdown-menu">
+              <li
+                className={`nav-item ${pathNames[2] === 'bookings' && pathNames[3] === undefined ? 'active' : ''}`}>
+                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/bookings`}>Lihat
+                  Data</a>
+              </li>
+              <li
+                className={`nav-item ${pathNames[2] === 'bookings' && pathNames[3] === "create" ? 'active' : ''}`}>
+                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/bookings/create`}>Buat
+                  Data</a>
+              </li>
+            </ul>
+          </li>
         </>) : (<div className="p-3 hide-sidebar-mini">
           <a href="/mentors/register" className="btn btn-primary btn-lg btn-block btn-icon-split">
             <i className="fas fa-rocket"></i> Daftar Mentor
