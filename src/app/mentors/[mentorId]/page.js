@@ -32,7 +32,7 @@ export default function Page({}) {
   const {isChatVisible, toggleChat, chatData, setChatData} = useContext(LandingContext);
   const [accessToken, setAccessToken] = useState(null);
   const [decodedAccessToken, setDecodedAccessToken] = useState(null);
-
+  const [checkout, setCheckout] = useState("");
 
   useEffect(() => {
     if (pathName.mentorId) {
@@ -50,9 +50,10 @@ export default function Page({}) {
     }
   }, [accessToken]);
 
+
   async function initiateCheckout() {
     localStorage.setItem("checkoutItem", "");
-    localStorage.setItem("checkoutItem", JSON.stringify({
+    const checkoutItem = JSON.stringify({
       topic: activeCategory['topic'],
       assistantId: activeCategory['id'],
       mentorId: activeCategory['mentorId'],
@@ -61,9 +62,16 @@ export default function Page({}) {
       price: activeCategory['price'],
       minutesDurations: activeCategory['durationMinutes'],
       note: "Testing",
-    }));
-    push(`${process.env.NEXT_PUBLIC_BASE_URL}checkout`)
+    })
+    localStorage.setItem("checkoutItem", checkoutItem);
+    setCheckout(checkoutItem)
   }
+
+  useEffect(() => {
+    if (checkout) {
+      push("/checkout");
+    }
+  }, [checkout]);
 
   const fetchMentorData = async (mentorId) => {
     let responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors/${mentorId}`, {
@@ -183,12 +191,14 @@ export default function Page({}) {
                                   <div
                                     className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-4 items-center justify-center">
                                     <div className="relative col-span-6 md:col-span-4">
-                                      <Image
-                                        alt="Album cover"
-                                        className="w-14 h-18"
-                                        shadow="md"
-                                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${activeCategory?.category.logo}`}
-                                      />
+                                      <div className="w-14 h-20 rounded-md overflow-hidden shadow-md bg-white">
+                                        <Image
+                                          alt="Album cover"
+                                          className="object-cover w-14 h-20"
+                                          src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${activeCategory?.category.logo}`}
+                                        />
+                                      </div>
+
                                     </div>
 
                                     <div className="flex flex-col col-span-6 md:col-span-8 ">
@@ -208,11 +218,13 @@ export default function Page({}) {
 
                         </div>
                         <div className="flex flex-row mt-5">
-                          <Image
-                            alt="NextUI hero Image"
-                            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${activeCategory?.category.logo}`}
-                            className="w-32 h-40"
-                          />
+                          <div className="w-36 h-40 rounded-md overflow-hidden shadow-md">
+                            <Image
+                              alt="Album cover"
+                              className="object-cover w-36 h-40"
+                              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${activeCategory?.category.logo}`}
+                            />
+                          </div>
                           <div className="flex flex-col ml-5 gap-4">
                             <h1 className="text-4xl font-bold">{activeCategory?.topic}</h1>
                             <div className="flex flex-row gap-3">

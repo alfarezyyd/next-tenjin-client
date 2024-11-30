@@ -85,7 +85,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchCurrentUser();
-    if (!localStorage.getItem("checkoutItem")) {
+    if (localStorage.getItem("checkoutItem").length === 2) {
       redirect("/marketplace")
     }
     const checkoutItem = JSON.parse(localStorage.getItem("checkoutItem"));
@@ -98,12 +98,6 @@ export default function Page() {
     const user = CommonUtil.parseJwt(accessToken);
     setLoggedUser(user);
   };
-
-  useEffect(() => {
-    // Cek apakah checkoutItem ada di localStorage
-    // Jika checkoutItem kosong, redirect ke halaman lain
-    redirect("/"); // Redirect ke halaman beranda atau halaman lainnya
-  }, [push]);
 
 
   async function triggerPayment() {
@@ -134,14 +128,14 @@ export default function Page() {
         const transactionToken = responseBody['result']['data']
         window.snap.pay(transactionToken, {
           onSuccess: function (result) {
-            push(`admin/orders/${transactionToken}`)
+            window.location.href = `admin/orders/${transactionToken}`
           }, onPending: function (result) {
-            push(`admin/orders`)
+            window.location.href = `admin/orders`
           }, onError: function (result) {
             console.error('Payment error:', result);
             alert('Terjadi kesalahan saat memproses pembayaran.');
           }, onClose: function (result) {
-            push(`admin/orders`)
+            window.location.href = `admin/orders`
           },
         });
       } else {
