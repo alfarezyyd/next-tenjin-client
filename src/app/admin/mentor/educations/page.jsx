@@ -114,7 +114,7 @@ export default function Page() {
           <div className="row">
             {loading ? (  // Tampilkan loading selama data belum tersedia
               <Loading/>) : (allMentorEducation.length > 0 ? (allMentorEducation.map((mentorEducation) => (
-              <div className="col-sm-12 col-md-6 col-lg-4 mb-4 p-0" key={mentorEducation.id}>
+              <div className="col-sm-12 col-md-6 col-lg-4 mb-4 p-0 card-content-data" key={mentorEducation.id}>
                 <div className="card-custom text-dark card-has-bg click-col"
                      style={{backgroundImage: `url(https://source.unsplash.com/600x900/?tech,street)`}}>
                   <img className="card-img d-none" src="https://source.unsplash.com/600x900/?tech,street"

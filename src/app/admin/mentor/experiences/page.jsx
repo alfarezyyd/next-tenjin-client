@@ -8,7 +8,7 @@ import {Loading} from "@/components/admin/Loading";
 import {useRouter, useSearchParams} from "next/navigation";
 
 import {toast} from 'react-toastify';
-
+import '@/../public/assets/css/components.css'
 
 export default function Page() {
   const [accessToken, setAccessToken] = useState(null);
