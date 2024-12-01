@@ -65,6 +65,7 @@ export default function Page() {
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
           setAllOrder(responseBody.result.data);
+          console.log(responseBody.result.data);
         } else {
           console.error('Failed to fetch experiences', responseBody);
         }
@@ -87,18 +88,25 @@ export default function Page() {
     return currentTime - orderTime > twentyFourHoursInMs;
   };
 
-  async function downloadInvoice(transactionToken) {
+
+  async function handleOrderDone(selectedOrder) {
     if (accessToken) {
       try {
-        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/orders/invoice`, {
-          method: 'POST', includeCredentials: true, headers: {
-            'Accept': 'application/json', 'Content-Type': 'application/json', // Penting untuk JSON
-            'Authorization': `Bearer ${accessToken}`,
-          }, body: JSON.stringify({transactionToken: transactionToken}),
+        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/orders/finished/${selectedOrder.id}`, {
+          method: 'GET', includeCredentials: true, headers: {
+            'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
+          },
         });
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
-          setAllOrder(responseBody.result.data);
+          const updatedOrders = allOrder.map(order => {
+            if (order.id === selectedOrder.id) {
+              return {...order, orderStatus: 'FINISHED'}; // Perbarui properti yang diinginkan
+            }
+            return order; // Tetap kembalikan item lain tanpa perubahan
+          });
+
+          setAllOrder(updatedOrders);
         } else {
           console.error('Failed to fetch experiences', responseBody);
         }
@@ -108,6 +116,7 @@ export default function Page() {
         setLoading(false); // Menghentikan loading ketika data sudah diterima
       }
     }
+
   }
 
   return (<AdminWrapper>
@@ -145,7 +154,7 @@ export default function Page() {
                   <Image src={`/images/authentication/login.jpg`} alt=""
                          className="w-100 h-100 m-0 p-0 object-cover" width={500}
                          height={500}/>
-                  {mentorAssistance.orderStatus === "FINISHED" ? (
+                  {(mentorAssistance.orderStatus === "FINISHED" || mentorAssistance.orderStatus === "CONFIRMED") ? (
                     <div className="expired-overlay">
                       <span className="expired-text">LUNAS</span>
                     </div>) : (
@@ -175,16 +184,23 @@ export default function Page() {
                         </div>
                         <div className="text-job">{mentorAssistance.assistance.mentor.user.gender}</div>
                       </div>
-                      {!isOrderExpired(mentorAssistance.createdAt) && (mentorAssistance.orderStatus !== "FINISHED") && (<>
+                      {!isOrderExpired(mentorAssistance.createdAt) && (mentorAssistance.orderPaymentStatus === "NOT_YET_PAID") && (<>
                         <a href="#" className="btn btn-outline-primary float-right mt-1 ml-2">Cancel</a>
                         <a href="#" onClick={() => {
                           initiatePayment(mentorAssistance['transactionToken'])
                         }} className="btn  btn-primary float-right mt-1">Continue</a>
                       </>)}
-                      {mentorAssistance.orderStatus === "FINISHED" &&
+                      {(mentorAssistance.orderStatus === "FINISHED" || mentorAssistance.orderStatus === "CONFIRMED") &&
                         (<a
                           href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/orders/${mentorAssistance.transactionToken.toString()}`}
-                          className="btn  btn-success float-right mt-1">Invoice</a>)}
+                          className="btn  btn-outline-success float-right mt-1">Invoice</a>)}
+                      {(mentorAssistance.orderStatus !== "FINISHED" && (mentorAssistance.orderPaymentStatus === "PAID") && mentorAssistance.orderCondition === "APPROVED") &&
+                        (<button
+                          className="btn  btn-primary float-right mt-1 mr-1" onClick={() => {
+                          handleOrderDone(mentorAssistance);
+                        }}>Konfirmasi
+                          Selesai</button>)}
+
                     </div>
                   </div>
                 </div>
