@@ -1,13 +1,14 @@
 export default function AdminFooter() {
-  return (
-    <footer className="main-footer">
-      <div className="footer-left">
-        Copyright &copy; 2018 <div className="bullet"></div> Design By <a href="https://nauv.al/">Muhamad Nauval
-        Azhar</a>
-      </div>
-      <div className="footer-right">
-        2.3.0
-      </div>
-    </footer>
-  )
+  return (<footer className="main-footer">
+    <div className="footer-left">
+      Copyright &copy; {new Date().getFullYear()}
+      <div className="bullet"></div>
+      Developed By <a href={`${process.env.NEXT_PUBLIC_BASE_URL}`}>
+      Tenjin Tomodachi
+    </a>
+    </div>
+    <div className="footer-right">
+      1.0.0
+    </div>
+  </footer>)
 }
