@@ -201,7 +201,7 @@ export default function LandingWrapper({children}) {
                     return (<button key={chat.uniqueId} onClick={() => {
                       handleActiveChat(chat)
                     }}
-                                    className={`w-full flex items-center p-2 rounded-md hover:bg-sky-500 transition group ${chat.uniqueId === activeChat.destinationUserUniqueId ? 'bg-sky-200' : 'bg-gray-100'}`}>
+                                    className={`w-full flex items-center p-2 rounded-md hover:bg-sky-500 transition group ${chat.uniqueId === activeChat?.destinationUserUniqueId ? 'bg-sky-200' : 'bg-gray-100'}`}>
                       <Image
                         className="w-8 h-8 rounded-full mr-3"
                         src={`https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-32-01_pfck4u.jpg`}

@@ -89,11 +89,13 @@ export default function Page({}) {
       for (const reviewElement of responseBody['result']['data']['Assistance'][0]['Review']) {
         sumOfAllRating += Number(reviewElement.rating)
       }
+      const averageRatingOperation = sumOfAllRating / responseBody['result']['data']['Assistance'][0]['Review'].length
       responseBody['result']['data']['Assistance'][0] = {
         ...responseBody['result']['data']['Assistance'][0],
-        averageRating: sumOfAllRating / responseBody['result']['data']['Assistance'][0]['Review'].length,
+        averageRating: isNaN(averageRatingOperation) ? 0 : averageRatingOperation,
       }
       setActiveCategory(responseBody['result']['data']['Assistance'][0]);
+      console.log(responseBody['result']['data'])
     } else {
       console.error('Failed to fetch assistance dependency', responseBody);
     }
@@ -111,7 +113,9 @@ export default function Page({}) {
         <div
           className="mx-auto w-full max-w-6xl rounded-2xl bg-white py-6 px-6 mb-5 flex flex-row gap-5 justify-between">
           <div className="flex flex-row gap-5">
-            <Avatar src="/images/articles/article.png" className="w-20 h-20"/>
+            <Avatar
+              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${mentorData?.user?.photoPath}`}
+              className="w-20 h-20"/>
             <div className="flex flex-col gap-0.5">
               <h1 className="text-xl font-semibold">{mentorData.user?.name}</h1>
               <div className="flex flex-row gap-2">
