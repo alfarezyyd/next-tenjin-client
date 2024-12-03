@@ -64,6 +64,7 @@ export default function Login() {
         window.location.href = '/admin/dashboard';
 
       } else {
+        console.log(responseBody);
         switch (response.status) {
           case 404: {
             setUserError({
@@ -79,6 +80,8 @@ export default function Login() {
         }
       }
     } catch (e) {
+    } finally {
+      setLoading(false);
     }
 
   };
