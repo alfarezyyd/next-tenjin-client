@@ -7,7 +7,7 @@ export default function AdminSidebar({parsedJwt}) {
   return (<div className="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
       <div className="sidebar-brand">
-        <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/admin/dashboard`}>TENJIN</Link>
+        <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/dashboard`}>TENJIN</Link>
       </div>
       <div className="sidebar-brand sidebar-brand-sm">
         <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}`}>TJN</Link>

@@ -137,6 +137,8 @@ export default function Page() {
       const calendar = $(calendarRef.current).fullCalendar('getCalendar');
       if (calendar) {
         calendar.removeEvents(); // Hapus semua event lama
+      } else {
+        return []
       }
       const allEvent = [];
       // Tambahkan event berdasarkan jadwal pengguna

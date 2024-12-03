@@ -109,7 +109,9 @@ export default function Page() {
                   <div className="card-body">
 
                     <ul className="nav nav-pills flex-column">
-                      <li className="nav-item"><a href="#" className="nav-link">General</a></li>
+                      <li className="nav-item">
+                        <Link href="/admin/settings/general-data"
+                              className="nav-link ">General Data</Link></li>
                       <li className="nav-item"><Link href="/admin/settings/password"
                                                      className="nav-link active">Password</Link>
                       </li>
