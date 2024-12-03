@@ -135,7 +135,9 @@ export default function Page() {
     if (calendarRef.current && currentUser) {
       const $ = window.jQuery;
       const calendar = $(calendarRef.current).fullCalendar('getCalendar');
-      calendar.removeEvents(); // Hapus semua event lama
+      if (calendar) {
+        calendar.removeEvents(); // Hapus semua event lama
+      }
       const allEvent = [];
       // Tambahkan event berdasarkan jadwal pengguna
       rawSchedule.forEach((schedule) => {
@@ -227,7 +229,7 @@ export default function Page() {
                     <h4>Total Profit</h4>
                   </div>
                   <div className="card-body">
-                    Rp.
+                    Rp. {currentUser?.userDetail?.totalBalance}
                   </div>
                 </div>
               </div>

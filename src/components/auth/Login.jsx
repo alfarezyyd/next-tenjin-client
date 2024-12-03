@@ -36,6 +36,7 @@ export default function Login() {
     const token = searchParams.get('token');
 
     if (token) {
+      setLoading(true);
       // Simpan token di cookie
       Cookies.set('accessToken', token);
 
@@ -156,6 +157,7 @@ export default function Login() {
         <Button
           type="submit"
           size="lg"
+          isLoading={loading}
           color="primary"
           className="linear mt-2 w-full rounded-xl font-light bg-brand-500 py-[12px] text-base text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700">
           Sign In

@@ -130,7 +130,7 @@ export default function Page({}) {
                   <Image
                     alt="Woman listening to music"
                     className="object-cover w-full h-80" // Set a fixed height
-                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/mentor-resources/${mentorData.id}/${mentorData.MentorResource?.[0]['imagePath']}`}
+                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/mentor-resources/profile/${mentorData.id}/${mentorData.MentorResource?.[0]['imagePath']}`}
                     width={500}
                   />
                   <CardFooter
