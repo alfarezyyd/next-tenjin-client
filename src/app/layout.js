@@ -10,7 +10,6 @@ export const metadata = {
 export default function RootLayout({children}) {
   return (<html lang="en">
   <body className="w-full m-0 p-0">
-  <ToastContainer style={{zIndex: 9999}}/>
   <Providers>{children}</Providers>
   </body>
   </html>);

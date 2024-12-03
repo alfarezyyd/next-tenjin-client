@@ -45,6 +45,58 @@ export default function AdminSidebar({parsedJwt}) {
                 Saldo</Link></li>
           </ul>
         </li>
+        <li className="menu-header">Management</li>
+        <li className={`nav-item ${pathNames[2] === 'categories' ? 'active' : ''}`}>
+          <Link href="#" className="nav-link has-dropdown" data-toggle="dropdown">
+            <i className="fas fa-bars"></i>
+            <span>Kategori</span>
+          </Link>
+          <ul className="dropdown-menu">
+            <li
+              className={`nav-item ${pathNames[2] === 'categories' && pathNames[3] === undefined ? 'active' : ''}`}>
+              <Link className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/management/categories`}>Lihat
+                Data</Link>
+            </li>
+            <li
+              className={`nav-item ${pathNames[2] === 'categories' && pathNames[3] === "create" ? 'active' : ''}`}>
+              <Link className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/management/categories/create`}>Buat
+                Data</Link>
+            </li>
+          </ul>
+        </li>
+        <li className={`nav-item ${pathNames[2] === 'tags' ? 'active' : ''}`}>
+          <Link href="#" className="nav-link has-dropdown" data-toggle="dropdown">
+            <i className="fas fa-tags"></i> <span>Tags</span>
+          </Link>
+          <ul className="dropdown-menu">
+            <li
+              className={`nav-item ${pathNames[2] === 'tags' && pathNames[3] === undefined ? 'active' : ''}`}>
+              <Link className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/management/tags`}>Lihat
+                Data</Link>
+            </li>
+            <li
+              className={`nav-item ${pathNames[2] === 'tags' && pathNames[3] === "create" ? 'active' : ''}`}>
+              <Link className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/management/tags/create`}>Buat
+                Data</Link>
+            </li>
+          </ul>
+        </li>
+        <li className={`nav-item ${pathNames[2] === 'languages' ? 'active' : ''}`}>
+          <Link href="#" className="nav-link has-dropdown" data-toggle="dropdown">
+            <i className="fas fa-comments"></i> Bahasa</Link>
+          <ul className="dropdown-menu">
+            <li
+              className={`nav-item ${pathNames[2] === 'languages' && pathNames[3] === undefined ? 'active' : ''}`}>
+              <Link className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/languages`}>Lihat
+                Data</Link>
+            </li>
+            <li
+              className={`nav-item ${pathNames[2] === 'languages' && pathNames[3] === "create" ? 'active' : ''}`}>
+              <Link className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/languages/create`}>Buat
+                Data</Link>
+            </li>
+          </ul>
+        </li>
 
         {(parsedJwt && parsedJwt.mentorId) ? (<>
           <li className="menu-header">Mentor</li>
