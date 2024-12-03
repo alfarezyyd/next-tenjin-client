@@ -29,7 +29,7 @@ export default function Page({}) {
   const {push} = useRouter();
   const [loading, setLoading] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
-  const {isChatVisible, toggleChat, chatData, setChatData} = useContext(LandingContext);
+  const {isChatVisible, toggleChat, chatData, setChatData, activeChat, setActiveChat} = useContext(LandingContext);
   const [accessToken, setAccessToken] = useState(null);
   const [decodedAccessToken, setDecodedAccessToken] = useState(null);
   const [checkout, setCheckout] = useState("");
@@ -73,6 +73,9 @@ export default function Page({}) {
     }
   }, [checkout]);
 
+  useEffect(() => {
+
+  }, [decodedAccessToken]);
   const fetchMentorData = async (mentorId) => {
     let responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors/${mentorId}`, {
       method: 'GET', headers: {
@@ -90,9 +93,7 @@ export default function Page({}) {
         ...responseBody['result']['data']['Assistance'][0],
         averageRating: sumOfAllRating / responseBody['result']['data']['Assistance'][0]['Review'].length,
       }
-      console.log(responseBody['result']['data']['Assistance'][0]['Review'])
       setActiveCategory(responseBody['result']['data']['Assistance'][0]);
-      console.log();
     } else {
       console.error('Failed to fetch assistance dependency', responseBody);
     }
@@ -259,18 +260,27 @@ export default function Page({}) {
                                 className="w-48 h-16 disabled">
                           <span className="font-bold text-2xl">Order</span>
                         </Button>
-                        <Button isDisabled={decodedAccessToken?.uniqueId !== null} variant="solid" size="lg"
+                        <Button isDisabled={accessToken?.uniqueId === null} variant="solid" size="lg"
                                 radius="full" onClick={() => {
                           toggleChat()
                           setChatData((prevChatData) => {
+                            console.log(chatData[mentorData.user.uniqueId])
                             const updatedChatData = {...prevChatData}; // Salin data lama (spread operator untuk objek)
                             // Hindari duplikasi dan tambahkan hanya jika berbeda
-                            if (mentorData.userUniqueId !== decodedAccessToken?.uniqueId && !updatedChatData[mentorData.userUniqueId]) {
-                              updatedChatData[mentorData.userUniqueId] = {
+                            if (mentorData.user.uniqueId !== prevChatData.uniqueId && !updatedChatData[mentorData.user.uniqueId]) {
+                              updatedChatData[mentorData.user.uniqueId] = {
                                 name: mentorData.user.name,
                                 uniqueId: mentorData.user.uniqueId,
                                 userId: mentorData.user.id,
                               };
+                            } else {
+                              console.log(chatData[mentorData.user.uniqueId])
+                              setActiveChat({
+                                name: chatData[mentorData.user.uniqueId].name,
+                                messages: chatData[mentorData.user.uniqueId].messages,
+                                destinationUserUniqueId: chatData[mentorData.user.uniqueId].uniqueId,
+                                userId: chatData[mentorData.user.uniqueId].userId
+                              })
                             }
                             return updatedChatData; // Kembalikan array yang diperbarui
                           });
@@ -329,7 +339,6 @@ export default function Page({}) {
                                   className="rounded-full flex-shrink-0"
                                 />
                                 <div className="flex flex-col">
-                                  {console.log(review)}
                                   <h3 className="text-xl font-semibold">{review.User?.name}</h3>
                                   <p className="text-sm" dangerouslySetInnerHTML={{__html: review.review}}>
 

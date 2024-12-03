@@ -8,9 +8,9 @@ export const LandingProvider = ({children}) => {
   const toggleChat = () => {
     setChatVisible(!isChatVisible);
   };
-
+  const [activeChat, setActiveChat] = useState(null);
   return (
-    <LandingContext.Provider value={{isChatVisible, toggleChat, chatData, setChatData}}>
+    <LandingContext.Provider value={{isChatVisible, toggleChat, chatData, setChatData, activeChat, setActiveChat}}>
       {children}
     </LandingContext.Provider>
   );

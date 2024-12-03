@@ -13,9 +13,8 @@ import '@/app/globals.css'
 export default function LandingWrapper({children}) {
   const [accessToken, setAccessToken] = useState();
   const [decodedAccessToken, setDecodedAccessToken] = useState();
-  const {isChatVisible, toggleChat, chatData, setChatData} = useContext(LandingContext);
+  const {isChatVisible, toggleChat, chatData, setChatData, activeChat, setActiveChat} = useContext(LandingContext);
   const [socket, setSocket] = useState();
-  const [activeChat, setActiveChat] = useState();
   const [message, setMessage] = useState("");
   const activeChatRef = useRef(); // Ref untuk menyimpan activeChat
   const lastMessageRef = useRef(null);
@@ -39,6 +38,7 @@ export default function LandingWrapper({children}) {
       setSocket(initializeSocket(decodedAccessToken.email, decodedAccessToken.uniqueId));
     }
   }, [decodedAccessToken])
+
 
   useEffect(() => {
     if (socket && decodedAccessToken) {
@@ -68,7 +68,7 @@ export default function LandingWrapper({children}) {
     if (socket) {
       socket.on("privateMessage", (message) => {
         setActiveChat({
-          ...activeChatRef.current, messages: [...(activeChatRef.current.messages), {
+          ...activeChatRef.current, messages: [...(activeChatRef.current?.messages ?? []), {
             isSender: message.message.isSender,
             message: message.message.message,
             timestamp: message.message.timestamp,
@@ -117,8 +117,23 @@ export default function LandingWrapper({children}) {
 
 
   useEffect(() => {
+    console.log(chatData, activeChat);
+    if (chatData && Object.keys(chatData).length > 0 && !activeChat) {
+      const defaultMentor = Object.values(chatData).find(
+        chat => chat.uniqueId === activeChat?.uniqueId
+      );
 
-  }, [chatData])
+      if (defaultMentor) {
+        setActiveChat({
+          name: defaultMentor.name,
+          messages: defaultMentor.messages,
+          destinationUserUniqueId: defaultMentor.uniqueId,
+          userId: defaultMentor.userId
+        });
+      }
+    }
+  }, [chatData, activeChat]);
+
 
   const triggerSendMessage = async () => {
     if (socket) {
@@ -180,6 +195,9 @@ export default function LandingWrapper({children}) {
                 <div className="space-y-2">
                   <h3 className="text-sm font-semibold text-gray-400 uppercase">Chats</h3>
                   {chatData && Object.values(chatData).length > 0 && Object.values(chatData).map((chat) => {
+                    {
+                      console.log(chat)
+                    }
                     return (<button key={chat.uniqueId} onClick={() => {
                       handleActiveChat(chat)
                     }} className="w-full flex items-center p-2 rounded-md hover:bg-gray-100 transition">
@@ -190,9 +208,11 @@ export default function LandingWrapper({children}) {
                       />
                       <div>
                         <h4 className="text-sm font-semibold text-gray-800">{chat.name}</h4>
-                        <p
-                          className="text-xs text-gray-500 text-left">{chat.messages[chat.messages.length - 1].message} ·
-                          {CommonUtil.diffForHumans(chat.messages[chat.messages.length - 1].timestamp)}</p>
+                        {chat.messages !== undefined && chat.messages.length > 0 && (
+                          <p
+                            className="text-xs text-gray-500 text-left">{chat.messages[chat.messages.length - 1].message} ·
+                            {CommonUtil.diffForHumans(chat.messages[chat.messages.length - 1].timestamp)}</p>
+                        )}
                       </div>
                     </button>)
                   })}
@@ -205,6 +225,9 @@ export default function LandingWrapper({children}) {
                 </div>
                 <div className="mt-6 space-y-4 overflow-y-auto flex-grow">
                   {activeChat?.messages?.length > 0 && activeChat.messages.map((chat, index) => {
+                    {
+                      console.log(chat, index)
+                    }
                     const isLastMessage = index === activeChat.messages.length - 1; // Cek apakah ini pesan terakhir
                     return chat.isSender ? (<div
                       className="flex items-start gap-2.5 justify-end"
