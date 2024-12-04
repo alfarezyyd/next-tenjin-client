@@ -10,7 +10,6 @@ import FAQ from '/src/components/landing/FAQ/index';
 import Testimonials from '/src/components/landing/Testimonials/index';
 import Articles from '/src/components/landing/Articles/index';
 import Joinus from '/src/components/landing/Joinus/index';
-import Insta from '/src/components/landing/Insta/index';
 import './globals.css'
 
 export default function Page() {
