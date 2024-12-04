@@ -144,8 +144,7 @@ export default function Page() {
                           mengatur password
                         </div>
                       )}
-                      <p className="text-muted">General settings such as, site title, site description, address and so
-                        on.</p>
+                      <p className="text-muted">Pengaturan mengenai perubahan password yang dimiliki pengguna</p>
                       <div className="form-group row align-items-center">
                         <label htmlFor="site-title"
                                className="form-control-label col-sm-3 text-md-right">Old Password</label>

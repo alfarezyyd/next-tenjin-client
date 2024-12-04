@@ -9,11 +9,11 @@ import {CommonUtil} from "@/common/utils/common-util";
 import {toast} from "react-toastify";
 import {useRouter, useSearchParams} from "next/navigation";
 
+import {FilePond, registerPlugin} from "react-filepond";
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-import {FilePond, registerPlugin} from 'react-filepond';
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 
-import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import Link from "next/link";
 
 
@@ -106,7 +106,8 @@ export default function Page() {
 
   async function handleGeneralData(e) {
     e.preventDefault()
-    if (file === undefined) {
+    console.log(file)
+    if (file === undefined || file.length === 0) {
       toast.error('Mohon upload foto profil Anda!')
       return
     }
@@ -119,8 +120,6 @@ export default function Page() {
 
       form.append('photo', file[0].file)
 
-      form.forEach((value, key) => {
-      })
       const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/users/settings/general-data`, {
         method: 'PUT', includeCredentials: true, headers: {
           'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
@@ -128,12 +127,18 @@ export default function Page() {
       });
       const responseBody = await fetchResponse.json();
       if (fetchResponse.ok) {
-        setCurrentUser(responseBody.result.data);
         setLoadingData(false);
-        Cookies.set("accessToken", responseBody.result.data)
+        console.log(responseBody.result.data);
+        Cookies.set("accessToken", responseBody.result.data.accessToken)
         toast.success("Your general data successfully updated!")
       } else {
-        console.error(responseBody);
+        console.log(responseBody.errors.message)
+        toast.error("Terdapat error pada pengisian formulir, kembali!")
+        const errorMessages = {};
+        responseBody.errors.message.forEach((error) => {
+          errorMessages[error.path[0]] = error.message;
+        });
+        setErrors(errorMessages);
       }
     }
 
@@ -188,8 +193,8 @@ export default function Page() {
                   <h4>General Settings</h4>
                 </div>
                 <div className="card-body">
-                  <p className="text-muted">General settings such as, site title, site description, address and so
-                    on.</p>
+                  <p className="text-muted">Kelola informasi akun dan preferensi aplikasi untuk pengalaman yang lebih
+                    sesuai.</p>
                   {loadingData ? (<Loading/>) : (<>
                     <div className="form-group row align-items-center">
                       <label htmlFor="site-title"
@@ -207,8 +212,12 @@ export default function Page() {
                       <label htmlFor="site-title"
                              className="form-control-label col-sm-3 text-md-right">Nama Lengkap</label>
                       <div className="col-sm-6 col-md-9">
-                        <input type="text" name="name" className="form-control" id="site-title"
+                        <input type="text" name="name"
+                               className={`form-control ${errors.name ? 'is-invalid' : ''}`} id="site-title"
                                value={payloadRequest.name} onChange={handleChange}/>
+                        <div className={'invalid-feedback'}>
+                          {errors.name}
+                        </div>
                       </div>
                     </div>
 

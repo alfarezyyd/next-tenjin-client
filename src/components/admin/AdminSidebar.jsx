@@ -33,17 +33,11 @@ export default function AdminSidebar({parsedJwt}) {
             <span>Pengaturan</span>
           </Link>
         </li>
-        <li className={`nav-item dropdown ${pathNames[0] === 'admin' && pathNames[1] === 'finance' ? 'active' : ''}`}>
-          <Link href="#" className="nav-link has-dropdown"><i className="fa-solid fa-coins"></i>
-            <span>Keuangan</span></Link>
-          <ul className="dropdown-menu">
-            <li className={`nav-item ${pathNames[2] === 'top-up' ? 'active' : ''}`}><Link className="nav-link"
-                                                                                          href="/admin/finance/top-up">Isi
-              Saldo</Link></li>
-            <li className={`nav-item ${pathNames[2] === 'withdraw' ? 'active' : ''}`}>
-              <Link className="nav-link" href="/admin/finance/withdraw">Menarik
-                Saldo</Link></li>
-          </ul>
+        <li className={`nav-item ${pathNames[2] === 'withdraw' ? 'active' : ''}`}>
+          <Link className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/finance/withdraw`}>
+            <i className="fa-solid fa-coins"></i>
+            <span>Menarik Saldo</span>
+          </Link>
         </li>
         {parsedJwt && parsedJwt.isManagement && (<>
           <li className="menu-header">Management</li>
