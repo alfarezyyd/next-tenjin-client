@@ -36,6 +36,7 @@ export default function Page() {
 
     if (typeof window !== 'undefined') {
       loadAssets();
+      setLoading(false);
     }
     setAccessToken(Cookies.get("accessToken"));
   }, []);
@@ -94,75 +95,83 @@ export default function Page() {
     }
   }
 
-  return (<AdminWrapper>
-    <section className="section">
-      <div className="section-header">
-        <h1>Kategori Asistensi</h1>
-        <div className="section-header-breadcrumb">
-          <div className="breadcrumb-item active"><a href="#">Admin</a></div>
-          <div className="breadcrumb-item"><a href="#">Management</a></div>
-          <div className="breadcrumb-item">Kategori</div>
-        </div>
-      </div>
-
-      <div className="section-body">
-        <h2 className="section-title">Overview</h2>
-        <p className="section-lead w-50">
-          Kelola data kategori management dengan praktis. Tambahkan, perbarui, atau hapus informasi kategori untuk
-          mendukung profil management yang kredibel.
-        </p>
-        <div className="container">
-          <div className="row">
-            {loading ? (  // Tampilkan loading selama data belum tersedia
-              <Loading/>) : (allCategory.length > 0 ? (allCategory.map((managementCategory) => (
-              <div className="col-12 col-sm-6 col-md-6 col-lg-3" key={`category-${managementCategory.id}`}>
-                <article className="article article-style-b">
-                  <div className="article-header">
-                    <div className="article-image"
-                         data-background={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${managementCategory.logo}`}>
-                    </div>
-
-                  </div>
-                  <div className="article-details">
-                    <div className="article-title">
-                      <h2><a href="#">{managementCategory?.name}</a></h2>
-                    </div>
-                    <div className="article-cta">
-                      <div className="d-flex flex-row justify-content-between">
-                        <a href="#" onClick={() => {
-                          triggerDeleteCategory(managementCategory.id);
-                        }} className="btn btn-icon btn-danger"><i
-                          className="fas fa-trash"></i></a>
-                        <a href="/admin/management/categories/edit">Edit <i className="fas fa-chevron-right"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              </div>))) : (
-              <div className="col-12 col-md-6 col-sm-12 p-0 mx-auto">
-                <div className="card">
-                  <div className="card-header">
-                    <h4>Empty Data</h4>
-                  </div>
-                  <div className="card-body">
-                    <div className="empty-state" data-height="400">
-                      <div className="empty-state-icon">
-                        <i className="fas fa-question"></i>
-                      </div>
-                      <h2>We couldn't find any data</h2>
-                      <p className="lead">
-                        Sorry we can't find any data, to get rid of this message, make at least 1 entry.
-                      </p>
-                      <a href="/admin/management/categories/create" className="btn btn-primary mt-4">Create new One</a>
-                      <a href="#" className="mt-4 bb">Need Help?</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+  return (
+    loading ? (
+      <Loading/>
+    ) : (
+      <AdminWrapper>
+        <section className="section">
+          <div className="section-header">
+            <h1>Kategori Asistensi</h1>
+            <div className="section-header-breadcrumb">
+              <div className="breadcrumb-item active"><a href="#">Admin</a></div>
+              <div className="breadcrumb-item"><a href="#">Management</a></div>
+              <div className="breadcrumb-item">Kategori</div>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
-  </AdminWrapper>)
+
+          <div className="section-body">
+            <h2 className="section-title">Overview</h2>
+            <p className="section-lead w-50">
+              Kelola data kategori management dengan praktis. Tambahkan, perbarui, atau hapus informasi kategori untuk
+              mendukung profil management yang kredibel.
+            </p>
+            <div className="container">
+              <div className="row">
+                {loading ? (  // Tampilkan loading selama data belum tersedia
+                  <Loading/>) : (allCategory.length > 0 ? (allCategory.map((managementCategory) => (
+                  <div className="col-12 col-sm-6 col-md-6 col-lg-3" key={`category-${managementCategory.id}`}>
+                    <article className="article article-style-b">
+                      <div className="article-header">
+                        <div className="article-image"
+                             data-background={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${managementCategory.logo}`}>
+                        </div>
+
+                      </div>
+                      <div className="article-details">
+                        <div className="article-title">
+                          <h2><a href="#">{managementCategory?.name}</a></h2>
+                        </div>
+                        <div className="article-cta">
+                          <div className="d-flex flex-row justify-content-between">
+                            <a href="#" onClick={() => {
+                              triggerDeleteCategory(managementCategory.id);
+                            }} className="btn btn-icon btn-danger"><i
+                              className="fas fa-trash"></i></a>
+                            <a href={`/admin/management/categories/update/${managementCategory.id}`}>Edit <i
+                              className="fas fa-chevron-right"></i></a>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  </div>))) : (
+                  <div className="col-12 col-md-6 col-sm-12 p-0 mx-auto">
+                    <div className="card">
+                      <div className="card-header">
+                        <h4>Empty Data</h4>
+                      </div>
+                      <div className="card-body">
+                        <div className="empty-state" data-height="400">
+                          <div className="empty-state-icon">
+                            <i className="fas fa-question"></i>
+                          </div>
+                          <h2>We couldn't find any data</h2>
+                          <p className="lead">
+                            Sorry we can't find any data, to get rid of this message, make at least 1 entry.
+                          </p>
+                          <a href="/admin/management/categories/create" className="btn btn-primary mt-4">Create new
+                            One</a>
+                          <a href="#" className="mt-4 bb">Need Help?</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      </AdminWrapper>
+    )
+  )
 }
