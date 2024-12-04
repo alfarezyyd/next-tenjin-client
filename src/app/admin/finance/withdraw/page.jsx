@@ -121,6 +121,11 @@ export default function Page() {
       </div>
 
       <div className="section-body">
+        <h2 className="section-title">Overview</h2>
+        <p className="section-lead w-50">
+          Ajukan dan kelola permintaan penarikan dana secara cepat dan mudah. Pantau status permintaan Anda, pastikan
+          semua informasi akurat.
+        </p>
         <section className="hero-section">
           {loading ? (  // Tampilkan loading selama data belum tersedia
             <Loading/>) : (<div className="row">
