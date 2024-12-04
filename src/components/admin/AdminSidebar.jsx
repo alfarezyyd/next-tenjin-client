@@ -97,6 +97,22 @@ export default function AdminSidebar({parsedJwt}) {
             </li>
           </ul>
         </li>
+        <li className={`nav-item ${pathNames[2] === 'withdraws' ? 'active' : ''}`}>
+          <Link href="#" className="nav-link has-dropdown" data-toggle="dropdown">
+            <i className="fas fa-money-bill-wave"></i> Withdraw</Link>
+          <ul className="dropdown-menu">
+            <li
+              className={`nav-item ${pathNames[2] === 'withdraws' && pathNames[3] === undefined ? 'active' : ''}`}>
+              <Link className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/management/withdraws`}>Lihat
+                Data</Link>
+            </li>
+            <li
+              className={`nav-item ${pathNames[2] === 'withdraws' && pathNames[3] === "create" ? 'active' : ''}`}>
+              <Link className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/management/withdraws/create`}>Buat
+                Data</Link>
+            </li>
+          </ul>
+        </li>
 
         {(parsedJwt && parsedJwt.mentorId) ? (<>
           <li className="menu-header">Mentor</li>
