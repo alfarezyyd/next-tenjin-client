@@ -9,6 +9,7 @@ import '@/../public/assets/css/withdraw.scss'
 import Image from "next/image";
 import {CommonUtil} from "@/common/utils/common-util";
 import CommonScript from "@/components/admin/CommonScript";
+import Link from "next/link";
 
 export default function Page() {
   const [accessToken, setAccessToken] = useState(null);
@@ -17,7 +18,7 @@ export default function Page() {
   const [withdrawValue, setWithdrawValue] = useState(0);
   const [errorMessages, setErrorMessages] = useState(null);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const searchParams = useSearchParams();
   const amountBalanceOption = [10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000]
@@ -30,6 +31,7 @@ export default function Page() {
 
     if (typeof window !== 'undefined') {
       loadAssets();
+      setLoading(false)
     }
     setAccessToken(Cookies.get("accessToken"));
 
@@ -160,9 +162,18 @@ export default function Page() {
                       </div>
                     </div>
                   </div>
-
                 </div>
               </div>
+              <Link href="/admin/finance/withdraw/history">
+                <div className="alert alert-primary alert-has-icon">
+                  <div className="alert-icon"><i className="far fa-lightbulb"></i></div>
+                  <div className="alert-body">
+                    <div className="alert-title">Lihat Riwayat Withdraw
+                      <i className="fas fa-arrow-right fa-10x pl-2"></i>
+                    </div>
+                  </div>
+                </div>
+              </Link>
             </div>
             <div className="col-6 col-md-6 col-lg-7 pr-0">
               <div className="card card-primary">
