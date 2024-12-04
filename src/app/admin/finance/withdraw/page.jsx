@@ -112,7 +112,7 @@ export default function Page() {
   return (<AdminWrapper>
     <section className="section">
       <div className="section-header">
-        <h1>Withdraw Balance Mentor</h1>
+        <h1>Menarik Saldo</h1>
         <div className="section-header-breadcrumb">
           <div className="breadcrumb-item active"><a href="#">Admin</a></div>
           <div className="breadcrumb-item"><a href="#">Mentor</a></div>

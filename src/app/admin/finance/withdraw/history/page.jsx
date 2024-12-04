@@ -40,15 +40,6 @@ export default function Page() {
       setAllHistory(responseBody.result.data);
       console.log(responseBody.result.data);
     } else {
-      if (responseBody.errors) {
-        const errorMessages = {};
-        responseBody.errors.message.forEach((error) => {
-          errorMessages[error.path[0]] = error.message;
-        });
-        setErrorMessages(errorMessages);
-      } else {
-        toast.error(responseBody.message)
-      }
     }
   };
   useEffect(() => {
@@ -58,7 +49,7 @@ export default function Page() {
     <AdminWrapper>
       <section className="section">
         <div className="section-header">
-          <h1>Withdraw Balance Mentor</h1>
+          <h1>Riwayat Menarik Saldo</h1>
           <div className="section-header-breadcrumb">
             <div className="breadcrumb-item active"><a href="#">Admin</a></div>
             <div className="breadcrumb-item"><a href="#">Mentor</a></div>
@@ -73,7 +64,7 @@ export default function Page() {
               <div className="row">
                 <div className="col-12">
                   <div className="activities">
-                    {allHistory?.length > 0 && allHistory.map((item, index) => (
+                    {allHistory?.length > 0 ? allHistory.map((item, index) => (
                       <div className="activity" key={`active-history-${index}`}>
                         <div className="activity-icon bg-primary text-white shadow-primary">
                           <i className="fas fa-comment-alt"></i>
@@ -118,7 +109,28 @@ export default function Page() {
                           </ul>
                         </div>
                       </div>
-                    ))}
+                    )) : (
+                      <div className="col-12 col-md-6 col-sm-6 p-0 mx-auto">
+                        <div className="card">
+                          <div className="card-header">
+                            <h4>Empty Data</h4>
+                          </div>
+                          <div className="card-body">
+                            <div className="empty-state" data-height="400">
+                              <div className="empty-state-icon">
+                                <i className="fas fa-question"></i>
+                              </div>
+                              <h2>We couldn't find any data</h2>
+                              <p className="lead">
+                                Sorry we can't find any data, to get rid of this message, make at least 1 entry.
+                              </p>
+
+                              <a href="#" className="mt-4 bb">Need Help?</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
