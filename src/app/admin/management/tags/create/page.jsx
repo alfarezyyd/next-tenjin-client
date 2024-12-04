@@ -111,7 +111,7 @@ export default function Page() {
 
     if (fetchResponse.ok) {
       setErrors({});
-      redirect('/admin/mentor/educations?notify=success'); // Tambahkan query param
+      redirect('/admin/management/tags?notify=success'); // Tambahkan query param
     } else {
       console.error('Failed to submit data', responseBody);
       const errorMessages = {};
