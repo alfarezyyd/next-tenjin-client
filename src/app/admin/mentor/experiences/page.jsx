@@ -22,6 +22,7 @@ export default function Page() {
     if (searchParams.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
         position: 'top-right', autoClose: 3000,
+        toastId: 'mentor-experiences-success',
       });
 
       // Bersihkan query param setelah menampilkan toast

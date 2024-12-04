@@ -56,7 +56,7 @@ export default function Page() {
   }, []);
 
   // useCallback to memoize handleSubmit function
-  const handleSubmit = useCallback(async (event) => {
+  const handleSubmit = (async (event) => {
     event.preventDefault();
     const formDataPayload = new FormData();
     formDataPayload.append('name', formData.name);
@@ -85,7 +85,7 @@ export default function Page() {
       });
       setErrors(errorMessages);
     }
-  }, [formData]);
+  });
 
   // useMemo to memoize validation errors display logic
   const errorFeedback = useMemo(() => {
@@ -151,8 +151,8 @@ export default function Page() {
                             <FilePond
                               files={files}
                               onupdatefiles={setFiles}
-                              allowMultiple={true}
-                              maxFiles={3}
+                              allowMultiple={false}
+                              maxFiles={1}
                               name="experienceResources"
                               labelIdle='Seret & Letakkan Gambar Anda atau <span class="filepond--label-action">Browse</span>'
                             />
