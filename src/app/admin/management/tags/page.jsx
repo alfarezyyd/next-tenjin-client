@@ -31,7 +31,7 @@ export default function Page() {
     // Cek jika ada `notify=success` di query param
     if (searchParams.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
-        position: 'top-right', autoClose: 3000,
+        position: 'top-right', autoClose: 3000, toastId: 'tags-success',
       });
 
       // Bersihkan query param setelah menampilkan toast
