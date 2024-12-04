@@ -27,7 +27,6 @@ export default function Page() {
       <Testimonials/>
       <Articles/>
       <Joinus/>
-      <Insta/>
     </main>
     <Footer/>
   </>)
