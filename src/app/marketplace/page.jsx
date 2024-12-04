@@ -33,7 +33,7 @@ const Marketplace = () => {
   }
   return (
     <LandingWrapper>
-      <div className="bg-lightPrimary">
+      <div className="bg-lightPrimary pb-12">
         <div className="grid h-full grid-cols-1 gap-5 xl:grid-cols-3 2xl:grid-cols-3 mx-12">
           <div className="mt-12 col-span-1 h-fit w-full xl:col-span-2 2xl:col-span-2">
             {/* NFt Banner */}
@@ -44,40 +44,6 @@ const Marketplace = () => {
               <h4 className="ml-1 text-2xl font-bold text-navy-700 dark:text-white">
                 Trending NFTs
               </h4>
-              <ul className="mt-4 flex items-center justify-between md:mt-0 md:justify-center md:!gap-5 2xl:!gap-12">
-                <li>
-                  <a
-                    className="text-base font-medium text-brand-500 hover:text-brand-500 dark:text-white bg-gray-300/50 p-2 px-3 rounded-3xl"
-                    href=" "
-                  >
-                    Art
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="text-base font-medium text-brand-500 hover:text-brand-500 dark:text-white"
-                    href=" "
-                  >
-                    Music
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="text-base font-medium text-brand-500 hover:text-brand-500 dark:text-white"
-                    href=" "
-                  >
-                    Collection
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="text-base font-medium text-brand-500 hover:text-brand-500 dark:text-white"
-                    href=" "
-                  >
-                    Sports
-                  </a>
-                </li>
-              </ul>
             </div>
 
             {/* NFTs trending card */}
