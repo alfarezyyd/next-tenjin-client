@@ -83,7 +83,7 @@ export default function Page() {
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
           toast.success('Data deleted successfully!', {
-            position: 'top-right', autoClose: 3000,
+            position: 'top-right', autoClose: 3000, toastId: 'booking-delete'
           })
           setAllMentorOrder(allMentorOrder.filter(value => value.id !== id));
         } else {
@@ -115,7 +115,7 @@ export default function Page() {
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
           toast.success('Booking successfully approved!', {
-            position: 'top-right', autoClose: 3000,
+            position: 'top-right', autoClose: 3000, toastId: 'booking-update'
           })
           const mentorOrder = allMentorOrder.find(value => value.id === orderId);
           mentorOrder.orderCondition = condition;
@@ -156,7 +156,7 @@ export default function Page() {
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
           toast.success('Booking successfully approved!', {
-            position: 'top-right', autoClose: 3000,
+            position: 'top-right', autoClose: 3000, toastId: 'booking-success'
           })
           const mentorOrder = allMentorOrder.find(value => value.id === activeBooking.id);
           mentorOrder.orderCondition = condition;
