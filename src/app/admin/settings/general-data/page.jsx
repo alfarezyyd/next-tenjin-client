@@ -201,6 +201,7 @@ export default function Page() {
                              className="form-control-label col-sm-3 text-md-right">Email</label>
                       <div className="col-sm-6 col-md-9">
                         <input type="text" name="email" className="form-control" id="email"
+                               disabled={currentUser?.isExternal}
                                value={payloadRequest.email} onChange={handleChange}/>
                         {payloadRequest.emailVerifiedAt ?
                           <small>Email verified at : {payloadRequest.emailVerifiedAt.substring(0, 10)} </small> :
