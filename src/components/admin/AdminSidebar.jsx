@@ -87,12 +87,12 @@ export default function AdminSidebar({parsedJwt}) {
           <ul className="dropdown-menu">
             <li
               className={`nav-item ${pathNames[2] === 'languages' && pathNames[3] === undefined ? 'active' : ''}`}>
-              <Link className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/languages`}>Lihat
+              <Link className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/management/languages`}>Lihat
                 Data</Link>
             </li>
             <li
               className={`nav-item ${pathNames[2] === 'languages' && pathNames[3] === "create" ? 'active' : ''}`}>
-              <Link className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/languages/create`}>Buat
+              <Link className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/management/languages/create`}>Buat
                 Data</Link>
             </li>
           </ul>
