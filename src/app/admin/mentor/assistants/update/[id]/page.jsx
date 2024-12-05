@@ -18,6 +18,7 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import 'summernote/dist/summernote-bs4.css';
 import 'filepond/dist/filepond.min.css';
 import '@/../public/assets/css/components.css'
+import {toast} from "react-toastify";
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -64,17 +65,21 @@ export default function Page() {
       }
       await CommonScript();
       $(categorySelectRef.current).on("change", () => {
-        console.log($(categorySelectRef.current).val())
         setSelectedCategoryId($(categorySelectRef.current).val());
       });
       $(tagsSelectRef.current).on("change", () => {
-        setFormData(prev => ({
-          ...prev, tagId: [...formData['tagId'], Number($(tagsSelectRef.current).val())]
+        const selectedValues = $(tagsSelectRef.current).val(); // Menghasilkan array
+        setFormData((prev) => ({
+          ...prev,
+          tagId: [...new Set([...prev.tagId, ...selectedValues.map(Number)])], // Gabungkan & hilangkan duplikat
         }));
       });
+
       $(languagesSelectRef.current).on("change", () => {
-        setFormData(prev => ({
-          ...prev, languages: $(languagesSelectRef.current).val()
+        const selectedValues = $(languagesSelectRef.current).val(); // Menghasilkan array
+        setFormData((prev) => ({
+          ...prev,
+          languages: [...new Set([...prev.languages, ...selectedValues.map(Number)])], // Gabungkan & hilangkan duplikat
         }));
       });
       $(formatSelectRef.current).on("change", () => {
@@ -131,6 +136,13 @@ export default function Page() {
 
           // Inisialisasi select2
           $(tagsSelectRef.current).select2()
+          $(tagsSelectRef.current).on("change", () => {
+            const selectedValues = $(tagsSelectRef.current).val(); // Menghasilkan array
+            setFormData((prev) => ({
+              ...prev,
+              tagId: [...new Set([...prev.tagId, ...selectedValues.map(Number)])], // Gabungkan & hilangkan duplikat
+            }));
+          });
         }
       }
     };
@@ -169,7 +181,6 @@ export default function Page() {
         ...formData, tagId: []
       })
       const newFilteredTag = assistanceDependency.tags.filter(tag => tag.categoryId == selectedCategoryId)
-      console.log(assistanceDependency.tags, selectedCategoryId);
       setFilteredTags(newFilteredTag)
     }
   }, [selectedCategoryId]);
@@ -184,12 +195,11 @@ export default function Page() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formDataPayload = new FormData();
-    console.log(oldFiles)
     const updatedFiles = files.filter(file => !oldFiles.some(oldFile => oldFile.name.imagePath === file.file.name));
-    console.log(updatedFiles);
     updatedFiles.forEach((file, index) => {
       formDataPayload.append(`images`, file.file);
     });
+    console.log(formData)
     Object.entries(formData).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         // Jika value adalah array, iterasi dan append setiap elemennya
@@ -200,9 +210,11 @@ export default function Page() {
         // Jika value bukan array, langsung append
         formDataPayload.append(key, value);
       }
-    })
+    });
+
     formDataPayload.append('categoryId', selectedCategoryId === 0 ? existingAssistance.category.id : selectedCategoryId);
     formDataPayload.forEach((value, key) => {
+      console.log(key, value);
     })
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/${existingAssistance.id}`, {
       method: 'PUT', body: formDataPayload, includeCredentials: true, headers: {
@@ -214,14 +226,18 @@ export default function Page() {
 
     if (response.ok) {
       setErrors({});
-      window.location.href = "/admin/mentor/assistants?notify=success"
+      router.push('/admin/mentor/assistants?notify=success');
     } else {
       console.error('Failed to submit data', responseBody);
-      const errorMessages = {};
-      responseBody.errors.message.forEach((error) => {
-        errorMessages[error.path[0]] = error.message;
-      });
-      setErrors(errorMessages);
+      try {
+        const errorMessages = {};
+        responseBody.errors.message.forEach((error) => {
+          errorMessages[error.path[0]] = error.message;
+        });
+        setErrors(errorMessages);
+      } catch (e) {
+        toast.error('Anda sudah memiliki kelas asistensi untuk kategori ini!')
+      }
     }
   }
 
@@ -238,6 +254,7 @@ export default function Page() {
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
           const existingAssistance = responseBody.result.data;
+          console.log(existingAssistance)
           setFormData({
             topic: existingAssistance.topic,
             capacity: existingAssistance.capacity,
@@ -249,7 +266,6 @@ export default function Page() {
             format: existingAssistance.format,
             deletedFilesName: []
           })
-          console.log(existingAssistance.AssistanceTag, existingAssistance.AssistanceLanguage)
           const allFiles = [];
           existingAssistance.AssistanceResource.forEach(image => {
             allFiles.push({
@@ -286,12 +302,16 @@ export default function Page() {
   }, [existingAssistance]);
 
   useEffect(() => {
-    if (existingAssistance && filteredTags && window.jQuery) {
-      const $ = window.jQuery
-      const validTagIds = existingAssistance.AssistanceTag.map(item => item.tagId);
-      const filteredData = filteredTags.filter(item => validTagIds.includes(item.id)).map((tag) => tag.id);
-      $(tagsSelectRef.current).val(filteredData).trigger('change'); // Set default value
+    const updateTagsSelect = async () => {
+      if (existingAssistance && filteredTags && window.jQuery) {
+        const $ = window.jQuery
+        const validTagIds = existingAssistance.AssistanceTag.map(item => item.tagId);
+        const filteredData = filteredTags.filter(item => validTagIds.includes(item.id)).map((tag) => tag.id);
+        console.log(filteredData);
+        $(tagsSelectRef.current).val(filteredData).trigger('change'); // Set default value
+      }
     }
+    updateTagsSelect();
   }, [existingAssistance, filteredTags]);
 
   useEffect(() => {
@@ -300,40 +320,15 @@ export default function Page() {
     }
   }, [params.id, accessToken]);
 
-  useEffect(() => {
-    const setDefaultLanguages = async () => {
-      const $ = window.jQuery;
-      // Set default value pada select2
-      $(languagesSelectRef.current).val(formData.languages).trigger('change');
-    };
-
-    if (formData.languages && formData.languages.length > 0 && window.jQuery) {
-      setDefaultLanguages();
-    }
-  }, [formData.languages]);
-
-  useEffect(() => {
-    const setDefaultTags = async () => {
-      const $ = window.jQuery;
-
-      // Set default value pada select2
-      $(tagsSelectRef.current).val(formData.tagId).trigger('change');
-    };
-
-    if (formData.tagId && formData.tagId.length > 0 && window.jQuery) {
-      setDefaultTags();
-    }
-  }, [formData.tagId]);
-
 
   const errorFeedback = useMemo(() => ({
     topic: errors.topic ? <div className="invalid-feedback">{errors.topic}</div> : null,
     durationMinutes: errors.durationMinutes ? <div className="invalid-feedback">{errors.durationMinutes}</div> : null,
     price: errors.price ? <div className="invalid-feedback">{errors.price}</div> : null,
     capacity: errors.capacity ? <div className="invalid-feedback">{errors.capacity}</div> : null,
-    languages: errors.languages ? <div className="invalid-feedback">{errors.languages}</div> : null,
-    format: errors.format ? <div className="invalid-feedback">{errors.format}</div> : null,
-    tagId: errors.tagId ? <div className="invalid-feedback">{errors.tagId}</div> : null,
+    languages: errors.languages ? <small className="text-danger">{errors.languages}</small> : null,
+    format: errors.format ? <small className="text-danger">{errors.format}</small> : null,
+    tagId: errors.tagId ? <small className="text-danger">{errors.tagId}</small> : null,
     description: errors.description ? <small className="text-danger">{errors.description}</small> : null,
   }), [errors]);
 
@@ -488,12 +483,14 @@ export default function Page() {
                       </label>
                       <div className="col-sm-12 col-md-7" id="select-container">
                         <select
-                          ref={tagsSelectRef} className="form-control select2" multiple={true}
+                          ref={tagsSelectRef} className={`form-control select2 ${errors.tagId ? 'is-invalid' : ''}`}
+                          multiple={true}
                           onChange={handleChange}
                           name="tagId" id="tags">
                           {filteredTags.length !== 0 && filteredTags.map((tag, index) => (
                             <option key={`tags-${index}`} value={tag['id']}>{tag['name']}</option>))}
                         </select>
+                        {errorFeedback.tagId}
                       </div>
                     </div>
                     <div className="form-group row mb-4">
