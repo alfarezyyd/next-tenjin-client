@@ -155,7 +155,26 @@ export default function Page() {
                   </div>
                 </div>
               </article>
-            </div>))) : (<p>No assistances available.</p>))}
+            </div>))) : (<div className="col-12 col-md-6 col-sm-12 p-0 mx-auto">
+            <div className="card">
+              <div className="card-header">
+                <h4>Empty Data</h4>
+              </div>
+              <div className="card-body">
+                <div className="empty-state" data-height="400">
+                  <div className="empty-state-icon">
+                    <i className="fas fa-question"></i>
+                  </div>
+                  <h2>We couldn't find any data</h2>
+                  <p className="lead">
+                    Sorry we can't find any data, to get rid of this message, make at least 1 entry.
+                  </p>
+                  <a href="/admin/mentor/experiences/create" className="btn btn-primary mt-4">Create new One</a>
+                  <a href="#" className="mt-4 bb">Need Help?</a>
+                </div>
+              </div>
+            </div>
+          </div>))}
         </div>
       </div>
     </section>

@@ -17,6 +17,7 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import 'summernote/dist/summernote-bs4.css';
 import 'filepond/dist/filepond.min.css';
 import '@/../public/assets/css/components.css'
+import {toast} from "react-toastify";
 
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -168,6 +169,9 @@ export default function Page() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (files.length <= 0) {
+      toast.error('Mohon upload minimal satu file')
+    }
     const formDataPayload = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
