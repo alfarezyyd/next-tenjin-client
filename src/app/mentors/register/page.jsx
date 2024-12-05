@@ -14,6 +14,7 @@ import {CommonUtil} from "@/common/utils/common-util";
 import Cookies from "js-cookie";
 import {useRouter} from "next/navigation";
 import '@/../public/assets/css/components.css'
+import {toast} from "react-toastify";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginPdfPreview);
@@ -61,6 +62,9 @@ export default function Page() {
   const fetchCurrentUser = async () => {
     let accessToken = Cookies.get("accessToken");
     const user = CommonUtil.parseJwt(accessToken);
+    if (user.mentorId !== null) {
+      window.location.href = '/admin/dashboard'
+    }
     setLoggedUser(user);
   };
 
@@ -124,7 +128,7 @@ export default function Page() {
     if (fetchResponse.ok) {
       Cookies.set("accessToken", "")
       Cookies.set('accessToken', responseBody['result']['data']['accessToken'])
-      router.push('/admin/dashboard?notify=success'); // Tambahkan query param
+      window.location.href = '/admin/dashboard?notify=success'; // Tambahkan query param
     } else {
       setCurrentStep(1);
       const errorMessages = {};
@@ -145,16 +149,21 @@ export default function Page() {
 
   // Fungsi untuk navigasi ke langkah berikutnya
   const nextStep = () => {
-    // if (currentStep === 1) {
-    //   const isComplete = Object.values({
-    //     ...formData.mentorAddress,
-    //     pin: formData.pin
-    //   }).every(value => value.trim() !== "");
-    //   if (!isComplete) {
-    //     toast.error('Mohon isi semua data dengan benar')
-    //     setCurrentStep((prevStep) => prevStep - 1);
-    //   }
-    // }
+    if (currentStep === 1) {
+      console.log(loggedUser)
+      if (loggedUser.emailVerifiedAt === null) {
+        toast.error('Mohon verifikasi email anda terlebih dahulu')
+        setCurrentStep((prevStep) => prevStep - 1);
+      }
+      const isComplete = Object.values({
+        ...formData.mentorAddress,
+        pin: formData.pin
+      }).every(value => value.trim() !== "");
+      if (!isComplete || profilePhoto.length === 0 || loggedUser.telephone === null) {
+        toast.error('Mohon isi semua data dengan benar')
+        setCurrentStep((prevStep) => prevStep - 1);
+      }
+    }
     setCurrentStep((prevStep) => prevStep + 1);
   };
 
@@ -252,7 +261,8 @@ export default function Page() {
                                  className="form-control"
                                  id="telephone" disabled value={loggedUser.telephone ?? '+62 '}
                                  name="telephone"/>
-                          <small>Jika nomor kosong, silahkan tambahkan pada settings</small>
+                          <small>Jika nomor kosong, silahkan tambahkan pada settings, namun anda tetap dapat
+                            melanjutkan pendaftaran</small>
                         </div>
 
                         <div className="form-group col-6">
@@ -433,7 +443,6 @@ export default function Page() {
                             onupdatefiles={(files) => {
                               setProfilePhoto(files);
                               const file = files[0].file; // Ambil file asli
-                              const previewURL = URL.createObjectURL(file); // Buat blob URL
                             }}
                             allowMultiple={false}
                             maxFiles={1}

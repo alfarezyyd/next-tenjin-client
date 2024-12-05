@@ -139,6 +139,10 @@ export default function Page() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (files.length === 0) {
+      toast.error('Mohon upload minimal satu foto')
+      return;
+    }
     const form = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       if (Array.isArray(value)) {
@@ -155,9 +159,7 @@ export default function Page() {
     });
 
     form.delete('experienceResources');
-    const updatedFiles = files.filter(file =>
-      !oldFiles.some(oldFile => oldFile.name === file.name)
-    );
+    const updatedFiles = files.filter(file => !oldFiles.some(oldFile => oldFile.name === file.name));
     updatedFiles.forEach((file, index) => {
       form.append(`experienceResources`, file.file);
     });
@@ -244,10 +246,12 @@ export default function Page() {
   }
 
   async function handleRemoveFile(error, file) {
-    setFormData({
-      ...formData,
-      deletedFilesName: [...formData.deletedFilesName, file.file.name], // Membuat salinan baru dari array dan menambahkannya
-    });
+    if (formData.deletedFilesName.indexOf(file.file.name) === -1) {
+      console.log(file.file)
+      setFormData({
+        ...formData, deletedFilesName: [...formData.deletedFilesName, file.file.name], // Membuat salinan baru dari array dan menambahkannya
+      });
+    }
   }
 
   return (<>
