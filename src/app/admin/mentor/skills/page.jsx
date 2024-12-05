@@ -146,6 +146,11 @@ export default function Page() {
           toast.success('Data submitted successfully!', {
             position: 'top-right', autoClose: 10000,
           });
+          $(descriptionRef.current).summernote('code', '');
+          setActiveId(null);
+          setFormData({
+            name: '', description: '',
+          })
         } else {
           console.error('Failed to fetch skill', responseBody);
         }
@@ -213,7 +218,7 @@ export default function Page() {
               <div className="col-6 col-md-6 col-sm-12 col-lg-7 pl-0">
                 <div className="card">
                   <div className="card-header">
-                    <h4>Formulir Menambah Kemampuan Mentor Baru</h4>
+                    <h4>Formulir Update Kemampuan Mentor</h4>
                   </div>
                   <div className="card-body">
                     <form onSubmit={handleSubmit}>
@@ -246,10 +251,11 @@ export default function Page() {
 
                       <div className="form-group row mb-4">
                         <div className="col-sm-12 col-md-7 offset-md-3">
-                          <button type="submit" className="btn btn-primary mr-2">
+                          <button type="submit" className="btn btn-primary mr-2" disabled={activeId == null}>
                             Submit
                           </button>
-                          <button type="button" className="btn btn-danger" onClick={triggerDelete}>
+                          <button type="button" className="btn btn-danger" onClick={triggerDelete}
+                                  disabled={activeId == null}>
                             Delete
                           </button>
                         </div>
