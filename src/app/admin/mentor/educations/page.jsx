@@ -136,8 +136,12 @@ export default function Page() {
                                aria-expanded="true">
                             <h4>Description</h4>
                           </div>
-                          <div className="accordion-body collapse show" id="panel-body-1" data-parent="#accordion">
-                            <p className="mb-0" dangerouslySetInnerHTML={{__html: mentorEducation.description}}/>
+                          <div className="accordion-body collapse show" id="panel-body-1"
+                               data-parent="#accordion">
+                            <p
+                              className="mb-0 truncate-multiline"
+                              dangerouslySetInnerHTML={{__html: mentorEducation.description}}
+                            />
                           </div>
                         </div>
                         <div className="accordion">
@@ -146,7 +150,8 @@ export default function Page() {
                             <h4>Society</h4>
                           </div>
                           <div className="accordion-body collapse" id="panel-body-2" data-parent="#accordion">
-                            <p className="mb-0" dangerouslySetInnerHTML={{__html: mentorEducation.society}}/>
+                            <p className="mb-0 truncate-multiline"
+                               dangerouslySetInnerHTML={{__html: mentorEducation.society}}/>
                           </div>
                         </div>
                         <div className="accordion">
@@ -155,7 +160,8 @@ export default function Page() {
                             <h4>Activity</h4>
                           </div>
                           <div className="accordion-body collapse" id="panel-body-3" data-parent="#accordion">
-                            <p className="mb-0" dangerouslySetInnerHTML={{__html: mentorEducation.activity}}/>
+                            <p className="mb-0 truncate-multiline"
+                               dangerouslySetInnerHTML={{__html: mentorEducation.activity}}/>
                           </div>
                         </div>
                       </div>
@@ -173,28 +179,26 @@ export default function Page() {
                     </div>
                   </div>
                 </div>
-              </div>))) : (
-              <div className="col-12 col-md-6 col-sm-12 p-0 mx-auto">
-                <div className="card">
-                  <div className="card-header">
-                    <h4>Empty Data</h4>
-                  </div>
-                  <div className="card-body">
-                    <div className="empty-state" data-height="400">
-                      <div className="empty-state-icon">
-                        <i className="fas fa-question"></i>
-                      </div>
-                      <h2>We couldn't find any data</h2>
-                      <p className="lead">
-                        Sorry we can't find any data, to get rid of this message, make at least 1 entry.
-                      </p>
-                      <a href="/admin/mentor/experiences/create" className="btn btn-primary mt-4">Create new One</a>
-                      <a href="#" className="mt-4 bb">Need Help?</a>
+              </div>))) : (<div className="col-12 col-md-6 col-sm-12 p-0 mx-auto">
+              <div className="card">
+                <div className="card-header">
+                  <h4>Empty Data</h4>
+                </div>
+                <div className="card-body">
+                  <div className="empty-state" data-height="400">
+                    <div className="empty-state-icon">
+                      <i className="fas fa-question"></i>
                     </div>
+                    <h2>We couldn't find any data</h2>
+                    <p className="lead">
+                      Sorry we can't find any data, to get rid of this message, make at least 1 entry.
+                    </p>
+                    <a href="/admin/mentor/experiences/create" className="btn btn-primary mt-4">Create new One</a>
+                    <a href="#" className="mt-4 bb">Need Help?</a>
                   </div>
                 </div>
               </div>
-            ))}
+            </div>))}
           </div>
         </div>
       </div>

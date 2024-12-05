@@ -103,3 +103,11 @@
   line-height: 1.4;
   word-spacing: 100vw;
 }
+
+.truncate-multiline {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3; /* Jumlah baris yang ingin ditampilkan */
+}
