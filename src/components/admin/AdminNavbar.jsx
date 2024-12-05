@@ -25,7 +25,9 @@ export default function AdminNavbar({parsedJwt}) {
           <div className="dropdown-list-content dropdown-list-message">
             <a href="#" className="dropdown-item dropdown-item-unread">
               <div className="dropdown-item-avatar">
-                <img alt="image" src="/assets/img/avatar/avatar-1.png" className="rounded-circle"/>
+                <img alt="image"
+                     src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/public/assets/user-resources/${parsedJwt?.photoPath}`}
+                     className="rounded-circle"/>
                 <div className="is-online"></div>
               </div>
               <div className="dropdown-item-desc">
@@ -144,7 +146,11 @@ export default function AdminNavbar({parsedJwt}) {
       </li>
       <li className="dropdown"><a href="#" data-toggle="dropdown"
                                   className="nav-link dropdown-toggle nav-link-lg nav-link-user">
-        <img alt="image" src="/assets/img/avatar/avatar-1.png" className="rounded-circle mr-1"/>
+        <img alt="image"
+             src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${parsedJwt?.photoPath}`}
+             className="rounded-circle mr-1" style={{
+          width: '35px', height: '35px', objectFit: 'cover',
+        }}/>
         <div className="d-sm-none d-lg-inline-block">Hi, {parsedJwt?.name}</div>
       </a>
         <div className="dropdown-menu dropdown-menu-right">

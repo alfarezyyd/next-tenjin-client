@@ -97,11 +97,11 @@ export default function Page() {
   return (<AdminWrapper>
     <section className="section">
       <div className="section-header">
-        <h1>Pendidikan Mentor</h1>
+        <h1>Asistensi Mentor</h1>
         <div className="section-header-breadcrumb">
           <div className="breadcrumb-item active"><a href="#">Admin</a></div>
           <div className="breadcrumb-item"><a href="#">Mentor</a></div>
-          <div className="breadcrumb-item">Pendidikan</div>
+          <div className="breadcrumb-item">Asistensi</div>
         </div>
       </div>
 
@@ -124,7 +124,7 @@ export default function Page() {
                     }}
                   ></div>
                 </div>
-               
+
                 <div className="article-details">
                   <div className="article-category">
                     <a href="#">{mentorAssistance.categoryName}</a>
@@ -140,7 +140,11 @@ export default function Page() {
                   }}></p>
                   <div className=" d-flex flex-row">
                     <div className="article-user">
-                      <img alt="image" src="../assets/img/avatar/avatar-1.png"/>
+                      <img alt="image"
+                           src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${decodedAccessToken?.photoPath}`}
+                           className="rounded-circle mr-3" style={{
+                        width: '45px', height: '45px', objectFit: 'cover',
+                      }}/>
                       <div className="article-user-details">
                         <div className="user-detail-name">
                           <a href="#"></a>

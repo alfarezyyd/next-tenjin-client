@@ -1,4 +1,4 @@
-export default function AdminTopbar() {
+export default function AdminTopbar({parsedJwt}) {
   return (
     <nav className="navbar navbar-expand-lg main-navbar">
       <a href={`${process.env.NEXT_PUBLIC_BASE_URL}`} className="navbar-brand sidebar-gone-hide">TENJIN</a>
@@ -25,7 +25,9 @@ export default function AdminTopbar() {
             <div className="dropdown-list-content dropdown-list-message">
               <a href="#" className="dropdown-item dropdown-item-unread">
                 <div className="dropdown-item-avatar">
-                  <img alt="image" src="../assets/img/avatar/avatar-1.png" className="rounded-circle"/>
+                  <img alt="image"
+                       src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/public/assets/user-resources/${parsedJ}`}
+                       className="rounded-circle"/>
                   <div className="is-online"></div>
                 </div>
                 <div className="dropdown-item-desc">
