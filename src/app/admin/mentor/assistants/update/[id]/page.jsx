@@ -56,7 +56,7 @@ export default function Page() {
   useEffect(() => {
     const loadAssets = async () => {
       const $ = (await import('jquery')).default;
-
+      window.jQuery = $
       await import('select2/dist/js/select2.min');
       await import('bootstrap-daterangepicker/daterangepicker');
       if (!$.fn.summernote) {
@@ -64,6 +64,7 @@ export default function Page() {
       }
       await CommonScript();
       $(categorySelectRef.current).on("change", () => {
+        console.log($(categorySelectRef.current).val())
         setSelectedCategoryId($(categorySelectRef.current).val());
       });
       $(tagsSelectRef.current).on("change", () => {
@@ -102,8 +103,8 @@ export default function Page() {
 
   useEffect(() => {
     const updateSelect2 = async () => {
-      if (typeof window !== 'undefined') {
-        const $ = (await import('jquery')).default;
+      if (typeof window !== 'undefined' && window.jQuery !== undefined) {
+        const $ = window.jQuery;
         if (typeof $.fn.select2 === 'function') {
 
           // Hapus elemen select jika sudah ada
@@ -114,7 +115,6 @@ export default function Page() {
           if ($(tagsSelectRef.current).data('select2')) {
             $(tagsSelectRef.current).select2('destroy');
           }
-
           // Buat elemen select baru
           const newSelectElement = document.createElement('select');
           newSelectElement.className = 'form-control select2';
@@ -124,7 +124,6 @@ export default function Page() {
 
           // Set ref ke elemen baru
           tagsSelectRef.current = newSelectElement;
-
           // Tambahkan option ke elemen select
           filteredTags.forEach(tag => {
             const optionElement = new Option(tag.name, tag.id);
@@ -156,8 +155,6 @@ export default function Page() {
       const responseBody = await responseFetch.json();
       if (responseFetch.ok) {
         setAssistanceDependency(responseBody['result']['data']);
-        let firstCategoryElementId = responseBody['result']['data']['categories'][0]['id'];
-        setSelectedCategoryId(firstCategoryElementId);
         setFormData({...formData, languages: responseBody['result']['data']['languages'].map(language => language.id)});
       } else {
         console.error('Failed to fetch assistance dependency', responseBody);
@@ -165,6 +162,16 @@ export default function Page() {
     }
   };
 
+  useEffect(() => {
+    if (selectedCategoryId) {
+      setFormData({
+        ...formData, tagId: []
+      })
+      const newFilteredTag = assistanceDependency.tags.filter(tag => tag.categoryId == selectedCategoryId)
+      console.log(assistanceDependency.tags, selectedCategoryId);
+      setFilteredTags(newFilteredTag)
+    }
+  }, [selectedCategoryId]);
 
   const handleChange = useCallback((e) => {
     const {name, value} = e.target;
@@ -176,7 +183,9 @@ export default function Page() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formDataPayload = new FormData();
-    const updatedFiles = files.filter(file => !oldFiles.some(oldFile => oldFile.name === file.file.name));
+    console.log(oldFiles)
+    const updatedFiles = files.filter(file => !oldFiles.some(oldFile => oldFile.name.imagePath === file.file.name));
+    console.log(updatedFiles);
     updatedFiles.forEach((file, index) => {
       formDataPayload.append(`images`, file.file);
     });
@@ -191,7 +200,7 @@ export default function Page() {
         formDataPayload.append(key, value);
       }
     })
-    formDataPayload.append('categoryId', selectedCategoryId);
+    formDataPayload.append('categoryId', selectedCategoryId === 0 ? existingAssistance.category.id : selectedCategoryId);
     formDataPayload.forEach((value, key) => {
     })
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/${existingAssistance.id}`, {
@@ -233,11 +242,12 @@ export default function Page() {
             price: existingAssistance.price,
             durationMinutes: existingAssistance.durationMinutes,
             description: existingAssistance.description,
-            tagId: [...existingAssistance.AssistanceTag],
-            languages: [...existingAssistance.AssistanceLanguage],
+            tagId: [...existingAssistance.AssistanceTag.map((tag) => tag.tagId)],
+            languages: [...existingAssistance.AssistanceLanguage.map((langauge) => langauge.languageId)],
             format: existingAssistance.format,
             deletedFilesName: []
           })
+          console.log(existingAssistance.AssistanceTag, existingAssistance.AssistanceLanguage)
           const allFiles = [];
           existingAssistance.AssistanceResource.forEach(image => {
             allFiles.push({
@@ -263,17 +273,22 @@ export default function Page() {
   useEffect(() => {
     const loadExistingFormDataRef = async () => {
       const $ = (await import('jquery')).default;
-
       $(categorySelectRef.current).val(existingAssistance.categoryId)
       $(formatSelectRef.current).val(existingAssistance.format)
-      const validTagIds = existingAssistance.AssistanceTag.map(item => item.tagId);
-      const filteredData = filteredTags.filter(item => validTagIds.includes(item.id)).map((tag) => tag.id);
       const languageId = existingAssistance.AssistanceLanguage.map(language => language.languageId)
-      $(tagsSelectRef.current).val(filteredData).trigger('change'); // Set default value
       $(languagesSelectRef.current).val(languageId).trigger('change');
     }
     if (existingAssistance && assistanceDependency) {
       loadExistingFormDataRef();
+    }
+  }, [existingAssistance]);
+
+  useEffect(() => {
+    if (existingAssistance && filteredTags && window.jQuery) {
+      const $ = window.jQuery
+      const validTagIds = existingAssistance.AssistanceTag.map(item => item.tagId);
+      const filteredData = filteredTags.filter(item => validTagIds.includes(item.id)).map((tag) => tag.id);
+      $(tagsSelectRef.current).val(filteredData).trigger('change'); // Set default value
     }
   }, [existingAssistance, filteredTags]);
 
@@ -285,8 +300,7 @@ export default function Page() {
 
   useEffect(() => {
     const setDefaultLanguages = async () => {
-      const $ = (await import('jquery')).default;
-
+      const $ = window.jQuery;
       // Set default value pada select2
       $(languagesSelectRef.current).val(formData.languages).trigger('change');
     };
@@ -298,7 +312,7 @@ export default function Page() {
 
   useEffect(() => {
     const setDefaultTags = async () => {
-      const $ = (await import('jquery')).default;
+      const $ = window.jQuery;
 
       // Set default value pada select2
       $(tagsSelectRef.current).val(formData.tagId).trigger('change');
