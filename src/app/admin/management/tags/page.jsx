@@ -109,24 +109,25 @@ export default function Page() {
     }
   }
 
-  async function triggerDeleteCategory(id) {
+  async function triggerDeleteTag() {
     if (accessToken) {
       try {
-        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/categories/${id}`, {
+        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/tags/${activeTag.id}`, {
           method: 'DELETE', includeCredentials: true, headers: {
             'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
           },
         });
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
-          setAllTags((prevAllMentorCategory) => prevAllMentorCategory.filter((education) => education.id !== id));
-          router.push('/admin/management/categories?notify=success');
+          setAllTags((prevAllMentorCategory) => prevAllMentorCategory.filter((category) => category.id !== activeTag.id));
+          setFormData({
+            name: ''
+          })
+          window.location.href = '/admin/management/tags?notify=success';
         } else {
-          toast.error('Data gagal dihapus, kemungkinan terdapat asistensi yang menggunakan kategori tersebut')
-          console.error('Failed to fetch categories', responseBody);
+          toast.error('Data gagal dihapus, kemungkinan terdapat asistensi yang menggunakan tag tersebut')
         }
       } catch (error) {
-        console.error('Error fetching categories:', error);
       } finally {
         setLoading(false); // Menghentikan loading ketika data sudah diterima
       }
@@ -199,11 +200,11 @@ export default function Page() {
   return (loading ? (<Loading/>) : (<AdminWrapper>
     <section className="section">
       <div className="section-header">
-        <h1>Kategori Asistensi</h1>
+        <h1>Tag Asistensi</h1>
         <div className="section-header-breadcrumb">
           <div className="breadcrumb-item active"><a href="#">Admin</a></div>
           <div className="breadcrumb-item"><a href="#">Management</a></div>
-          <div className="breadcrumb-item">Kategori</div>
+          <div className="breadcrumb-item">Tag</div>
         </div>
       </div>
 
@@ -227,7 +228,7 @@ export default function Page() {
                 </button>))}
               </div>
             </div>) : (<div className="col-12 col-md-6 col-sm-12 p-0 mx-auto">
-              <div className="card">
+              <div className="card mr-5">
                 <div className="card-header">
                   <h4>Empty Data</h4>
                 </div>
@@ -250,13 +251,13 @@ export default function Page() {
             <div className="col-6 col-md-6 col-sm-12 col-lg-6 pl-0">
               <div className="card">
                 <div className="card-header">
-                  <h4>Formulir Menambah Kemampuan Mentor Baru</h4>
+                  <h4>Formulir Mengubah Bahasa</h4>
                 </div>
                 <div className="card-body">
                   <form onSubmit={handleSubmit}>
                     <div className="form-group row mb-4">
                       <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="categoryId">
-                        Kategori Asistensi
+                        Tag Asistensi
                       </label>
                       <div className="col-sm-12 col-md-7">
                         <select ref={categorySelectRef} className="form-control select2"
@@ -284,9 +285,13 @@ export default function Page() {
                     </div>
 
                     <div className="form-group row mb-4">
-                      <div className="col-sm-12 col-md-7 offset-md-3">
-                        <button type="submit" className="btn btn-primary">
+                      <div className="col-sm-12 col-md-7 offset-md-3 ">
+                        <button type="submit" className="btn btn-primary mr-2" disabled={activeTag == null}>
                           Submit
+                        </button>
+                        <button type="button" className="btn btn-danger" onClick={triggerDeleteTag}
+                                disabled={activeTag == null}>
+                          Delete
                         </button>
                       </div>
                     </div>

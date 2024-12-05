@@ -103,10 +103,10 @@ export default function Page() {
     }
   }
 
-  async function triggerDeleteCategory(id) {
+  async function triggerDeleteLanguage() {
     if (accessToken) {
       try {
-        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/categories/${id}`, {
+        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/languages/${activeLanguage.id}`, {
           method: 'DELETE', includeCredentials: true, headers: {
             'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
           },
@@ -114,7 +114,7 @@ export default function Page() {
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
           setAllLanguage((prevAllMentorCategory) => prevAllMentorCategory.filter((education) => education.id !== id));
-          router.push('/admin/management/categories?notify=success');
+          window.location.href = '/admin/management/languages?notify=success';
         } else {
           toast.error('Data gagal dihapus, kemungkinan terdapat asistensi yang menggunakan kategori tersebut')
           console.error('Failed to fetch categories', responseBody);
@@ -144,6 +144,9 @@ export default function Page() {
 
     if (fetchResponse.ok) {
       setErrors({});
+      setFormData({
+        name: ''
+      })
       const language = allLanguage.find((language) => language.id === activeLanguage.id);
       language.name = formData.name
       setAllLanguage([
@@ -173,10 +176,6 @@ export default function Page() {
     };
   }, [errors]);
 
-
-  async function triggerDelete() {
-
-  }
 
   async function triggerEditForm(language) {
     const $ = window.jQuery;
@@ -220,7 +219,7 @@ export default function Page() {
                 </button>))}
               </div>
             </div>) : (<div className="col-12 col-md-6 col-sm-12 p-0 mx-auto">
-              <div className="card">
+              <div className="card mr-5">
                 <div className="card-header">
                   <h4>Empty Data</h4>
                 </div>
@@ -265,9 +264,13 @@ export default function Page() {
                     </div>
 
                     <div className="form-group row mb-4">
-                      <div className="col-sm-12 col-md-7 offset-md-3">
-                        <button type="submit" className="btn btn-primary">
+                      <div className="col-sm-12 col-md-7 offset-md-3 ">
+                        <button type="submit" className="btn btn-primary mr-2" disabled={activeLanguage == null}>
                           Submit
+                        </button>
+                        <button type="button" className="btn btn-danger" onClick={triggerDeleteLanguage}
+                                disabled={activeLanguage == null}>
+                          Delete
                         </button>
                       </div>
                     </div>

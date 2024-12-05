@@ -61,7 +61,7 @@ export default function Page() {
           console.log(responseBody.result.data)
           setAllCategory(responseBody.result.data);
         } else {
-          console.error('Failed to fetch education', responseBody);
+          console.error('Failed to fetch category', responseBody);
         }
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -81,7 +81,7 @@ export default function Page() {
         });
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
-          setAllCategory((prevAllMentorCategory) => prevAllMentorCategory.filter((education) => education.id !== id));
+          setAllCategory((prevAllMentorCategory) => prevAllMentorCategory.filter((category) => category.id !== id));
           router.push('/admin/management/categories?notify=success');
         } else {
           toast.error('Data gagal dihapus, kemungkinan terdapat asistensi yang menggunakan kategori tersebut')
