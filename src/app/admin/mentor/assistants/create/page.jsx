@@ -64,9 +64,11 @@ export default function Page() {
       await CommonScript();
       const $ = (await import('jquery')).default;
       $(categorySelectRef.current).on("change", () => {
+        console.log($(categorySelectRef.current).val())
         setSelectedCategoryId($(categorySelectRef.current).val());
       });
       $(tagsSelectRef.current).on("change", () => {
+        console.log(Number($(tagsSelectRef.current).val()))
         setFormData(prev => ({
           ...prev, tagId: [...formData['tagId'], Number($(tagsSelectRef.current).val())]
         }));
@@ -127,6 +129,13 @@ export default function Page() {
 
           // Inisialisasi select2
           $(tagsSelectRef.current).select2()
+          $(tagsSelectRef.current).on("change", () => {
+            console.log(Number($(tagsSelectRef.current).val()))
+            setFormData(prev => ({
+              ...prev, tagId: [...formData['tagId'], Number($(tagsSelectRef.current).val())]
+            }));
+          });
+          
         }
       }
     };
@@ -171,6 +180,7 @@ export default function Page() {
     event.preventDefault();
     if (files.length <= 0) {
       toast.error('Mohon upload minimal satu file')
+      return
     }
     const formDataPayload = new FormData();
 
@@ -192,6 +202,7 @@ export default function Page() {
       formDataPayload.append(`images`, file.file);
     });
     formDataPayload.forEach((value, key) => {
+      console.log(key, value);
     })
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
@@ -222,7 +233,7 @@ export default function Page() {
     capacity: errors.capacity ? <div className="invalid-feedback">{errors.capacity}</div> : null,
     languages: errors.languages ? <div className="invalid-feedback">{errors.languages}</div> : null,
     format: errors.format ? <div className="invalid-feedback">{errors.format}</div> : null,
-    tagId: errors.tagId ? <div className="invalid-feedback">{errors.tagId}</div> : null,
+    tagId: errors.tagId ? <small className="text-danger">{errors.tagId}</small> : null,
     description: errors.description ? <small className="text-danger">{errors.description}</small> : null,
   }), [errors]);
 
@@ -379,6 +390,8 @@ export default function Page() {
                           {filteredTags.length !== 0 && filteredTags.map((tag, index) => (
                             <option key={`tags-${index}`} value={tag['id']}>{tag['name']}</option>))}
                         </select>
+                        {errorFeedback.tagId}
+
                       </div>
                     </div>
                     <div className="form-group row mb-4">

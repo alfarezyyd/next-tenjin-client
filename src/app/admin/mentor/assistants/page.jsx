@@ -117,9 +117,14 @@ export default function Page() {
             <div key={`mentorAssistance-${mentorAssistance.id}`} className="col-12 col-md-4 col-lg-4">
               <article className="article article-style-c">
                 <div className="article-header">
-                  <div className="article-image"
-                       data-background={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${decodedAccessToken.mentorId}/${mentorAssistance.id}/${mentorAssistance.imagePath[0]}`}></div>
+                  <div
+                    className="article-image"
+                    style={{
+                      backgroundImage: `url(${encodeURI(`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${decodedAccessToken.mentorId}/${mentorAssistance.id}/${mentorAssistance.imagePath[0]}`)})`,
+                    }}
+                  ></div>
                 </div>
+               
                 <div className="article-details">
                   <div className="article-category">
                     <a href="#">{mentorAssistance.categoryName}</a>
@@ -145,7 +150,9 @@ export default function Page() {
                     </div>
                     <div className="">
                       <a
-                        href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/assistants/update/${mentorAssistance.id}`}
+                        href={`
+                      ${process.env.NEXT_PUBLIC_BASE_URL}
+                      admin / mentor / assistants / update / ${mentorAssistance.id}`}
                         className="btn btn-info">Edit</a>
                       <button className="btn btn-danger mt-1" onClick={() => {
                         triggerDeleteAssistant(mentorAssistance.id);
