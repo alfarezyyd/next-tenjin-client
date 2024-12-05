@@ -135,7 +135,7 @@ export default function Page() {
               ...prev, tagId: [...formData['tagId'], Number($(tagsSelectRef.current).val())]
             }));
           });
-          
+
         }
       }
     };
@@ -218,11 +218,15 @@ export default function Page() {
       router.push('/admin/mentor/assistants?notify=success');
     } else {
       console.error('Failed to submit data', responseBody);
-      const errorMessages = {};
-      responseBody.errors.message.forEach((error) => {
-        errorMessages[error.path[0]] = error.message;
-      });
-      setErrors(errorMessages);
+      try {
+        const errorMessages = {};
+        responseBody.errors.message.forEach((error) => {
+          errorMessages[error.path[0]] = error.message;
+        });
+        setErrors(errorMessages);
+      } catch (e) {
+        toast.error('Anda sudah memiliki kelas asistensi untuk kategori ini!')
+      }
     }
   }
 
@@ -231,7 +235,7 @@ export default function Page() {
     durationMinutes: errors.durationMinutes ? <div className="invalid-feedback">{errors.durationMinutes}</div> : null,
     price: errors.price ? <div className="invalid-feedback">{errors.price}</div> : null,
     capacity: errors.capacity ? <div className="invalid-feedback">{errors.capacity}</div> : null,
-    languages: errors.languages ? <div className="invalid-feedback">{errors.languages}</div> : null,
+    languages: errors.languages ? <small className="text-danger">{errors.languages}</small> : null,
     format: errors.format ? <div className="invalid-feedback">{errors.format}</div> : null,
     tagId: errors.tagId ? <small className="text-danger">{errors.tagId}</small> : null,
     description: errors.description ? <small className="text-danger">{errors.description}</small> : null,
@@ -354,30 +358,28 @@ export default function Page() {
                         </select>
                       </div>
                     </div>
-                    {formData.format !== "INDIVIDUAL" &&
-                      <div className="form-group row mb-4">
-                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
-                               htmlFor="capacity">
-                          Kapasitas
-                        </label>
-                        <div className="col-sm-9 col-md-5 input-group">
-                          <input
-                            type="number"
-                            className={`form-control ${errors.capacity ? 'is-invalid' : ''}`}
-                            name="capacity"
-                            id="capacity"
-                            value={formData.capacity}
-                            onChange={handleChange}
-                          />
-                          <div className="input-group-append">
-                            <div className="input-group-text">
-                              Orang
-                            </div>
+                    {formData.format !== "INDIVIDUAL" && <div className="form-group row mb-4">
+                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
+                             htmlFor="capacity">
+                        Kapasitas
+                      </label>
+                      <div className="col-sm-9 col-md-5 input-group">
+                        <input
+                          type="number"
+                          className={`form-control ${errors.capacity ? 'is-invalid' : ''}`}
+                          name="capacity"
+                          id="capacity"
+                          value={formData.capacity}
+                          onChange={handleChange}
+                        />
+                        <div className="input-group-append">
+                          <div className="input-group-text">
+                            Orang
                           </div>
-                          {errorFeedback.capacity}
                         </div>
+                        {errorFeedback.capacity}
                       </div>
-                    }
+                    </div>}
                     <div className="form-group row mb-4">
                       <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="tags">
                         Tag
@@ -391,7 +393,6 @@ export default function Page() {
                             <option key={`tags-${index}`} value={tag['id']}>{tag['name']}</option>))}
                         </select>
                         {errorFeedback.tagId}
-
                       </div>
                     </div>
                     <div className="form-group row mb-4">
@@ -404,6 +405,7 @@ export default function Page() {
                           {assistanceDependency['languages'].map((value, index) => (
                             <option key={"languages" + index} value={value['id']}>{value['name']}</option>))}
                         </select>
+                        {errorFeedback.languages}
                       </div>
                     </div>
                     <div className="form-group row mb-4">

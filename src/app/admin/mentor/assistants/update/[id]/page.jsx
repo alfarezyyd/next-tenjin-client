@@ -140,6 +140,12 @@ export default function Page() {
     updateSelect2();
   }, [filteredTags]);
 
+  useEffect(() => {
+    if (assistanceDependency.tags && existingAssistance?.category?.id) {
+      setFilteredTags(assistanceDependency.tags.filter(tag => tag.categoryId === existingAssistance.category.id))
+    }
+  }, [assistanceDependency.tags, existingAssistance])
+
   const fetchAssistanceDependency = async () => {
     if (accessToken) {
       const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/create`, {
@@ -153,20 +159,11 @@ export default function Page() {
         let firstCategoryElementId = responseBody['result']['data']['categories'][0]['id'];
         setSelectedCategoryId(firstCategoryElementId);
         setFormData({...formData, languages: responseBody['result']['data']['languages'].map(language => language.id)});
-        setFilteredTags(responseBody['result']['data']['tags'].filter(value => value['categoryId'] === Number(firstCategoryElementId)));
-
       } else {
         console.error('Failed to fetch assistance dependency', responseBody);
       }
     }
   };
-
-  useEffect(() => {
-    if (selectedCategoryId && assistanceDependency.tags) {
-      const tags = assistanceDependency.tags.filter(tag => tag.categoryId === Number(selectedCategoryId));
-      setFilteredTags(tags);
-    }
-  }, [selectedCategoryId, assistanceDependency.tags]);
 
 
   const handleChange = useCallback((e) => {
@@ -179,9 +176,7 @@ export default function Page() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formDataPayload = new FormData();
-    const updatedFiles = files.filter(file =>
-      !oldFiles.some(oldFile => oldFile.name === file.file.name)
-    );
+    const updatedFiles = files.filter(file => !oldFiles.some(oldFile => oldFile.name === file.file.name));
     updatedFiles.forEach((file, index) => {
       formDataPayload.append(`images`, file.file);
     });
@@ -238,15 +233,15 @@ export default function Page() {
             price: existingAssistance.price,
             durationMinutes: existingAssistance.durationMinutes,
             description: existingAssistance.description,
-            tagId: [...existingAssistance.tagId],
-            languages: [...existingAssistance.languageIds],
+            tagId: [...existingAssistance.AssistanceTag],
+            languages: [...existingAssistance.AssistanceLanguage],
             format: existingAssistance.format,
             deletedFilesName: []
           })
           const allFiles = [];
-          existingAssistance.imagePath.forEach(image => {
+          existingAssistance.AssistanceResource.forEach(image => {
             allFiles.push({
-              source: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${existingAssistance.mentorId}/${existingAssistance.id}/${image}`,
+              source: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${existingAssistance.mentorId}/${existingAssistance.id}/${image.imagePath}`,
               options: {type: 'input'},
               name: image
             })
@@ -271,13 +266,16 @@ export default function Page() {
 
       $(categorySelectRef.current).val(existingAssistance.categoryId)
       $(formatSelectRef.current).val(existingAssistance.format)
-      $(tagsSelectRef.current).val([...existingAssistance.tagId]).trigger('change'); // Set default value
-
+      const validTagIds = existingAssistance.AssistanceTag.map(item => item.tagId);
+      const filteredData = filteredTags.filter(item => validTagIds.includes(item.id)).map((tag) => tag.id);
+      const languageId = existingAssistance.AssistanceLanguage.map(language => language.languageId)
+      $(tagsSelectRef.current).val(filteredData).trigger('change'); // Set default value
+      $(languagesSelectRef.current).val(languageId).trigger('change');
     }
-    if (existingAssistance) {
+    if (existingAssistance && assistanceDependency) {
       loadExistingFormDataRef();
     }
-  }, [existingAssistance]);
+  }, [existingAssistance, filteredTags]);
 
   useEffect(() => {
     if (params.id) {
