@@ -92,7 +92,6 @@ export default function Page() {
     if (typeof window !== 'undefined') {
       loadAssets();
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -146,6 +145,7 @@ export default function Page() {
   }, [assistanceDependency.tags, existingAssistance])
 
   const fetchAssistanceDependency = async () => {
+    setLoading(true);
     if (accessToken) {
       const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/create`, {
         method: 'GET', includeCredentials: true, headers: {
@@ -159,6 +159,7 @@ export default function Page() {
       } else {
         console.error('Failed to fetch assistance dependency', responseBody);
       }
+      setLoading(false)
     }
   };
 
@@ -213,7 +214,7 @@ export default function Page() {
 
     if (response.ok) {
       setErrors({});
-      // router.push("/admin/mentor/assistants?notify=success")
+      window.location.href = "/admin/mentor/assistants?notify=success"
     } else {
       console.error('Failed to submit data', responseBody);
       const errorMessages = {};
@@ -225,6 +226,7 @@ export default function Page() {
   }
 
   const fetchExistingAssistance = async (id) => {
+    setLoading(true);
     if (accessToken) {
       try {
         const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/${id}`, {
@@ -305,7 +307,7 @@ export default function Page() {
       $(languagesSelectRef.current).val(formData.languages).trigger('change');
     };
 
-    if (formData.languages && formData.languages.length > 0) {
+    if (formData.languages && formData.languages.length > 0 && window.jQuery) {
       setDefaultLanguages();
     }
   }, [formData.languages]);
@@ -318,7 +320,7 @@ export default function Page() {
       $(tagsSelectRef.current).val(formData.tagId).trigger('change');
     };
 
-    if (formData.tagId && formData.tagId.length > 0) {
+    if (formData.tagId && formData.tagId.length > 0 && window.jQuery) {
       setDefaultTags();
     }
   }, [formData.tagId]);

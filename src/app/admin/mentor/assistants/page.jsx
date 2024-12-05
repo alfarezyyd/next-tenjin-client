@@ -20,6 +20,9 @@ export default function Page() {
   useEffect(() => {
     // Cek jika ada `notify=success` di query param
     if (searchParams.get('notify') === 'success') {
+      toast.success('Data deleted successfully!', {
+        position: 'top-right', autoClose: 3000, toastId: 'assistants-success',
+      })
       // Bersihkan query param setelah menampilkan toast
       router.replace('/admin/mentor/assistants');
     }
@@ -76,7 +79,7 @@ export default function Page() {
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
           toast.success('Data deleted successfully!', {
-            position: 'top-right', autoClose: 3000, toastId: 'assistants-success',
+            position: 'top-right', autoClose: 3000, toastId: 'assistants-delete',
           })
           setAllMentorAssistance(allMentorAssistance.filter(value => value.id !== id));
         } else {
@@ -115,6 +118,7 @@ export default function Page() {
           {loading ? (  // Tampilkan loading selama data belum tersedia
             <Loading/>) : (allMentorAssistance.length > 0 ? (allMentorAssistance.map((mentorAssistance) => (
             <div key={`mentorAssistance-${mentorAssistance.id}`} className="col-12 col-md-4 col-lg-4">
+
               <article className="article article-style-c">
                 <div className="article-header">
                   <div
