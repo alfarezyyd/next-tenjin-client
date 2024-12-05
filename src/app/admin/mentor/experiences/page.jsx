@@ -79,6 +79,9 @@ export default function Page() {
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
           router.push('/admin/mentor/experiences?notify=success');
+          setAllMentorExperience({
+            ...allMentorExperience.filter((value) => value.id !== id),
+          })
         } else {
           console.error('Failed to fetch experiences', responseBody);
         }
