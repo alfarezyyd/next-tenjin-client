@@ -76,7 +76,7 @@ export default function Page() {
 
     if (fetchResponse.ok) {
       setErrors({});
-      router.push('/admin/mentor/educations?notify=success'); // Tambahkan query param
+      window.location.href = '/admin/management/categories?notify=success'; // Tambahkan query param
     } else {
       console.error('Failed to submit data', responseBody);
       const errorMessages = {};
