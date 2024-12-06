@@ -6,7 +6,6 @@ import CommonScript from "@/components/admin/CommonScript";
 import {Loading} from "@/components/admin/Loading";
 import Cookies from "js-cookie";
 import {toast} from "react-toastify";
-import {useRouter, useSearchParams} from "next/navigation";
 
 
 import Link from "next/link";
@@ -20,8 +19,6 @@ export default function Page() {
   const [decodedAccessToken, setDecodedAccessToken] = useState(null);
   const [payloadRequest, setPayloadRequest] = useState(null);
   const [errors, setErrors] = useState({});
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const [toggleVisibility, setToggleVisibility] = useState(false);
 
   function handleChange(e) {

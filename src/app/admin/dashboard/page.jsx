@@ -3,7 +3,7 @@ import CommonScript from "@/components/admin/CommonScript";
 import {useEffect, useRef, useState} from "react";
 import 'fullcalendar/dist/fullcalendar.min.css'
 import {Loading} from "@/components/admin/Loading";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import Cookies from "js-cookie";
 import {CommonUtil} from "@/common/utils/common-util";
@@ -22,7 +22,6 @@ export default function Page() {
   const [lastFiveOrderType, setLastFiveOrderType] = useState(null);
   const [lastFiveOrder, setLastFiveOrder] = useState(null);
   const calendarRef = useRef(null);
-  const searchParams = useSearchParams();
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   const router = useRouter();
@@ -62,8 +61,8 @@ export default function Page() {
     }
   }, [decodedAccessToken]);
   useEffect(() => {
-    // Cek jika ada `notify=success` di query param
-    if (searchParams.get('notify') === 'success') {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
         position: 'top-right', autoClose: 3000, toastId: 'dashboard-success',
       });
@@ -297,7 +296,7 @@ export default function Page() {
                     )
                   })}
                 </div>
-                
+
               </div>
             </div>
           </div>

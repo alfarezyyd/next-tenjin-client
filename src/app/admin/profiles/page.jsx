@@ -104,8 +104,9 @@ export default function Page() {
                     <div className="row">
                       <div className="form-group col-12">
                         <label>Bio</label>
-                        <textarea
-                          className="form-control summernote-simple">Ujang maman is a superhero name in <b>Indonesia</b>, especially in my family. He is not a fictional character but an original hero in my family, a hero for his children and for his wife. So, I use the name as a user in this template. Not a tribute, Im just bored with <b>John Doe</b>.</textarea>
+                        <textarea className="form-control summernote-simple">
+                          Ujang maman is a superhero name in
+                          especially in my family. He is not a fictional character but an original hero in my family, a hero for his children and for his wife. So, I use the name as a user in this template. Not a tribute, Im just bored with</textarea>
                       </div>
                     </div>
                     <div className="row">

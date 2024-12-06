@@ -6,7 +6,7 @@ import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
 import {toast} from "react-toastify";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import 'select2/dist/css/select2.min.css';
 
 import '@/../public/assets/css/components.css'
@@ -18,12 +18,11 @@ export default function Page() {
     name: ''
   });
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [allWithdraws, setAllWithdraws] = useState([]);
   const [activeWithdraw, setActiveWithdraw] = useState({});
   useEffect(() => {
-    // Cek jika ada `notify=success` di query param
-    if (searchParams.get('notify') === 'success') {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
         position: 'top-right', autoClose: 3000, toastId: 'tags-success',
       });

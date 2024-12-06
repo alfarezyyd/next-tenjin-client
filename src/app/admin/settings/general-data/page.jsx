@@ -7,7 +7,7 @@ import {Loading} from "@/components/admin/Loading";
 import Cookies from "js-cookie";
 import {CommonUtil} from "@/common/utils/common-util";
 import {toast} from "react-toastify";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 
 import {FilePond, registerPlugin} from "react-filepond";
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
@@ -29,10 +29,9 @@ export default function Page() {
   const [errors, setErrors] = useState({});
   const [file, setFile] = useState();
   const router = useRouter();
-  const searchParams = useSearchParams();
   useEffect(() => {
-    // Cek jika ada `notify=success` di query param
-    if (searchParams.get('notify') === 'success') {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
         position: 'top-right', autoClose: 100000,
       });

@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
 import {toast} from "react-toastify";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import '@/../public/assets/css/withdraw.scss'
 import Image from "next/image";
 import {CommonUtil} from "@/common/utils/common-util";
@@ -20,7 +20,6 @@ export default function Page() {
 
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const searchParams = useSearchParams();
   const amountBalanceOption = [10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000]
   useEffect(() => {
 

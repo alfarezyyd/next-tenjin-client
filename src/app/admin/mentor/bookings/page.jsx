@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import {toast} from "react-toastify";
 
 import '@/../public/assets/css/components.css'
@@ -16,7 +16,6 @@ export default function Page() {
   const [allMentorOrder, setAllMentorOrder] = useState({});
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [activeBooking, setActiveBooking] = useState(null);
   const [formData, setFormData] = useState({
     meetingPlatform: '',
@@ -24,12 +23,12 @@ export default function Page() {
     meetingLink: ''
   });
   useEffect(() => {
-    // Cek jika ada `notify=success` di query param
-    if (searchParams.get('notify') === 'success') {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('notify') === 'success') {
       // Bersihkan query param setelah menampilkan toast
       router.replace('/admin/mentor/assistants');
     }
-  }, [searchParams, router]);
+  }, [window.location.search, router]);
 
   useEffect(() => {
     async function loadAssets() {

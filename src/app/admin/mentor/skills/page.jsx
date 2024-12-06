@@ -3,9 +3,8 @@ import AdminWrapper from "@/components/admin/AdminWrapper";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
-import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import {Loading} from "@/components/admin/Loading";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import {toast} from 'react-toastify';
 
 import 'summernote/dist/summernote-bs4.css'
@@ -17,7 +16,6 @@ export default function Page() {
   const [allMentorSkill, setAllMentorSkill] = useState({});
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [activeId, setActiveId] = useState(null);
   const [formData, setFormData] = useState({
     name: '', description: '',
@@ -26,16 +24,18 @@ export default function Page() {
   const descriptionRef = useRef(null);
 
   useEffect(() => {
-    // Cek jika ada `notify=success` di query param
-    if (searchParams.get('notify') === 'success') {
-      toast.success('Data submitted successfully!', {
-        position: 'top-right', autoClose: 3000, toastId: 'skills-success'
-      });
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('notify') === 'success') {
+        toast.success('Data submitted successfully!', {
+          position: 'top-right', autoClose: 3000, toastId: 'skills-success'
+        });
 
-      // Bersihkan query param setelah menampilkan toast
-      router.replace('/admin/mentor/skills');
+        // Bersihkan query param setelah menampilkan toast
+        router.replace('/admin/mentor/skills');
+      }
     }
-  }, [searchParams, router]);
+  }, [router]);
 
   useEffect(() => {
     async function loadAssets() {

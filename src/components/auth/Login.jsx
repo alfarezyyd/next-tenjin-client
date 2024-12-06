@@ -5,7 +5,7 @@ import {Button, Input} from "@nextui-org/react";
 import Cookies from "js-cookie";
 import {EyeSlashFilledIcon} from "@/components/auth/EyeSlashFilledIcon";
 import {EyeFilledIcon} from "@/components/auth/EyeFilledIcon";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import Link from "next/link";
 
 
@@ -19,7 +19,6 @@ export default function Login() {
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const {push} = useRouter();
 
   const handleChange = (e) => {
     setLoginRequest({
@@ -29,24 +28,28 @@ export default function Login() {
 
 
   const router = useRouter();
-  const searchParams = useSearchParams();
-
   useEffect(() => {
-    // Ambil token dari URL
-    const token = searchParams.get('token');
+      // Ambil token dari URL
+      if (window.location.search) {
+        const params = new URLSearchParams(window.location.search);
 
-    if (token) {
-      setLoading(true);
-      // Simpan token di cookie
-      Cookies.set('accessToken', token);
+        const token = params.get('token');
 
-      // Redirect ke halaman dashboard setelah login
-      window.location.href = '/admin/dashboard';
-    } else {
-      // Jika tidak ada token, redirect ke halaman login
-      router.push('/auth/login');
-    }
-  }, [searchParams, router]);
+        if (token) {
+          setLoading(true);
+          // Simpan token di cookie
+          Cookies.set('accessToken', token);
+
+          // Redirect ke halaman dashboard setelah login
+          window.location.href = '/admin/dashboard';
+        } else {
+          // Jika tidak ada token, redirect ke halaman login
+          router.push('/auth/login');
+        }
+      }
+    },
+    [window?.location.search, router]
+  );
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();

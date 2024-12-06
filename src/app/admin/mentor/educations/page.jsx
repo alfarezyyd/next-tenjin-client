@@ -7,7 +7,7 @@ import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
 import {toast} from "react-toastify";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 
 import '@/../public/assets/css/components.css'
 
@@ -16,10 +16,9 @@ export default function Page() {
   const [allMentorEducation, setAllMentorEducation] = useState({});
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const searchParams = useSearchParams();
   useEffect(() => {
-    // Cek jika ada `notify=success` di query param
-    if (searchParams.get('notify') === 'success') {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
         position: 'top-right', autoClose: 3000, toastId: 'education-success',
       });
@@ -27,7 +26,7 @@ export default function Page() {
       // Bersihkan query param setelah menampilkan toast
       router.replace('/admin/mentor/educations');
     }
-  }, [searchParams, router]);
+  }, [window.location.search, router]);
 
   useEffect(() => {
     async function loadAssets() {

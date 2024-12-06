@@ -26,7 +26,7 @@ export default function AdminTopbar({parsedJwt}) {
               <a href="#" className="dropdown-item dropdown-item-unread">
                 <div className="dropdown-item-avatar">
                   <img alt="image"
-                       src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/public/assets/user-resources/${parsedJ}`}
+                       src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/public/assets/user-resources/${parsedJwt?.photoPath}`}
                        className="rounded-circle"/>
                   <div className="is-online"></div>
                 </div>

@@ -5,7 +5,7 @@ import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
 import {toast} from "react-toastify";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import Image from "next/image";
 
 
@@ -17,10 +17,9 @@ export default function Page() {
   const [orderHistory, setOrderHistory] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const searchParams = useSearchParams();
   useEffect(() => {
-    // Cek jika ada `notify=success` di query param
-    if (searchParams.get('notify') === 'success') {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
         position: 'top-right', autoClose: 3000, toastId: 'top-up-success',
       });
