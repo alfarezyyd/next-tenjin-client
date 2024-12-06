@@ -68,14 +68,17 @@ export default function Page() {
         setSelectedCategoryId($(categorySelectRef.current).val());
       });
       $(tagsSelectRef.current).on("change", () => {
-        console.log(Number($(tagsSelectRef.current).val()))
-        setFormData(prev => ({
-          ...prev, tagId: [...formData['tagId'], Number($(tagsSelectRef.current).val())]
+        const selectedValues = $(tagsSelectRef.current).val(); // Menghasilkan array
+        setFormData((prev) => ({
+          ...prev,
+          tagId: [...new Set([...prev.tagId, ...selectedValues.map(Number)])], // Gabungkan & hilangkan duplikat
         }));
       });
       $(languagesSelectRef.current).on("change", () => {
-        setFormData(prev => ({
-          ...prev, languages: [...formData.languages, Number($(languagesSelectRef.current).val())]
+        const selectedValues = $(languagesSelectRef.current).val(); // Menghasilkan array
+        setFormData((prev) => ({
+          ...prev,
+          languages: [...new Set([...prev.languages, ...selectedValues.map(Number)])], // Gabungkan & hilangkan duplikat
         }));
       });
       $(formatSelectRef.current).on("change", () => {
@@ -130,9 +133,11 @@ export default function Page() {
           // Inisialisasi select2
           $(tagsSelectRef.current).select2()
           $(tagsSelectRef.current).on("change", () => {
-            console.log(Number($(tagsSelectRef.current).val()))
-            setFormData(prev => ({
-              ...prev, tagId: [...formData['tagId'], Number($(tagsSelectRef.current).val())]
+            console.log(formData.tagId);
+            const selectedValues = $(tagsSelectRef.current).val(); // Menghasilkan array
+            setFormData((prev) => ({
+              ...prev,
+              tagId: [...new Set([...prev.tagId, ...selectedValues.map(Number)])], // Gabungkan & hilangkan duplikat
             }));
           });
 
@@ -163,6 +168,9 @@ export default function Page() {
   };
 
   useEffect(() => {
+    setFormData({
+      ...formData, tagId: []
+    })
     if (selectedCategoryId && assistanceDependency.tags) {
       const tags = assistanceDependency.tags.filter(tag => tag.categoryId === Number(selectedCategoryId));
       setFilteredTags(tags);
@@ -204,7 +212,6 @@ export default function Page() {
     formDataPayload.forEach((value, key) => {
       console.log(key, value);
     })
-
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants`, {
       method: 'POST', body: formDataPayload, includeCredentials: true, headers: {
         'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,

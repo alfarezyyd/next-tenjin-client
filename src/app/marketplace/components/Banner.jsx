@@ -1,6 +1,6 @@
 const Banner1 = () => {
   return (<div
-    className="flex w-full flex-col rounded-[20px] bg-cover px-[30px] py-[30px] md:px-[64px] md:py-[56px]"
+    className="flex w-full flex-col rounded-[20px] bg-cover px-[30px] py-[30px] md:px-[64px] md:py-[56px] justify-center"
     style={{backgroundImage: `url(/assets/img/nfts/NftBanner1.png)`}}
   >
     <div className="w-full">
