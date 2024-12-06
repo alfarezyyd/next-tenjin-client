@@ -120,7 +120,7 @@ export default function Page() {
             <Loading/>) : (<div className='d-flex flex-row'>
             <div className="col-12 col-md-6 col-lg-3 pl-0">
               {orderHistory?.length > 0 ? (orderHistory.map((item, index) => (
-                <div className="card card-primary">
+                <div className="card card-primary" key={`top-up${index}`}>
                   <div className="card-body">
                     <p className='mb-0'>Total Harga: {item.totalPrice}</p>
                     <p className='mb-0'>Jumlah Koin: {item.coinAmount}</p>

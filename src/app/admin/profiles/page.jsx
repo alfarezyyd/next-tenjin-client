@@ -46,7 +46,7 @@ export default function Page() {
                     Web Developer</div></div>
                   Ujang maman is a superhero name in <b>Indonesia</b>, especially in my family. He is not a fictional
                   character but an original hero in my family, a hero for his children and for his wife. So, I use the
-                  name as a user in this template. Not a tribute, I'm just bored with <b>'John Doe'</b>.
+                  name as a user in this template. Not a tribute, Im just bored with <b>ohn Doe</b>.
                 </div>
                 <div className="card-footer text-center">
                   <div className="font-weight-bold mb-2">Follow Ujang On</div>
@@ -105,7 +105,7 @@ export default function Page() {
                       <div className="form-group col-12">
                         <label>Bio</label>
                         <textarea
-                          className="form-control summernote-simple">Ujang maman is a superhero name in <b>Indonesia</b>, especially in my family. He is not a fictional character but an original hero in my family, a hero for his children and for his wife. So, I use the name as a user in this template. Not a tribute, I'm just bored with <b>'John Doe'</b>.</textarea>
+                          className="form-control summernote-simple">Ujang maman is a superhero name in <b>Indonesia</b>, especially in my family. He is not a fictional character but an original hero in my family, a hero for his children and for his wife. So, I use the name as a user in this template. Not a tribute, Im just bored with <b>John Doe</b>.</textarea>
                       </div>
                     </div>
                     <div className="row">

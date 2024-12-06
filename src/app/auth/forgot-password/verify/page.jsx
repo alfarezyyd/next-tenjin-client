@@ -60,7 +60,7 @@ export default function Page() {
             Forgot your password?
           </h4>
           <p className="mb-3 ml-1 font-light text-base text-gray-400">
-            No problem. Just let us know your email address and we'll email you a password reset link that will allow
+            No problem. Just let us know your email address and we will email you a password reset link that will allow
             you to choose a new one. !
           </p>
 

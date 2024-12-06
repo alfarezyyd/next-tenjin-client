@@ -201,9 +201,9 @@ export default function Page() {
                             <div className="empty-state-icon">
                               <i className="fas fa-question"></i>
                             </div>
-                            <h2>We couldn't find any data</h2>
+                            <h2>We could`&apos;` find any data</h2>
                             <p className="lead">
-                              Sorry we can't find any data, to get rid of this message, make at least 1 entry.
+                              Sorry we ca`&apos;` find any data, to get rid of this message, make at least 1 entry.
                             </p>
                             <a href="/admin/mentor/skills/create" className="btn btn-primary mt-4">Create new
                               One</a>
