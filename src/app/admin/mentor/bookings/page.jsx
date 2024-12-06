@@ -61,7 +61,6 @@ export default function Page() {
       const responseBody = await responseFetch.json();
       if (responseFetch.ok) {
         setAllMentorOrder(responseBody.result.data);
-        console.log(responseBody.result.data);
       } else {
         console.error('Failed to fetch assistance', responseBody);
       }
@@ -120,7 +119,7 @@ export default function Page() {
           const mentorOrder = allMentorOrder.find(value => value.id === orderId);
           mentorOrder.orderCondition = condition;
           console.log(allMentorOrder, mentorOrder);
-          setAllMentorOrder()
+
           setAllMentorOrder([
             ...allMentorOrder.filter(value => value.id !== orderId),
             mentorOrder,
@@ -145,7 +144,6 @@ export default function Page() {
   }
 
   async function triggerUpdateLink() {
-    console.log(activeBooking)
     if (accessToken) {
       try {
         const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors/orders/booking/${activeBooking.id}`, {
@@ -159,13 +157,12 @@ export default function Page() {
             position: 'top-right', autoClose: 3000, toastId: 'booking-success'
           })
           const mentorOrder = allMentorOrder.find(value => value.id === activeBooking.id);
-          mentorOrder.orderCondition = condition;
-          console.log(allMentorOrder, mentorOrder);
-          setAllMentorOrder()
           setAllMentorOrder([
-            ...allMentorOrder.filter(value => value.id !== orderId),
+            ...allMentorOrder.filter(value => value.id !== activeBooking.id),
             mentorOrder,
           ]);
+          const $ = window.jQuery
+          $("#exampleModal").modal("hide");
         } else {
           console.error('Failed to fetch assistance', responseBody);
         }

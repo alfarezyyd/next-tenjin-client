@@ -20,7 +20,7 @@ import timeGridPlugin from '@fullcalendar/timegrid' // a plugin!
 import interactionPlugin from '@fullcalendar/interaction'
 import {Time} from "@internationalized/date";
 import {Bounce, toast} from "react-toastify";
-import {redirect, useRouter} from "next/navigation";
+import {redirect} from "next/navigation";
 import {CommonUtil} from "@/common/utils/common-util";
 
 
@@ -35,7 +35,6 @@ export default function Page() {
   const [selectedInfoDate, setSelectedInfoDate] = useState(null);
   const calendarRef = useRef(null);
   const [event, setEvent] = useState(null);
-  const {push} = useRouter();
 
   const [totalPrice, setTotalPrice] = useState(0);
   const handleIncrement = () => {
@@ -225,7 +224,7 @@ export default function Page() {
               <div className="flex flex-row justify-between">
                 <div className="flex flex-col rounded-lg bg-white sm:flex-row">
                   <Image className="m-2 h-24 w-28 rounded-md border object-cover object-center z-2"
-                         src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
+                         src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${checkoutItem?.logo}`}
                          alt=""/>
                   <div className="flex w-full flex-col px-4 py-4">
                     <span className="font-semibold">{checkoutItem['topic']}</span>
@@ -299,14 +298,19 @@ export default function Page() {
                   </svg>
                 </div>
               </div>
-              <label htmlFor="billing-address" className="mt-4 mb-2 block text-sm font-medium">Telephone
-                Number</label>
+              <label htmlFor="billing-address" className="mt-4 mb-2 block text-sm font-medium">Notes</label>
               <div className="flex flex-col sm:flex-row">
                 <div className="relative flex-shrink-0 sm:w-7/12">
-                  <input type="text" id="billing-address" name="billing-address" readOnly
-                         value={`${loggedUser.telephone ?? 'Tidak Ada'} `}
+                  <input type="text" id="billing-address" name="billing-address"
+                         value={`${checkoutItem.note}`}
                          className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                         placeholder="Street Address"/>
+                         placeholder="Street Address" onChange={(e) => {
+                    setCheckoutItem((prevState) => ({
+                        ...prevState,
+                        note: e.target.value
+                      }
+                    ))
+                  }}/>
                   <div
                     className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3 bg-zinc-200">
                     <img className="h-4 w-4 object-contain"

@@ -36,6 +36,7 @@ export default function Page({}) {
   useEffect(() => {
     if (accessToken) {
       setDecodedAccessToken(CommonUtil.parseJwt(accessToken));
+      console.log(CommonUtil.parseJwt(accessToken));
     }
   }, [accessToken]);
 
@@ -50,6 +51,7 @@ export default function Page({}) {
       durationMinutes: activeCategory['durationMinutes'],
       price: activeCategory['price'],
       minutesDurations: activeCategory['durationMinutes'],
+      logo: activeCategory['category']['logo'],
       note: "Testing",
     })
     localStorage.setItem("checkoutItem", checkoutItem);
@@ -255,11 +257,13 @@ export default function Page({}) {
                   <div className="flex flex-row gap-3 mt-5">
                     <Button onClick={initiateCheckout} color="primary"
                             variant="ghost" size="lg" radius="full"
-                            className="w-48 h-16 disabled">
+                            className="w-48 h-16" isDisabled={decodedAccessToken?.mentorId == mentorData.id}>
                       <span className="font-bold text-2xl">Order</span>
                     </Button>
-                    <Button isDisabled={accessToken?.uniqueId === null} variant="solid" size="lg"
-                            radius="full" onClick={() => {
+                    <Button
+                      isDisabled={accessToken?.uniqueId === null || decodedAccessToken?.mentorId === mentorData.id}
+                      variant="solid" size="lg"
+                      radius="full" onClick={() => {
                       toggleChat()
                       setChatData((prevChatData) => {
                         console.log(chatData[mentorData.user.uniqueId])
@@ -283,7 +287,7 @@ export default function Page({}) {
                         return updatedChatData; // Kembalikan array yang diperbarui
                       });
                     }}
-                            className="w-48 h-16 bg-gradient-to-r from-teal-400 to-blue-500 hover:from-pink-500 hover:to-orange-500 ">
+                      className="w-48 h-16 bg-gradient-to-r from-teal-400 to-blue-500 hover:from-pink-500 hover:to-orange-500 ">
                       <div className="flex flex-row gap-4 font-bold text-3xl text-white items-center">
                         <PiHandWavingFill/>
                         <span className="text-2xl">Hi</span>
