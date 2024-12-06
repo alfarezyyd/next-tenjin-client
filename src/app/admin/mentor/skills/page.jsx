@@ -24,18 +24,16 @@ export default function Page() {
   const descriptionRef = useRef(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('notify') === 'success') {
-        toast.success('Data submitted successfully!', {
-          position: 'top-right', autoClose: 3000, toastId: 'skills-success'
-        });
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('notify') === 'success') {
+      toast.success('Data submitted successfully!', {
+        position: 'top-right', autoClose: 3000, toastId: 'skills-success'
+      });
 
-        // Bersihkan query param setelah menampilkan toast
-        router.replace('/admin/mentor/skills');
-      }
+      // Bersihkan query param setelah menampilkan toast
+      router.replace('/admin/mentor/skills');
     }
-  }, [router]);
+  }, [window.location.search, router]);
 
   useEffect(() => {
     async function loadAssets() {
