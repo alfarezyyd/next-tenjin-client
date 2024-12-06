@@ -203,31 +203,32 @@ export default function Page() {
                         <div>
                           <li className="list-group-item d-flex justify-content-between align-items-center">
                             Nama Cohort
-                            <span className="badge badge-primary badge-pill">{value.user.name}</span>
+                            <span className="badge badge-primary badge-pill ml-3">{value.user.name}</span>
                           </li>
                           <li className="list-group-item d-flex justify-content-between align-items-center">
                             Tanggal
                             <span
-                              className="badge badge-primary badge-pill">{value.sessionStartTimestamp.substring(0, 10)}</span>
+                              className="badge badge-primary badge-pill ml-3">{value.sessionStartTimestamp.substring(0, 10)}</span>
                           </li>
                           <li className="list-group-item d-flex justify-content-between align-items-center">
                             Waktu
                             <span
-                              className="badge badge-primary badge-pill">{value.sessionStartTimestamp.substring(11, 16)} - {value.sessionEndTimestamp.substring(11, 16)}</span>
+                              className="badge badge-primary badge-pill ml-3">{value.sessionStartTimestamp.substring(11, 16)} - {value.sessionEndTimestamp.substring(11, 16)}</span>
                           </li>
                           <li className="list-group-item d-flex justify-content-between align-items-center">
                             Topic
-                            <span className="badge badge-primary badge-pill">{value.assistance.topic}</span>
+                            <span
+                              className="badge badge-primary badge-pill text-wrap ml-3">{value.assistance.topic}</span>
                           </li>
                           <li className="list-group-item d-flex justify-content-between align-items-center">
                             Status
                             <span
-                              className={`badge badge-${value.orderCondition === "WAITING" ? 'warning' : 'primary'} badge-pill`}>{value.orderCondition}</span>
+                              className={`badge badge-${value.orderCondition === "WAITING" ? 'warning' : 'primary'} badge-pill ml-3`}>{value.orderCondition}</span>
                           </li>
                           <li className="list-group-item d-flex justify-content-between align-items-center">
                             Meeting Link
                             <span
-                              className={`badge badge-${value.orderCondition === "WAITING" ? 'warning' : 'primary'} badge-pill`}>{value.meetingLink}</span>
+                              className={`badge badge-${value.orderCondition === "WAITING" ? 'warning' : 'primary'} badge-pill ml-3`}>{value.meetingLink}</span>
                           </li>
 
                           {value.orderCondition === "WAITING" &&

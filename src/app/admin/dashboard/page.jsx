@@ -82,7 +82,9 @@ export default function Page() {
       });
       const responseBody = await responseFetch.json();
       if (responseFetch.ok) {
+        console.log(responseBody.result.data);
         setCurrentUser(responseBody.result.data);
+        setLastFiveOrder(responseBody.result.data.userSpecificSchedule.lastFiveOrders);
       } else {
         console.error('Failed to fetch skill', responseBody);
       }
@@ -284,7 +286,8 @@ export default function Page() {
                              alt="product"/>
                         <div className="media-body">
                           <div className="float-right">
-                            <div className="font-weight-600 text-muted text-small">86 Sales</div>
+                            <div
+                              className="font-weight-600 text-muted text-small">{item?.sessionStartTimestamp?.substring(0, 10)}</div>
                           </div>
                           <div className="media-title">{item.assistance.topic}</div>
                           <div className="mt-1">
@@ -294,16 +297,7 @@ export default function Page() {
                     )
                   })}
                 </div>
-                <div className="card-footer pt-3 d-flex justify-content-center">
-                  <div className="budget-price justify-content-center">
-                    <div className="budget-price-square bg-primary" data-width="20"></div>
-                    <div className="budget-price-label">Selling Price</div>
-                  </div>
-                  <div className="budget-price justify-content-center">
-                    <div className="budget-price-square bg-danger" data-width="20"></div>
-                    <div className="budget-price-label">Budget Price</div>
-                  </div>
-                </div>
+                
               </div>
             </div>
           </div>

@@ -129,8 +129,6 @@ export default function Page() {
   }
 
   async function updateReviewUser() {
-    console.log(rating)
-    console.log(orderReview)
     if (accessToken) {
       try {
         const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/reviews`, {
@@ -154,7 +152,7 @@ export default function Page() {
           });
           setAllOrder(updatedOrders);
           const $ = (await import('jquery')).default;
-          $('#modalId').modal('hide')
+          $('#reviewModal').modal('hide')
         } else {
           console.error('Failed to fetch experiences', responseBody);
         }
