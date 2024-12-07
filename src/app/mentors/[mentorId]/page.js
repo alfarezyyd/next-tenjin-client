@@ -34,6 +34,7 @@ export default function Page({}) {
   }, []);
 
   useEffect(() => {
+    console.log(accessToken);
     if (accessToken) {
       setDecodedAccessToken(CommonUtil.parseJwt(accessToken));
       console.log(CommonUtil.parseJwt(accessToken));
@@ -257,11 +258,12 @@ export default function Page({}) {
                   <div className="flex flex-row gap-3 mt-5">
                     <Button onClick={initiateCheckout} color="primary"
                             variant="ghost" size="lg" radius="full"
-                            className="w-48 h-16" isDisabled={decodedAccessToken?.mentorId == mentorData.id}>
+                            className="w-48 h-16"
+                            isDisabled={decodedAccessToken?.mentorId == mentorData.id || accessToken === undefined}>
                       <span className="font-bold text-2xl">Order</span>
                     </Button>
                     <Button
-                      isDisabled={accessToken?.uniqueId === null || decodedAccessToken?.mentorId === mentorData.id}
+                      isDisabled={accessToken === undefined || decodedAccessToken?.mentorId === mentorData.id}
                       variant="solid" size="lg"
                       radius="full" onClick={() => {
                       toggleChat()

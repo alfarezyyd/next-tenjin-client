@@ -44,23 +44,25 @@ const Marketplace = () => {
                 </h4>
               </div>
 
-              {/* NFTs trending card */}
-              <div className="z-20 grid grid-cols-1 gap-5 md:grid-cols-5">
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+
+                {/* NFTs trending card */}
                 {assistants?.trendingAssistanceDetails && assistants.trendingAssistanceDetails.length > 0 &&
-                  assistants.map((assistant, index) => (
+                  assistants.trendingAssistanceDetails.map((assistant, index) => (
                     <NftCard
-                      key={`assistants-tre-${index}`}
+                      key={`assistants-${index}`}
                       title={assistant.topic}
                       author={assistant.mentor?.user?.name}
                       price={assistant.price}
                       assistantId={assistant.id}
-                      mentorId={assistant.mentor?.user?.uniqueId}
+                      uniqueId={assistant.mentor?.user?.uniqueId}
+                      mentorId={assistant.mentor?.id}
                       durationMinutes={assistant.durationMinutes}
+                      image={assistant.AssistanceResource[0].imagePath}
                     />
                   ))
                 }
               </div>
-
               {assistants?.assistancePerCategory && assistants.assistancePerCategory.length > 0 && (
                 assistants.assistancePerCategory.map((assistant, index) => (
                   <div key={`assistance-parent${index}`}>
