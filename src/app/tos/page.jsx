@@ -108,7 +108,8 @@ export default function Page() {
                 </div>
                 <h2 className={"font-semibold text-xl"}>Disclaimer</h2>
                 <p className={"text-md"}>
-                  The services provided by Tenjin are on an "as-is" and "as available" basis. Tenjin makes no
+                  The services provided by Tenjin are on an `&quot;`as-is`&quot;` and `&quot;`as available`&quot;`
+                  basis. Tenjin makes no
                   representations or warranties of any kind, express or implied, regarding the operation or availability
                   of the platform, the accuracy of the information, or the quality of services provided. Tenjin
                   disclaims all warranties, including but not limited to implied warranties of merchantability and
