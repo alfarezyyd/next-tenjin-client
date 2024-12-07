@@ -27,7 +27,7 @@ export default function Page() {
       // Bersihkan query param setelah menampilkan toast
       router.replace('/admin/educations');
     }
-  }, [window.location.search, router]);
+  }, [router]);
 
   async function triggerPaymentCoin(amountCoin, totalPrice) {
 

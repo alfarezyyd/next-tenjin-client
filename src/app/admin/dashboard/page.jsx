@@ -70,7 +70,7 @@ export default function Page() {
       // Bersihkan query param setelah menampilkan toast
       router.replace('/admin/dashboard');
     }
-  }, [window.location.search, router]);
+  }, [router]);
 
   async function fetchCurrentUser() {
     try {

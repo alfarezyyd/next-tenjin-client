@@ -26,7 +26,7 @@ export default function Page() {
       // Bersihkan query param setelah menampilkan toast
       router.replace('/admin/mentor/educations');
     }
-  }, [window.location.search, router]);
+  }, [router]);
 
   useEffect(() => {
     async function loadAssets() {
