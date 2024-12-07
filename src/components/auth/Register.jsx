@@ -6,6 +6,7 @@ import {useRouter} from "next/navigation";
 import Cookies from "js-cookie";
 import {EyeFilledIcon} from "@/components/auth/EyeFilledIcon";
 import {EyeSlashFilledIcon} from "@/components/auth/EyeSlashFilledIcon";
+import Link from "next/link";
 
 export default function Register() {
   const {push} = useRouter();
@@ -141,12 +142,12 @@ export default function Register() {
             <div className="flex items-center">
 
             </div>
-            <a
+            <Link
               className="text-sm mt-2 font-medium text-brand-500 hover:text-brand-600 dark:text-white"
               href=" "
             >
               Forgot Password?
-            </a>
+            </Link>
           </div>
           <Button
             type="submit"

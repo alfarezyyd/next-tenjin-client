@@ -48,7 +48,7 @@ export default function Login() {
         }
       }
     },
-    [window?.location.search, router]
+    [router]
   );
   const handleSubmit = async (e) => {
     setLoading(true);
@@ -153,12 +153,12 @@ export default function Login() {
           <div className="flex items-center">
 
           </div>
-          <a
+          <Link
             className="text-sm mt-2 font-medium text-brand-500 hover:text-brand-600 dark:text-white"
-            href=" "
+            href='auth/forgot-password'
           >
             Forgot Password?
-          </a>
+          </Link>
         </div>
         <Button
           type="submit"

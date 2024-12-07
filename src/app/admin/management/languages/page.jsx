@@ -34,7 +34,7 @@ export default function Page() {
       // Bersihkan query param setelah menampilkan toast
       router.replace('/admin/management/languages');
     }
-  }, [searchParams, router]);
+  }, [router]);
 
   useEffect(() => {
     async function loadAssets() {

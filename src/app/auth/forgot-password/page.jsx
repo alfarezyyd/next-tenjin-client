@@ -1,8 +1,7 @@
 "use client"
 import AuthWrapper from "@/components/auth/AuthWrapper";
-import {Button, Input} from "@nextui-org/react";
+import {Button, Input, InputOtp} from "@nextui-org/react";
 import {useState} from "react";
-import Cookies from "js-cookie";
 import {useRouter} from "next/navigation";
 
 
@@ -10,22 +9,24 @@ export default function Page() {
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState([]);
   const {push} = useRouter()
+  const [stepCount, setStepCount] = useState(0);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}authentication/self/forgot-password`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}authentication/self/generate-otp`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(email),
+        body: JSON.stringify({
+          email: email
+        }),
       });
-
-      const responseBody = await response.json();
+      console.log(await response.json());
       if (response.ok) {
-        push('/auth/login');  // Redirect to the dashboard or another protected route
+        setStepCount((count) => count + 1);
       } else {
         switch (response.status) {
           case 404: {
@@ -68,30 +69,38 @@ export default function Page() {
             <div className="h-px w-full bg-gray-200 dark:bg-navy-700"/>
             <div className="h-px w-full bg-gray-200 dark:bg-navy-700"/>
           </div>
-          <form onSubmit={handleSubmit}>
-            {/* Email */}
+          {stepCount === 0 &&
+            <form onSubmit={handleSubmit}>
+              <Input
+                label="Email"
+                name="email"
+                fullWidth
+                className="mb-3"
+                required
+                onChange={handleChange}
+              />
 
-            <Input
-              label="Email"
-              name="email"
-              fullWidth
-              className="mb-3"
-              required
-              onChange={handleChange}
-            />
-
-            <div className="mb-4 flex items-center justify-between px-2 dark:text-white">
-              <div className="flex items-center">
+              <div className="mb-4 flex items-center justify-between px-2 dark:text-white">
+                <div className="flex items-center">
+                </div>
+              </div>
+              <Button
+                type="submit"
+                size="lg"
+                color="primary"
+                className="linear mt-2 w-full rounded-xl font-light bg-brand-500 py-[12px] text-base text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700">
+                Email password reset link
+              </Button>
+            </form>
+          }
+          {stepCount === 1 && (
+            <div className="flex flex-col items-start gap-2">
+              <InputOtp length={6} value={value} onValueChange={setValue}/>
+              <div className="text-small text-default-500">
+                OTP value: <span className="text-md font-medium">{value}</span>
               </div>
             </div>
-            <Button
-              type="submit"
-              size="lg"
-              color="primary"
-              className="linear mt-2 w-full rounded-xl font-light bg-brand-500 py-[12px] text-base text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700">
-              Email password reset link
-            </Button>
-          </form>
+          )}
           <div className="mt-4">
 
           </div>

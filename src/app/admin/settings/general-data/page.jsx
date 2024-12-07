@@ -40,7 +40,7 @@ export default function Page() {
 
       // Bersihkan query param setelah menampilkan toast
     }
-  }, [searchParams, router]);
+  }, [router]);
 
 
   function handleChange(e) {

@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import {CommonUtil} from "@/common/utils/common-util";
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import {Loading} from "@/components/admin/Loading";
+import Link from "next/link";
 
 export default function Page() {
   const [accessToken, setAccessToken] = useState(null);
@@ -76,8 +77,8 @@ export default function Page() {
                 <div className="card-body">
                   <h4>Password</h4>
                   <p>Pengaturan mengenai perubahan password yang dimiliki pengguna</p>
-                  <a href="features-setting-detail.html" className="card-cta">Change Setting <i
-                    className="fas fa-chevron-right"></i></a>
+                  <Link href="/admin/settings/password" className="card-cta">Change Setting <i
+                    className="fas fa-chevron-right"></i></Link>
                 </div>
               </div>
             </div>

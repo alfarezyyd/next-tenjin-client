@@ -36,7 +36,7 @@ export default function Page() {
       // Bersihkan query param setelah menampilkan toast
       router.replace('/admin/management/tags');
     }
-  }, [searchParams, router]);
+  }, [router]);
 
   useEffect(() => {
     async function loadAssets() {

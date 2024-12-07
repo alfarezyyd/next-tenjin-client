@@ -37,8 +37,8 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    // Cek jika ada `notify=success` di query param
-    if (searchParams.get('notify') === 'success') {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
         position: 'top-right', autoClose: 3000, toastId: 'withdraw-success',
       });
@@ -46,7 +46,7 @@ export default function Page() {
       // Bersihkan query param setelah menampilkan toast
       router.replace('/admin/educations');
     }
-  }, [searchParams, router]);
+  }, [router]);
 
   async function createWithdrawRequest() {
     const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/withdraws`, {
