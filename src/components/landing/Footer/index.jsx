@@ -6,22 +6,27 @@ const products = [
   {
     id: 1,
     section: "Menu",
-    link: ['Home', 'About Us', 'Vision', 'Our Mentors'],
+    link: [
+      {'Home': '/'},
+      {'About Us': '#aboutus-section'},
+      {'Vision': '#vision-section'},
+      {'Our Mentors': '#our-mentors-section'}],
   },
   {
     id: 2,
-    section: "Category",
-    link: ['Design', 'Mockup', 'View all', 'Log In']
+    section: "Navigation",
+    link: [{'Dashboard': '/admin/dashboard'},
+      {'Marketplace': '/marketplace'}, {'Login': '/auth/login'}, {'Register': '/auth/register'}]
   },
   {
     id: 3,
-    section: "Pages",
-    link: ['Marketplace', 'Login', 'Register']
+    section: "Policy",
+    link: [{'Terms & Condition': '/tos'}]
   },
   {
     id: 4,
     section: "Contact Tenjin",
-    link: ['admin@tenjin.net', 'Changelog']
+    link: [{'Email': 'mailto:adityaalfarezyd@gmail.com'}, {'WhatsApp': 'https://wa.me/6289637577001'}]
   }
 ]
 
@@ -59,7 +64,8 @@ const footer = () => {
               <ul>
                 {product.link.map((link, index) => (
                   <li key={index} className='mb-5'>
-                    <Link href="/public" className="text-white text-lg font-normal mb-6 space-links">{link}</Link>
+                    <Link href={link[Object.keys(link)[0]]}
+                          className="text-white text-lg font-normal mb-6 space-links">{Object.keys(link)[0]}</Link>
                   </li>
                 ))}
               </ul>
