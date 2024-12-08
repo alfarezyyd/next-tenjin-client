@@ -1,10 +1,19 @@
+"use client"
 import Link from "next/link";
+import {useEffect, useState} from "react";
+import {usePathname} from "next/navigation";
 
-export const SettingSidebar = ({currentUser, lastPathName}) => {
- 
-  return (<ul className="nav nav-pills flex-column">
+export const SettingSidebar = ({currentUser}) => {
+  const [lastPathName, setLastPathName] = useState()
+  const pathName = usePathname()
+  useEffect(() => {
+    const splittedPath = pathName.split("/")
+    setLastPathName(splittedPath[splittedPath.length - 1]);
+    console.log(splittedPath)
+  }, [pathName]);
+  return (lastPathName && (<ul className="nav nav-pills flex-column">
     <li className="nav-item"><Link href="/admin/settings/general-data"
-                                   className={`nav-link ${lastPathName === 'general-data"' ? 'active' : ''}`}>General</Link>
+                                   className={`nav-link ${lastPathName === 'general-data' ? 'active' : ''}`}>General</Link>
     </li>
     <li className="nav-item"><Link href="/admin/settings/password"
                                    className={`nav-link ${lastPathName === 'password' ? 'active' : ''}`}>Password</Link>
@@ -18,5 +27,5 @@ export const SettingSidebar = ({currentUser, lastPathName}) => {
         Rekening</Link></li>
     </>)}
 
-  </ul>)
+  </ul>))
 }

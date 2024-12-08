@@ -13,8 +13,7 @@ import {FilePond, registerPlugin} from "react-filepond";
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-
-import Link from "next/link";
+import {SettingSidebar} from "@/components/admin/SettingSidebar";
 
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -24,6 +23,7 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [loadingData, setLoadingData] = useState(true);
   const [accessToken, setAccessToken] = useState(null);
+  const [decodedAccessToken, setDecodedAccessToken] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [payloadRequest, setPayloadRequest] = useState();
   const [errors, setErrors] = useState({});
@@ -68,6 +68,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchCurrentUser()
+    setDecodedAccessToken(CommonUtil.parseJwt(accessToken))
   }, [accessToken]);
 
 
@@ -171,17 +172,7 @@ export default function Page() {
                 <h4>Jump To</h4>
               </div>
               <div className="card-body">
-                <ul className="nav nav-pills flex-column">
-                  <li className="nav-item"><a href="#" className="nav-link active">General</a></li>
-                  <li className="nav-item"><Link href="/admin/settings/password"
-                                                 className="nav-link">Password</Link>
-                  </li>
-                  {currentUser?.Mentor && (<>
-                    <li className="nav-item"><a href="#" className="nav-link">Email</a></li>
-                    <li className="nav-item"><a href="#" className="nav-link">System</a></li>
-                  </>)}
-
-                </ul>
+                <SettingSidebar currentUser={decodedAccessToken}/>
               </div>
             </div>
           </div>

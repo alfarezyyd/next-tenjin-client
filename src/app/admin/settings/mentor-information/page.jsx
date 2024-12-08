@@ -109,8 +109,7 @@ export default function Page() {
         const mentorData = responseBody.result.data;
         const allFiles = [];
         setFormData({
-          bio: mentorData.bio,
-          deletedFilesName: []
+          bio: mentorData.bio, deletedFilesName: []
         })
         for (const resourceElement of mentorData.MentorResource) {
           console.log(resourceElement);
@@ -132,7 +131,7 @@ export default function Page() {
   async function handleMentorInformation(e) {
     e.preventDefault()
     console.log(file)
-   
+
     if (accessToken) {
       const form = new FormData();
 
@@ -214,7 +213,7 @@ export default function Page() {
                 <h4>Jump To</h4>
               </div>
               <div className="card-body">
-                {lastPathName && <SettingSidebar currentUser={decodedAccessToken} lastPathName={lastPathName}/>}
+                <SettingSidebar currentUser={decodedAccessToken}/>
               </div>
             </div>
           </div>

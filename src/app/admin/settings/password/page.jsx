@@ -11,6 +11,7 @@ import {toast} from "react-toastify";
 import Link from "next/link";
 import {FaEye, FaEyeSlash} from "react-icons/fa";
 import {CommonUtil} from "@/common/utils/common-util";
+import {SettingSidebar} from "@/components/admin/SettingSidebar";
 
 
 export default function Page() {
@@ -104,24 +105,7 @@ export default function Page() {
                     <h4>Jump To</h4>
                   </div>
                   <div className="card-body">
-
-                    <ul className="nav nav-pills flex-column">
-                      <li className="nav-item">
-                        <Link href="/admin/settings/general-data"
-                              className="nav-link ">General Data</Link></li>
-                      <li className="nav-item"><Link href="/admin/settings/password"
-                                                     className="nav-link active">Password</Link>
-                      </li>
-                      {
-                        decodedAccessToken?.mentorId && (
-                          <>
-                            <li className="nav-item"><a href="#" className="nav-link">Email</a></li>
-                            <li className="nav-item"><a href="#" className="nav-link">System</a></li>
-                          </>
-                        )
-                      }
-
-                    </ul>
+                    <SettingSidebar currentUser={decodedAccessToken}/>
                   </div>
                 </div>
               </div>
