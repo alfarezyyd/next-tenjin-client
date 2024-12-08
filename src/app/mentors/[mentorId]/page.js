@@ -249,7 +249,7 @@ export default function Page({}) {
                         <Image src={"/assets/coin.svg"} alt="Star" width={40}/>
                         <div className="flex flex-col justify-center">
                           <div className="text-base text-amber-400"><span
-                            className="text-xl font-bold">{activeCategory?.price}</span> /{activeCategory?.durationMinutes} Menit
+                            className="text-xl font-bold">Rp. {activeCategory?.price}</span> /{activeCategory?.durationMinutes} Menit
                           </div>
                         </div>
                       </div>

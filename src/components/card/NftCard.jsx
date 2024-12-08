@@ -43,7 +43,7 @@ const NftCard = ({title, author, price, image, uniqueId, mentorId, extra, durati
             <div className="flex flex-row items-center gap-3 mt-2">
               <Image src={"/assets/coin.svg"} alt="Star" width={30} height={30}/>
               <p className="mt-1 text-2xl font-bold text-amber-300 ">
-                {price} <span className='text-xl text-black font-semibold'>/{durationMinutes} menit</span>
+                Rp. {price} <span className='text-xl text-black font-semibold'>/{durationMinutes} menit</span>
               </p>
             </div>
           </div>
