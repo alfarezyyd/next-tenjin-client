@@ -17,13 +17,14 @@ export default function Page({}) {
   const [mentorData, setMentorData] = useState({});
   const pathName = useParams();
   const {push} = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState(null);
   const {isChatVisible, toggleChat, chatData, setChatData, activeChat, setActiveChat} = useContext(LandingContext);
   const [accessToken, setAccessToken] = useState(null);
   const [decodedAccessToken, setDecodedAccessToken] = useState(null);
   const [checkout, setCheckout] = useState("");
   const [isStateError, setIsStateError] = useState(false);
+  const [activeImage, setActiveImage] = useState("");
   useEffect(() => {
     if (pathName.mentorId) {
       fetchMentorData(pathName.mentorId);
@@ -70,6 +71,7 @@ export default function Page({}) {
 
   }, [decodedAccessToken]);
   const fetchMentorData = async (mentorId) => {
+    setLoading(true);
     let responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors/${mentorId}`, {
       method: 'GET', headers: {
         'Accept': 'application/json',
@@ -92,6 +94,7 @@ export default function Page({}) {
     } else {
       setIsStateError(true);
     }
+    setLoading(false);
   }
 
   function handleShare() {
@@ -107,9 +110,7 @@ export default function Page({}) {
   }
 
   if (isStateError) {
-    return (
-      <ErrorPage/>
-    )
+    return (<ErrorPage/>)
   }
   return (loading ? <Loading/> : (<LandingWrapper>
     <div id="upper-mentor"
@@ -150,21 +151,37 @@ export default function Page({}) {
         </div>
         <div className="w-full md:mx-auto md:w-full max-w-7xl rounded-2xl mb-5">
           <div className="flex flex-col md:flex-row  md:gap-5 items-center px-0 md:pl-0 justify-center md:items-start">
-            <div className="w-[95%]  md:w-1/3 z-0">
+            <div className="w-[95%] md:w-1/3 z-0">
               <Card isFooterBlurred radius="lg" className="border-none">
                 <Image
                   alt="Woman listening to music"
                   className="object-cover w-full h-80" // Set a fixed height
-                  src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${mentorData?.user?.photoPath}`}
+                  src={activeImage === "" ? `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${mentorData?.user?.photoPath}` : `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/mentor-resources/profile/${mentorData?.id}/${activeImage}`}
                   width={500}
                 />
                 <CardFooter
                   className="justify-center before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10"
                 >
                   <p className="text-md text-white/80">Profile Photo</p>
-
                 </CardFooter>
               </Card>
+              <div className="gap-2 flex flex-row overflow-x-auto whitespace-nowrap mt-2">
+                {mentorData.MentorResource !== undefined && mentorData?.MentorResource.map((item, index) => (/* eslint-disable no-console */
+                  <Card key={index} isPressable shadow="sm" onPress={() => {
+                    setActiveImage(item.imagePath)
+                  }}>
+                    <CardBody className="overflow-visible p-0">
+                      <Image
+                        alt={item.title}
+                        className="w-full object-cover h-[140px]"
+                        radius="lg"
+                        shadow="sm"
+                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/mentor-resources/profile/${mentorData?.id}/${item.imagePath}`}
+                        width="100%"
+                      />
+                    </CardBody>
+                  </Card>))}
+              </div>
               <div className="overflow-x-auto whitespace-nowrap py-4 px-2">
                 <div className="inline-flex gap-2">
                   {mentorData['MentorResources']?.length > 0 && mentorData['MentorResources']?.map((item, index) => (
@@ -279,9 +296,7 @@ export default function Page({}) {
                         // Hindari duplikasi dan tambahkan hanya jika berbeda
                         if (mentorData.user.uniqueId !== prevChatData.uniqueId && !updatedChatData[mentorData.user.uniqueId]) {
                           updatedChatData[mentorData.user.uniqueId] = {
-                            name: mentorData.user.name,
-                            uniqueId: mentorData.user.uniqueId,
-                            userId: mentorData.user.id,
+                            name: mentorData.user.name, uniqueId: mentorData.user.uniqueId, userId: mentorData.user.id,
                           };
                         } else {
                           console.log(chatData[mentorData.user.uniqueId])
@@ -339,23 +354,21 @@ export default function Page({}) {
                 <CardBody>
                   <div className="flex flex-col gap-3">
                     {activeCategory?.Review.map((review) => {
-                      return (
-                        <div className="flex flex-row gap-3" key={`review-${review.id}`}>
-                          <div className="flex flex-row gap-5">
-                            <Avatar
-                              src="https://i.pravatar.cc/150?u=a04258114e29026302d"
-                              size="lg"
-                              className="rounded-full flex-shrink-0"
-                            />
-                            <div className="flex flex-col">
-                              <h3 className="text-xl font-semibold">{review.User?.name}</h3>
-                              <p className="text-sm" dangerouslySetInnerHTML={{__html: review.review}}>
+                      return (<div className="flex flex-row gap-3" key={`review-${review.id}`}>
+                        <div className="flex flex-row gap-5">
+                          <Avatar
+                            src="https://i.pravatar.cc/150?u=a04258114e29026302d"
+                            size="lg"
+                            className="rounded-full flex-shrink-0"
+                          />
+                          <div className="flex flex-col">
+                            <h3 className="text-xl font-semibold">{review.User?.name}</h3>
+                            <p className="text-sm" dangerouslySetInnerHTML={{__html: review.review}}>
 
-                              </p>
-                            </div>
+                            </p>
                           </div>
                         </div>
-                      )
+                      </div>)
                     })}
 
                   </div>
