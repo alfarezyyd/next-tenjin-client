@@ -2,7 +2,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {useParams, useRouter} from "next/navigation";
 import LandingWrapper from "@/components/landing/LandingWrapper";
-import {Avatar, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Image} from "@nextui-org/react";
+import {Alert, Avatar, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Image} from "@nextui-org/react";
 import {Loading} from "@/components/admin/Loading";
 import {LandingContext} from "@/components/LandingProvider";
 import Cookies from "js-cookie";
@@ -12,6 +12,9 @@ import {PiHandWavingFill} from "react-icons/pi";
 import {MdOutlineChat} from "react-icons/md";
 import {toast} from "react-toastify";
 import ErrorPage from "@/app/errors/ErrorPage";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+
 
 export default function Page({}) {
   const [mentorData, setMentorData] = useState({});
@@ -25,6 +28,9 @@ export default function Page({}) {
   const [checkout, setCheckout] = useState("");
   const [isStateError, setIsStateError] = useState(false);
   const [activeImage, setActiveImage] = useState("");
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [slides, setSlides] = useState([]);
+  const [imageAssistant, setImageAssistant] = useState(null);
   useEffect(() => {
     if (pathName.mentorId) {
       fetchMentorData(pathName.mentorId);
@@ -36,7 +42,6 @@ export default function Page({}) {
   }, []);
 
   useEffect(() => {
-    console.log(accessToken);
     if (accessToken) {
       setDecodedAccessToken(CommonUtil.parseJwt(accessToken));
       console.log(CommonUtil.parseJwt(accessToken));
@@ -79,18 +84,30 @@ export default function Page({}) {
     });
     let responseBody = await responseFetch.json();
     let sumOfAllRating = 0;
+    console.log(responseBody['result']['data'])
+    let firstAssistance = responseBody['result']['data']['Assistance'][0];
     if (responseFetch.ok) {
       setMentorData(responseBody['result']['data']);
-      for (const reviewElement of responseBody['result']['data']['Assistance'][0]['Review']) {
+      for (const reviewElement of firstAssistance['Review']) {
         sumOfAllRating += Number(reviewElement.rating)
       }
-      const averageRatingOperation = sumOfAllRating / responseBody['result']['data']['Assistance'][0]['Review'].length
-      responseBody['result']['data']['Assistance'][0] = {
-        ...responseBody['result']['data']['Assistance'][0],
-        averageRating: isNaN(averageRatingOperation) ? 0 : averageRatingOperation,
+      const averageRatingOperation = sumOfAllRating / firstAssistance['Review'].length
+      firstAssistance = {
+        ...firstAssistance, averageRating: isNaN(averageRatingOperation) ? 0 : averageRatingOperation,
       }
-      setActiveCategory(responseBody['result']['data']['Assistance'][0]);
-      console.log(responseBody['result']['data'])
+      setActiveCategory(firstAssistance);
+      if (firstAssistance['AssistanceResource'].length > 0) {
+        console.log(firstAssistance['AssistanceResource']);
+        console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${responseBody['result']['data']['id']}/${firstAssistance['AssistanceResource'][0].assistantId}/${firstAssistance['AssistanceResource'][0].imagePath}`)
+        setSlides(firstAssistance['AssistanceResource'].map((item) => {
+          return {
+            src: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${responseBody['result']['data']['id']}/${item.assistantId}/${item.imagePath}`,
+            width: 3840,
+            height: 5760
+          }
+        }))
+        setImageAssistant(firstAssistance['AssistanceResource']);
+      }
     } else {
       setIsStateError(true);
     }
@@ -182,6 +199,34 @@ export default function Page({}) {
                     </CardBody>
                   </Card>))}
               </div>
+              <div className="flex flex-col gap-3 mt-5">
+                <Alert
+                  color="success"
+                  description={`${mentorData?.Education[0].name} - ${mentorData?.Education[0].studyField}`}
+                  isVisible={true}
+                  title={"Pendidikan Terakhir"}
+                  variant="faded"
+                  classNames={{
+                    base: [''],
+                    title: ['text-lg', 'font-bold'],
+                    description: ['text-md', 'font-semibold'],
+                    iconWrapper: ['my-auto']
+                  }}
+                />
+                <Alert
+                  color="primary"
+                  description={`${mentorData?.Experience[0].positionName} - ${mentorData?.Experience[0].companyName}`}
+                  isVisible={true}
+                  title={"Pengalaman Kerja Terakhir"}
+                  variant="flat"
+                  classNames={{
+                    base: [''],
+                    title: ['text-lg', 'font-bold'],
+                    description: ['text-md', 'font-semibold'],
+                    iconWrapper: ['my-auto']
+                  }}
+                />
+              </div>
               <div className="overflow-x-auto whitespace-nowrap py-4 px-2">
                 <div className="inline-flex gap-2">
                   {mentorData['MentorResources']?.length > 0 && mentorData['MentorResources']?.map((item, index) => (
@@ -213,9 +258,7 @@ export default function Page({}) {
                 <CardBody>
                   <div className="flex flex-row gap-2 md:gap-5">
                     {mentorData['Assistance']?.length > 0 && mentorData.Assistance.map((item, index) => {
-                      return (<div onClick={() => {
-                        handleWhenClick(item)
-                      }} key={`assistance-mentor${index}`}>
+                      return (<div key={`assistance-mentor${index}`}>
                         <Card shadow="sm" key={index} isPressable onPress={() => {
                           let sumOfAllRating = 0;
                           console.log(item)
@@ -225,6 +268,14 @@ export default function Page({}) {
                           console.log(sumOfAllRating, item['Review'].length)
                           item.averageRating = sumOfAllRating === 0 ? 0 : sumOfAllRating / item['Review'].length
                           setActiveCategory(item)
+                          setImageAssistant(item.AssistanceResource)
+                          setSlides(item.AssistanceResource.map(resource => {
+                            return {
+                              src: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${decodedAccessToken.mentorId}/${resource.assistantId}/${resource.imagePath}`,
+                              width: 3840,
+                              height: 5760
+                            }
+                          }))
                         }}
                               isBlurred
                               className={`${item.id === activeCategory?.id ? "bg-sky-500 text-white" : ""}`}>
@@ -331,6 +382,29 @@ export default function Page({}) {
                   <CardBody className="bg-gray-200 rounded-xl">
                     <p dangerouslySetInnerHTML={{__html: activeCategory?.description}}></p>
                   </CardBody>
+                  <CardFooter>
+                    <div className="gap-2 flex flex-row overflow-x-auto whitespace-nowrap mt-2">
+                      {imageAssistant.length > 0 && imageAssistant.map((item, index) => (/* eslint-disable no-console */
+                        <Card key={index} isPressable onPress={() => {
+                          setActiveImage(item.imagePath)
+                        }}>
+                          <CardBody className="overflow-visible p-0">
+                            <Image
+                              alt={item.title}
+                              className="w-full object-cover h-[140px]"
+                              onClick={() => setLightboxOpen(true)}
+                              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${decodedAccessToken?.mentorId}/${item.assistantId}/${item.imagePath}`}
+                              width="100%"
+                            />
+                          </CardBody>
+                        </Card>))}
+                    </div>
+                    <Lightbox
+                      open={lightboxOpen}
+                      close={() => setLightboxOpen(false)}
+                      slides={slides}
+                    />
+                  </CardFooter>
                 </div>
                 <Divider/>
                 <CardFooter className={"flex flex-row gap-3"}>
