@@ -385,25 +385,26 @@ export default function Page({}) {
                   <CardFooter>
                     <div className="gap-2 flex flex-row overflow-x-auto whitespace-nowrap mt-2">
                       {imageAssistant.length > 0 && imageAssistant.map((item, index) => (/* eslint-disable no-console */
-                        <Card key={index} isPressable onPress={() => {
-                          setActiveImage(item.imagePath)
-                        }}>
+                        <Card key={index} isPressable>
                           <CardBody className="overflow-visible p-0">
                             <Image
                               alt={item.title}
                               className="w-full object-cover h-[140px]"
-                              onClick={() => setLightboxOpen(true)}
+                              onClick={() => {
+                                setLightboxOpen(true)
+                                console.log(activeImage)
+                              }}
                               src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${decodedAccessToken?.mentorId}/${item.assistantId}/${item.imagePath}`}
                               width="100%"
+                            />
+                            <Lightbox
+                              open={lightboxOpen}
+                              close={() => setLightboxOpen(false)}
+                              slides={slides}
                             />
                           </CardBody>
                         </Card>))}
                     </div>
-                    <Lightbox
-                      open={lightboxOpen}
-                      close={() => setLightboxOpen(false)}
-                      slides={slides}
-                    />
                   </CardFooter>
                 </div>
                 <Divider/>
