@@ -11,6 +11,7 @@ import {BsInfoSquareFill} from "react-icons/bs";
 import {PiHandWavingFill} from "react-icons/pi";
 import {MdOutlineChat} from "react-icons/md";
 import {toast} from "react-toastify";
+import ErrorPage from "@/app/errors/ErrorPage";
 
 export default function Page({}) {
   const [mentorData, setMentorData] = useState({});
@@ -22,7 +23,7 @@ export default function Page({}) {
   const [accessToken, setAccessToken] = useState(null);
   const [decodedAccessToken, setDecodedAccessToken] = useState(null);
   const [checkout, setCheckout] = useState("");
-
+  const [isStateError, setIsStateError] = useState(false);
   useEffect(() => {
     if (pathName.mentorId) {
       fetchMentorData(pathName.mentorId);
@@ -89,7 +90,7 @@ export default function Page({}) {
       setActiveCategory(responseBody['result']['data']['Assistance'][0]);
       console.log(responseBody['result']['data'])
     } else {
-      console.error('Failed to fetch assistance dependency', responseBody);
+      setIsStateError(true);
     }
   }
 
@@ -101,10 +102,15 @@ export default function Page({}) {
         toast.success("Link copied to clipboard!")
       })
       .catch(err => {
-        console.error("Failed to copy the link: ", err);
+        toast.error("Error copied to clipboard!")
       });
   }
 
+  if (isStateError) {
+    return (
+      <ErrorPage/>
+    )
+  }
   return (loading ? <Loading/> : (<LandingWrapper>
     <div id="upper-mentor"
          className='mx-auto max-w-7xl py-8 lg:px-4 md:px-2 sm:px-0 bg-faqblue rounded-t-2xl mt-12 relative z-0 mb-12'>

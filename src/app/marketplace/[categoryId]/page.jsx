@@ -28,7 +28,9 @@ const Marketplace = () => {
       console.log(responseBody['result']['data'])
       setLoading(false);
     } else {
-      console.error('Failed to fetch assistance dependency', responseBody);
+      return {
+        notFound: true,
+      };
     }
   }
   return (

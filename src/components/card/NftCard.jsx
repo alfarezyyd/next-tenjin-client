@@ -6,7 +6,7 @@ import {Image} from "@nextui-org/react";
 
 const NftCard = ({title, author, price, image, uniqueId, mentorId, extra, durationMinutes, assistantId}) => {
   const [heart, setHeart] = useState(true);
-  return (<Link href={`${process.env.NEXT_PUBLIC_BASE_URL}mentors/${uniqueId} `}>
+  return (<Link href={`${process.env.NEXT_PUBLIC_BASE_URL}mentors/${uniqueId}`}>
     <Card
       extra={`flex flex-col w-full h-full !p-4 3xl:p-![18px] bg-white ${extra}`}
     >
@@ -41,7 +41,7 @@ const NftCard = ({title, author, price, image, uniqueId, mentorId, extra, durati
               By {author}{" "}
             </p>
             <div className="flex flex-row items-center gap-3 mt-2">
-              <Image src={"/assets/coin.svg"} alt="Star" width={30} height={30}/>
+              <Image src={"/assets/coin.svg"} className={"z-0"} alt="Star" width={30} height={30}/>
               <p className="mt-1 text-2xl font-bold text-amber-300 ">
                 Rp. {price} <span className='text-xl text-black font-semibold'>/{durationMinutes} menit</span>
               </p>
