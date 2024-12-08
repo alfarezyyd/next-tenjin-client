@@ -519,7 +519,6 @@ export default function Page() {
                           <div className="invalid-feedback">{errors.bankName}</div>
                         </div>
                       </div>
-
                       <div className="row col-md-9 mx-auto">
                         <div className="form-group col-6">
                           <label htmlFor="accountNumber">Nomor Rekening</label>

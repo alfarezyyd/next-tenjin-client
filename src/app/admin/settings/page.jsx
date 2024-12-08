@@ -104,8 +104,8 @@ export default function Page() {
                   <div className="card-body">
                     <h4>Rekening</h4>
                     <p>Pengaturan mengenai rekening yang digunakan oleh mentor</p>
-                    <a href="features-setting-detail.html" className="card-cta">Change Setting <i
-                      className="fas fa-chevron-right"></i></a>
+                    <Link href="/admin/settings/mentor-information-account" className="card-cta">Change Setting <i
+                      className="fas fa-chevron-right"></i></Link>
                   </div>
                 </div>
               </div>
