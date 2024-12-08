@@ -91,8 +91,8 @@ export default function Page() {
                   <div className="card-body">
                     <h4>Informasi Mentor</h4>
                     <p>Perubahan mengenai data pribadi mentor yang dimiliki</p>
-                    <a href="features-setting-detail.html" className="card-cta">Change Setting <i
-                      className="fas fa-chevron-right"></i></a>
+                    <Link href="/admin/settings/mentor-information" className="card-cta">Change Setting <i
+                      className="fas fa-chevron-right"></i></Link>
                   </div>
                 </div>
               </div>
