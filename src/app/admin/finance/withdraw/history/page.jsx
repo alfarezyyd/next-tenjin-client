@@ -120,9 +120,9 @@ export default function Page() {
                               <div className="empty-state-icon">
                                 <i className="fas fa-question"></i>
                               </div>
-                              <h2>We could`&apos;` find any data</h2>
+                              <h2>We could not find any data</h2>
                               <p className="lead">
-                                Sorry we ca`&apos;` find any data, to get rid of this message, make at least 1 entry.
+                                Sorry we can not find any data, to get rid of this message, make at least 1 entry.
                               </p>
 
                               <a href="#" className="mt-4 bb">Need Help?</a>
