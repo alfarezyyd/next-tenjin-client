@@ -71,7 +71,7 @@ export default function Login() {
         switch (response.status) {
           case 404: {
             setUserError({
-              email: "User with this email not found"
+              email: "User with this email not found",
             })
             break;
           }
