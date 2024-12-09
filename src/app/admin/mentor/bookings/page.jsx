@@ -161,15 +161,13 @@ export default function Page() {
           toast.success('Booking successfully rejected!', {
             position: 'top-right', autoClose: 3000, toastId: 'booking-update'
           })
-          const mentorOrder = allMentorOrder.find(value => value.id === activeBooking.id
-          );
-          mentorOrder.orderCondition = "REJECT";
-
           setAllMentorOrder((prevOrders) =>
-            prevOrders.map((order) =>
-              order.id === activeBooking.id ? {...order, ...mentorOrder} : order
+            prevOrders.filter((order) =>
+              order.id !== activeBooking.id
             )
           );
+          const $ = window.jQuery;
+          $("#exampleModal1").modal("hide");
         } else {
           console.error('Failed to fetch assistance', responseBody);
         }
@@ -197,7 +195,8 @@ export default function Page() {
           <h2 className="section-title">Overview</h2>
           <p className="section-lead w-50">
             Pantau dan kelola jadwal booking mentor dengan mudah. Lihat detail booking, atur jadwal, konfirmasi, atau
-            batalkan pertemuan langsung dari satu halaman.
+            batalkan pertemuan langsung dari satu halaman. <br/>
+            PERHATIAN! BOOKING HANYA BERISI PESANAN YANG BELUM SELESAI
           </p>
           <div className="row">
             {loading ? (  // Tampilkan loading selama data belum tersedia

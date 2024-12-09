@@ -20,26 +20,26 @@ export default function AdminSidebar({parsedJwt}) {
           </a>
         </li>
         {parsedJwt && parsedJwt.isManagement === false && (<>
-            <li className="menu-header">PENGGUNA</li>
-            <li className={`nav-item ${pathNames[1] === 'orders' ? 'active' : ''}`}>
-              <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/orders`}>
-                <i className="fas fa-receipt"></i>
-                <span>Order</span>
-              </a>
-            </li>
-            <li className={`nav-item ${pathNames[1] === 'settings' ? 'active' : ''}`}>
-              <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/settings`}>
-                <i className="fas fa-cogs"></i>
-                <span>Pengaturan</span>
-              </a>
-            </li>
-            <li className={`nav-item ${pathNames[2] === 'withdraw' ? 'active' : ''}`}>
-              <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/finance/withdraw`}>
-                <i className="fa-solid fa-coins"></i>
-                <span>Menarik Saldo</span>
-              </a>
-            </li>
-          </>)}
+          <li className="menu-header">PENGGUNA</li>
+          <li className={`nav-item ${pathNames[1] === 'orders' ? 'active' : ''}`}>
+            <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/orders`}>
+              <i className="fas fa-receipt"></i>
+              <span>Order</span>
+            </a>
+          </li>
+          <li className={`nav-item ${pathNames[1] === 'settings' ? 'active' : ''}`}>
+            <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/settings`}>
+              <i className="fas fa-cogs"></i>
+              <span>Pengaturan</span>
+            </a>
+          </li>
+          <li className={`nav-item ${pathNames[2] === 'withdraw' ? 'active' : ''}`}>
+            <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/finance/withdraw`}>
+              <i className="fa-solid fa-coins"></i>
+              <span>Menarik Saldo</span>
+            </a>
+          </li>
+        </>)}
         {parsedJwt && parsedJwt.isManagement && (<>
           <li className="menu-header">Management</li>
           <li className={`nav-item ${pathNames[2] === 'categories' ? 'active' : ''}`}>
@@ -177,22 +177,10 @@ export default function AdminSidebar({parsedJwt}) {
             </ul>
           </li>
           <li className={`nav-item ${pathNames[2] === 'bookings' ? 'active' : ''}`}>
-            <a href="#" className="nav-link has-dropdown" data-toggle="dropdown">
+            <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/bookings`}>
               <i className="fas fa-calendar-check"></i>
               <span>Booking</span>
             </a>
-            <ul className="dropdown-menu">
-              <li
-                className={`nav-item ${pathNames[2] === 'bookings' && pathNames[3] === undefined ? 'active' : ''}`}>
-                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/bookings`}>Lihat
-                  Data</a>
-              </li>
-              <li
-                className={`nav-item ${pathNames[2] === 'bookings' && pathNames[3] === "create" ? 'active' : ''}`}>
-                <a className="nav-link" href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/bookings/create`}>Buat
-                  Data</a>
-              </li>
-            </ul>
           </li>
         </>) : (<div className="p-3 hide-sidebar-mini">
           <a href="/mentors/register" className="btn btn-primary btn-lg btn-block btn-icon-split">
