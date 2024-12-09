@@ -33,7 +33,7 @@ export default function Page() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('notify') === 'success') {
       toast.success('Data submitted successfully!', {
-        position: 'top-right', autoClose: 100000,
+        position: 'top-right', autoClose: 3000, toastId: 'general-data-success'
       });
 
       router.replace('/admin/settings/general-data');
@@ -195,7 +195,7 @@ export default function Page() {
                                value={payloadRequest.email} onChange={handleChange}/>
                         {payloadRequest.emailVerifiedAt ?
                           <small>Email verified at : {payloadRequest.emailVerifiedAt.substring(0, 10)} </small> :
-                          <small>Verify your email here : <a href="">Test</a> </small>}
+                          <small>Verify your email : <a href="/admin/verify-email">here</a> </small>}
 
                       </div>
                     </div>

@@ -7,9 +7,13 @@ import "../../../public/assets/css/custom.scss"
 import AdminTopbar from "@/components/admin/AdminTopbar";
 import '@/../public/assets/css/components.css'
 import '@/../public/assets/css/style.css'
+import {CommonUtil} from "@/common/utils/common-util";
+import Cookies from "js-cookie";
+import AdminFooter from "@/components/admin/AdminFooter";
 
 export default function AdminFullWrapper({children}) {
   const [loading, setLoading] = useState(false);
+  const [decodedAccessToken, setDecodedAccessToken] = useState(null);
   useEffect(() => {
     document.body.classList.add('layout-3'); // Tambahkan class layout-3
     const loadAssets = async () => {
@@ -27,6 +31,7 @@ export default function AdminFullWrapper({children}) {
       setLoading(false);
     }
 
+    setDecodedAccessToken(CommonUtil.parseJwt(Cookies.get('accessToken')));
     return () => {
       // Bersihkan class saat komponen di-unmount
       document.body.classList.remove('layout-3');
@@ -42,19 +47,11 @@ export default function AdminFullWrapper({children}) {
         <div id="app">
           <div className="main-wrapper container">
             <div className="navbar-bg-full"></div>
-            <AdminTopbar/>
+            <AdminTopbar parsedJwt={decodedAccessToken}/>
             <div className="main-content">
               {children}
             </div>
-            <footer className="main-footer">
-              <div className="footer-left">
-                Copyright &copy; 2018 <div className="bullet"></div> Design By <a href="https://nauv.al/">Muhamad Nauval
-                Azhar</a>
-              </div>
-              <div className="footer-right">
-                2.3.0
-              </div>
-            </footer>
+            <AdminFooter/>
           </div>
         </div>
       )}
