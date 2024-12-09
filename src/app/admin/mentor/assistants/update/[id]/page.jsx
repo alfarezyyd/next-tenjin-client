@@ -293,25 +293,15 @@ export default function Page() {
       const $ = (await import('jquery')).default;
       $(categorySelectRef.current).val(existingAssistance.categoryId)
       $(formatSelectRef.current).val(existingAssistance.format)
+
+      const validTagIds = existingAssistance.AssistanceTag.map(item => item.tagId);
+      $(tagsSelectRef.current).val(validTagIds).trigger('change'); // Set default value
       const languageId = existingAssistance.AssistanceLanguage.map(language => language.languageId)
       $(languagesSelectRef.current).val(languageId).trigger('change');
     }
-    if (existingAssistance && assistanceDependency) {
+    if (existingAssistance && filteredTags) {
       loadExistingFormDataRef();
     }
-  }, [existingAssistance]);
-
-  useEffect(() => {
-    const updateTagsSelect = async () => {
-      if (existingAssistance && filteredTags && window.jQuery) {
-        const $ = window.jQuery
-        const validTagIds = existingAssistance.AssistanceTag.map(item => item.tagId);
-        const filteredData = filteredTags.filter(item => validTagIds.includes(item.id)).map((tag) => tag.id);
-        console.log(filteredData);
-        $(tagsSelectRef.current).val(filteredData).trigger('change'); // Set default value
-      }
-    }
-    updateTagsSelect();
   }, [existingAssistance, filteredTags]);
 
   useEffect(() => {
