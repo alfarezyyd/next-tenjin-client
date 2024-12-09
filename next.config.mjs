@@ -12,7 +12,11 @@ const nextConfig = {
     remotePatterns: [{
       protocol: 'https', hostname: 'tenjin.web.id', port: '8080', // Tambahkan port yang sesuai
       pathname: '**',
-    },],
+    },
+      {
+        protocol: 'http', hostname: 'localhost', port: '3001', // Tambahkan port yang sesuai
+        pathname: '**',
+      }],
   },
 };
 
