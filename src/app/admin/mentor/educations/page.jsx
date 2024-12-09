@@ -2,7 +2,6 @@
 import '@/../public/assets/css/educations.scss'
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import {useEffect, useState} from "react";
-import Image from "next/image"
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
@@ -77,15 +76,20 @@ export default function Page() {
             'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
           },
         });
-        const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
+          toast.success('Data deleted successfully!', {
+            position: 'top-right', autoClose: 3000, toastId: 'education-danger',
+          })
           setAllMentorEducation((prevAllMentorEducation) => prevAllMentorEducation.filter((education) => education.id !== id));
-          router.push('/admin/mentor/educations?notify=success');
         } else {
-          console.error('Failed to fetch experiences', responseBody);
+          toast.error('Error deleting education', {
+            'position': 'top-right', autoClose: 3000, toastId: 'education-danger',
+          });
         }
       } catch (error) {
-        console.error('Error fetching experiences:', error);
+        toast.error('Error deleting education', {
+          'position': 'top-right', autoClose: 3000, toastId: 'education-danger',
+        });
       } finally {
         setLoading(false); // Menghentikan loading ketika data sudah diterima
       }
@@ -112,92 +116,93 @@ export default function Page() {
         <div className="container">
           <div className="row">
             {loading ? (  // Tampilkan loading selama data belum tersedia
-              <Loading/>) : (allMentorEducation.length > 0 ? (allMentorEducation.map((mentorEducation) => (
-              <div className="col-sm-12 col-md-6 col-lg-4 mb-4 p-0 card-content-data" key={mentorEducation.id}>
-                <div className="card-custom text-dark card-has-bg click-col"
-                     style={{backgroundImage: `url(https://source.unsplash.com/600x900/?tech,street)`}}>
-                  <Image className="card-img d-none" src="https://source.unsplash.com/600x900/?tech,street"
-                         alt=" Lorem Ipsum Sit Amet Consectetur dipisi?"/>
-                  <div className="card-img-overlay d-flex flex-column">
-                    <div className="card-body">
-                      <small
-                        className="card-meta mb-2">{mentorEducation.degree} | {mentorEducation.studyField}</small>
-                      <h4 className="card-title mt-0 "><a className="text-dark"
-                                                          href="https://creativemanner.com">{mentorEducation.name}</a>
-                      </h4>
-                      <small><i
-                        className="far fa-clock"></i> {mentorEducation.startDate.substring(0, 10)} hingga {mentorEducation.endDate.substring(0, 10)}
-                      </small>
-                      <div id="accordion" className="pt-3">
-                        <div className="accordion">
-                          <div className="accordion-header" role="button" data-toggle="collapse"
-                               data-target="#panel-body-1"
-                               aria-expanded="true">
-                            <h4>Description</h4>
+              <Loading/>) : (allMentorEducation.length > 0 ? (
+              allMentorEducation.map((mentorEducation) => (
+                <div className="col-sm-12 col-md-6 col-lg-4 mb-4 p-0 card-content-data mx-2" key={mentorEducation.id}>
+                  <div className="card-custom text-dark card-has-bg click-col">
+                    <div className="card-img-overlay d-flex flex-column">
+                      <div className="card-body">
+                        <small
+                          className="card-meta mb-2">{mentorEducation.degree} | {mentorEducation.studyField}</small>
+                        <h4 className="card-title mt-0 "><a className="text-dark"
+                                                            href="https://creativemanner.com">{mentorEducation.name}</a>
+                        </h4>
+                        <small><i
+                          className="far fa-clock"></i> {mentorEducation.startDate.substring(0, 10)} hingga {mentorEducation.endDate.substring(0, 10)}
+                        </small>
+                        <div id="accordion" className="pt-3">
+                          <div className="accordion">
+                            <div className="accordion-header" role="button" data-toggle="collapse"
+                                 data-target="#panel-body-1"
+                                 aria-expanded="true">
+                              <h4>Description</h4>
+                            </div>
+                            <div className="accordion-body collapse show" id="panel-body-1"
+                                 data-parent="#accordion">
+                              <p
+                                className="mb-0 truncate-multiline"
+                                dangerouslySetInnerHTML={{__html: mentorEducation.description}}
+                              />
+                            </div>
                           </div>
-                          <div className="accordion-body collapse show" id="panel-body-1"
-                               data-parent="#accordion">
-                            <p
-                              className="mb-0 truncate-multiline"
-                              dangerouslySetInnerHTML={{__html: mentorEducation.description}}
-                            />
+                          <div className="accordion">
+                            <div className="accordion-header" role="button" data-toggle="collapse"
+                                 data-target="#panel-body-2">
+                              <h4>Society</h4>
+                            </div>
+                            <div className="accordion-body collapse" id="panel-body-2" data-parent="#accordion">
+                              <p className="mb-0 truncate-multiline"
+                                 dangerouslySetInnerHTML={{__html: mentorEducation.society}}/>
+                            </div>
                           </div>
-                        </div>
-                        <div className="accordion">
-                          <div className="accordion-header" role="button" data-toggle="collapse"
-                               data-target="#panel-body-2">
-                            <h4>Society</h4>
-                          </div>
-                          <div className="accordion-body collapse" id="panel-body-2" data-parent="#accordion">
-                            <p className="mb-0 truncate-multiline"
-                               dangerouslySetInnerHTML={{__html: mentorEducation.society}}/>
-                          </div>
-                        </div>
-                        <div className="accordion">
-                          <div className="accordion-header" role="button" data-toggle="collapse"
-                               data-target="#panel-body-3">
-                            <h4>Activity</h4>
-                          </div>
-                          <div className="accordion-body collapse" id="panel-body-3" data-parent="#accordion">
-                            <p className="mb-0 truncate-multiline"
-                               dangerouslySetInnerHTML={{__html: mentorEducation.activity}}/>
+                          <div className="accordion">
+                            <div className="accordion-header" role="button" data-toggle="collapse"
+                                 data-target="#panel-body-3">
+                              <h4>Activity</h4>
+                            </div>
+                            <div className="accordion-body collapse" id="panel-body-3" data-parent="#accordion">
+                              <p className="mb-0 truncate-multiline"
+                                 dangerouslySetInnerHTML={{__html: mentorEducation.activity}}/>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="card-footer">
-                      <div className="d-flex flex-row" style={{gap: 5}}>
-                        <a
-                          href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/educations/update/${mentorEducation.id}`}
-                          className="btn btn-info">Edit</a>
-                        <button className="btn btn-danger" onClick={() => {
-                          triggerDeleteEducation(mentorEducation.id)
-                        }}>Delete
-                        </button>
+                      <div className="card-footer">
+                        <div className="d-flex flex-row" style={{gap: 5}}>
+                          <a
+                            href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/mentor/educations/update/${mentorEducation.id}`}
+                            className="btn btn-info">Edit</a>
+                          <button className="btn btn-danger" onClick={() => {
+                            triggerDeleteEducation(mentorEducation.id)
+                          }}>Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>))) : (<div className="col-12 col-md-6 col-sm-12 p-0 mx-auto">
-              <div className="card">
-                <div className="card-header">
-                  <h4>Empty Data</h4>
-                </div>
-                <div className="card-body">
-                  <div className="empty-state" data-height="400">
-                    <div className="empty-state-icon">
-                      <i className="fas fa-question"></i>
+                </div>))
+            ) : (
+              <div className="col-12 col-md-6 col-sm-12 p-0 mx-auto">
+                <div className="card">
+                  <div className="card-header">
+                    <h4>Empty Data</h4>
+                  </div>
+                  <div className="card-body">
+                    <div className="empty-state" data-height="400">
+                      <div className="empty-state-icon">
+                        <i className="fas fa-question"></i>
+                      </div>
+                      <h2>We could not find any data</h2>
+                      <p className="lead">
+                        Sorry we can not find any data, to get rid of this message, make at least 1 entry.
+                      </p>
+                      <a href="/admin/mentor/experiences/create" className="btn btn-primary mt-4">Create new One</a>
+                      <a href="#" className="mt-4 bb">Need Help?</a>
                     </div>
-                    <h2>We could not find any data</h2>
-                    <p className="lead">
-                      Sorry we can not find any data, to get rid of this message, make at least 1 entry.
-                    </p>
-                    <a href="/admin/mentor/experiences/create" className="btn btn-primary mt-4">Create new One</a>
-                    <a href="#" className="mt-4 bb">Need Help?</a>
                   </div>
                 </div>
               </div>
-            </div>))}
+            ))}
           </div>
         </div>
       </div>

@@ -5,7 +5,6 @@ import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
 import CommonScript from "@/components/admin/CommonScript";
-import {useRouter} from "next/navigation";
 
 
 // Style
@@ -13,6 +12,7 @@ import 'select2/dist/css/select2.min.css'
 import 'bootstrap-daterangepicker/daterangepicker.css'
 import 'summernote/dist/summernote-bs4.css'
 import '@/../public/assets/css/components.css'
+import {toast} from "react-toastify";
 
 
 export default function Page() {
@@ -36,7 +36,6 @@ export default function Page() {
   const descriptionRef = useRef(null);
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
-  const router = useRouter()
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -127,11 +126,11 @@ export default function Page() {
 
     if (fetchResponse.ok) {
       setErrors({});
-      router.push('/admin/mentor/educations?notify=success'); // Tambahkan query param
+      window.location.href = '/admin/mentor/educations?notify=success'; // Tambahkan query param
     } else {
-      console.error('Failed to submit data', responseBody);
+      toast.error('Terdapat error dalam pengisian formulir Anda!')
       const errorMessages = {};
-      responseBody.errors.message.forEach((error) => {
+      responseBody.errors?.message.forEach((error) => {
         errorMessages[error.path[0]] = error.message;
       });
       setErrors(errorMessages);

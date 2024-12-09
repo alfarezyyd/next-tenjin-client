@@ -13,6 +13,7 @@ import 'select2/dist/css/select2.min.css'
 import 'bootstrap-daterangepicker/daterangepicker.css'
 import 'summernote/dist/summernote-bs4.css'
 import '@/../public/assets/css/components.css'
+import {toast} from "react-toastify";
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
@@ -126,9 +127,9 @@ export default function Page() {
       setErrors({});
       router.push('/admin/mentor/educations?notify=success'); // Tambahkan query param
     } else {
-      console.error('Failed to submit data', responseBody);
+      toast.error('Terdapat error dalam pengisian formulir Anda!')
       const errorMessages = {};
-      responseBody.errors.message.forEach((error) => {
+      responseBody.errors?.message.forEach((error) => {
         errorMessages[error.path[0]] = error.message;
       });
       setErrors(errorMessages);
@@ -190,9 +191,9 @@ export default function Page() {
         </div>
 
         <div className="section-body">
-          <h2 className="section-title">Membuat Data Pendidikan Mentor Baru</h2>
+          <h2 className="section-title">Mengubah Data Pendidikan Mentor</h2>
           <p className="section-lead col-6">
-            Pada halaman ini, Anda dapat membuat data pendidikan mentor baru dengan mengisi semua field formulir
+            Pada halaman ini, Anda dapat mengubah data pendidikan mentor dengan mengisi semua field formulir
             yang telah disediakan. Dengan jejak edukasi yang memukau, Anda dapat menarik mentee untuk belajar.
           </p>
 
@@ -200,7 +201,7 @@ export default function Page() {
             <div className="col-12">
               <div className="card">
                 <div className="card-header">
-                  <h4>Formulir Menambah Pendidikan Mentor Baru</h4>
+                  <h4>Formulir Mengubah Pendidikan Mentor</h4>
                 </div>
                 <div className="card-body">
                   <form onSubmit={handleSubmit}>

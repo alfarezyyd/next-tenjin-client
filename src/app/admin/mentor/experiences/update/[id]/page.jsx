@@ -254,7 +254,7 @@ export default function Page() {
     if (formData.deletedFilesName.indexOf(file.file.name) === -1) {
       console.log(file.file)
       setFormData({
-        ...formData, deletedFilesName: [...formData.deletedFilesName, file.file.name], // Membuat salinan baru dari array dan menambahkannya
+        ...formData, deletedFilesName: [...formData.deletedFilesName, file.file.name], // Mengubah salinan baru dari array dan menambahkannya
       });
     }
   }
@@ -281,9 +281,9 @@ export default function Page() {
         </div>
 
         <div className="section-body">
-          <h2 className="section-title">Membuat Data Pengalaman Mentor Baru</h2>
+          <h2 className="section-title">Mengubah Data Pengalaman Mentor</h2>
           <p className="section-lead col-6">
-            Pada halaman ini, Anda dapat membuat data pengalaman mentor baru dengan mengisi semua field formulir
+            Pada halaman ini, Anda dapat mengubah data pengalaman mentor dengan mengisi semua field formulir
             yang telah disediakan. Dengan pengalaman yang menarik, Anda dapat menarik mentee untuk belajar.
           </p>
 
