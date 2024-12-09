@@ -328,7 +328,7 @@ export default function Page() {
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium text-gray-900">Tax</p>
                   <p
-                    className="font-semibold text-gray-900">Rp {(Number((totalPrice === 0 ? checkoutItem['price'] : totalPrice) * 0.1).toFixed(1))}</p>
+                    className="font-semibold text-gray-900">Rp {(Number((totalPrice === 0 ? checkoutItem['price'] : totalPrice) * 0.11).toFixed(1))}</p>
                 </div>
               </div>
               <div className="mt-6 flex items-center justify-between">
@@ -336,7 +336,7 @@ export default function Page() {
                 <p
                   className="text-2xl font-semibold text-gray-900">
                   Rp{' '}
-                  {totalPrice === 0 ? checkoutItem['price'] : (totalPrice + totalPrice * 0.1).toFixed(1)}                </p>
+                  {totalPrice === 0 ? checkoutItem['price'] : (totalPrice + totalPrice * 0.11).toFixed(1)}                </p>
               </div>
             </div>
             <button onClick={triggerPayment}

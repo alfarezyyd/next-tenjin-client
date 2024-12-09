@@ -263,7 +263,7 @@ export default function Page() {
               </div>
             </div>
             <div className="col-lg-4">
-              <div className="card gradient-bottom">
+              <div className="card">
                 <div className="card-header d-flex flex-row">
                   <div className="col-md-8 col-lg-6">
                     <h4>Last 5 Orders</h4>
@@ -281,7 +281,8 @@ export default function Page() {
                   {lastFiveOrder?.length > 0 && lastFiveOrder.map((item, index) => {
                     return (
                       <li className="media" key={`last-five-orders-${index}`}>
-                        <img className="mr-3 rounded" width="55" src="../assets/img/products/product-3-50.png"
+                        <img className="mr-3 rounded" width="55"
+                             src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${item?.assistance?.category?.logo}`}
                              alt="product"/>
                         <div className="media-body">
                           <div className="float-right">
