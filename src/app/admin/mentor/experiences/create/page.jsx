@@ -220,7 +220,7 @@ export default function Page() {
             <h2 className="section-title">Membuat Data Pengalaman Mentor Baru</h2>
             <p className="section-lead col-6">
               Pada halaman ini, Anda dapat membuat data pengalaman mentor baru dengan mengisi semua field formulir
-              yang telah disediakan. Dengan pengalaman yang menarik, Anda dapat menarik mentee untuk belajar.
+              yang telah disediakan. Dengan pengalaman yang menarik, Anda dapat menarik cohort untuk belajar.
             </p>
 
             <div className="row">

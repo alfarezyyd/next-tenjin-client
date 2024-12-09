@@ -284,7 +284,7 @@ export default function Page() {
           <h2 className="section-title">Mengubah Data Pengalaman Mentor</h2>
           <p className="section-lead col-6">
             Pada halaman ini, Anda dapat mengubah data pengalaman mentor dengan mengisi semua field formulir
-            yang telah disediakan. Dengan pengalaman yang menarik, Anda dapat menarik mentee untuk belajar.
+            yang telah disediakan. Dengan pengalaman yang menarik, Anda dapat menarik cohort untuk belajar.
           </p>
 
           <div className="row">

@@ -71,7 +71,7 @@ export default function Page() {
 
     if (fetchResponse.ok) {
       setErrors({});
-      router.push('/admin/mentor/skills?notify=success');
+      window.location.href = '/admin/mentor/skills?notify=success';
     } else {
       console.error('Failed to submit data', responseBody);
       const errorMessages = {};
@@ -114,7 +114,7 @@ export default function Page() {
               <h2 className="section-title">Membuat Data Kemampuan Mentor Baru</h2>
               <p className="section-lead col-6">
                 Pada halaman ini, Anda dapat membuat data kemampuan mentor baru dengan mengisi semua field formulir
-                yang telah disediakan. Dengan kemampuan yang variatif, Anda dapat menarik mentee untuk belajar.
+                yang telah disediakan. Dengan kemampuan yang variatif, Anda dapat menarik cohort untuk belajar.
               </p>
 
               <div className="row">

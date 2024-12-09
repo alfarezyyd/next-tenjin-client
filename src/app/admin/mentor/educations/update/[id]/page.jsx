@@ -194,7 +194,7 @@ export default function Page() {
           <h2 className="section-title">Mengubah Data Pendidikan Mentor</h2>
           <p className="section-lead col-6">
             Pada halaman ini, Anda dapat mengubah data pendidikan mentor dengan mengisi semua field formulir
-            yang telah disediakan. Dengan jejak edukasi yang memukau, Anda dapat menarik mentee untuk belajar.
+            yang telah disediakan. Dengan jejak edukasi yang memukau, Anda dapat menarik cohort untuk belajar.
           </p>
 
           <div className="row">
