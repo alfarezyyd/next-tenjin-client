@@ -244,7 +244,7 @@ export default function Page() {
       setFiles(allFiles);
       setOldFiles(allFiles);
     } else {
-      if (fetchResponse.status === 404) {
+      if (fetchResponse.status === 404 || fetchResponse.status === 400) {
         setIsPageError(true);
       }
     }
