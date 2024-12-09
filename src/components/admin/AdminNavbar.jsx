@@ -147,7 +147,7 @@ export default function AdminNavbar({parsedJwt}) {
       {/*</li>*/}
       <li className="dropdown"><a href="#" data-toggle="dropdown"
                                   className="nav-link dropdown-toggle nav-link-lg nav-link-user">
-        <Image alt="image" width={0} height={0}
+        <Image alt="image" width={35} height={35}
                src={parsedJwt?.photoPath === undefined || parsedJwt?.photoPath === null ? '/assets/img/avatar/avatar-2.png' : `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${parsedJwt?.photoPath}`}
                className="rounded-circle mr-1" style={{
           width: '35px', height: '35px', objectFit: 'cover',

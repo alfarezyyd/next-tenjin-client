@@ -144,8 +144,8 @@ export default function Page() {
                   }}></p>
                   <div className=" d-flex flex-row">
                     <div className="article-user">
-                      <Image alt="image"
-                             src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${decodedAccessToken?.photoPath}`}
+                      <Image alt="image" width={45} height={45}
+                             src={decodedAccessToken?.photoPath === undefined || decodedAccessToken?.photoPath === null ? '/assets/img/avatar/avatar-2.png' : `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${decodedAccessToken?.photoPath}`}
                              className="rounded-circle mr-3" style={{
                         width: '45px', height: '45px', objectFit: 'cover',
                       }}/>
