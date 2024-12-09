@@ -1,5 +1,6 @@
 "use client"
 import AdminWrapper from "@/components/admin/AdminWrapper";
+import Image from 'next/image';
 
 export default function Page() {
   return (
@@ -22,8 +23,8 @@ export default function Page() {
             <div className="col-12 col-md-12 col-lg-5">
               <div className="card profile-widget">
                 <div className="profile-widget-header">
-                  <img alt="image" src="../assets/img/avatar/avatar-1.png"
-                       className="rounded-circle profile-widget-picture"/>
+                  <Image alt="image" src="../assets/img/avatar/avatar-1.png"
+                         className="rounded-circle profile-widget-picture"/>
                   <div className="profile-widget-items">
                     <div className="profile-widget-item">
                       <div className="profile-widget-item-label">Posts</div>

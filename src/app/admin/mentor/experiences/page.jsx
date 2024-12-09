@@ -9,6 +9,7 @@ import {useRouter} from "next/navigation";
 
 import {toast} from 'react-toastify';
 import '@/../public/assets/css/components.css'
+import Image from "next/image";
 
 export default function Page() {
   const [accessToken, setAccessToken] = useState(null);
@@ -116,9 +117,9 @@ export default function Page() {
                 <Loading/>) : (allMentorExperience.length > 0 ? (allMentorExperience.map((mentorExperience, index) => (
                 <article key={index} className="postcard light blue">
                   <a className="postcard__img_link" href="#">
-                    <img className="postcard__img"
-                         src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/experience-resources/${mentorExperience.mentorId}/${mentorExperience.id}/${mentorExperience.experienceResource[0].imagePath}`}
-                         alt="Image Title"/>
+                    <Image className="postcard__img"
+                           src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/experience-resources/${mentorExperience.mentorId}/${mentorExperience.id}/${mentorExperience.experienceResource[0].imagePath}`}
+                           alt="Image Title"/>
                   </a>
                   <div className="postcard__text t-dark">
                     <h1 className="postcard__title blue"><a href="#">{mentorExperience.positionName}</a></h1>

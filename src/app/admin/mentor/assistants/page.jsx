@@ -9,6 +9,7 @@ import {toast} from "react-toastify";
 
 import '@/../public/assets/css/components.css'
 import {CommonUtil} from "@/common/utils/common-util";
+import Image from "next/image";
 
 export default function Page() {
   const [accessToken, setAccessToken] = useState(null);
@@ -143,9 +144,9 @@ export default function Page() {
                   }}></p>
                   <div className=" d-flex flex-row">
                     <div className="article-user">
-                      <img alt="image"
-                           src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${decodedAccessToken?.photoPath}`}
-                           className="rounded-circle mr-3" style={{
+                      <Image alt="image"
+                             src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${decodedAccessToken?.photoPath}`}
+                             className="rounded-circle mr-3" style={{
                         width: '45px', height: '45px', objectFit: 'cover',
                       }}/>
                       <div className="article-user-details">

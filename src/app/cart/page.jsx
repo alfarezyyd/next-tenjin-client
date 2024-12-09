@@ -1,6 +1,7 @@
 "use client"
 
 import LandingWrapper from "@/components/landing/LandingWrapper";
+import Image from "next/image";
 
 export default function Page() {
   return (
@@ -33,8 +34,8 @@ export default function Page() {
               <div
                 className="flex flex-col min-[500px]:flex-row min-[500px]:items-center gap-5 py-6  border-b border-gray-200 group">
                 <div className="w-full md:max-w-[126px]">
-                  <img src="https://pagedone.io/asset/uploads/1701162850.png" alt="perfume bottle image"
-                       className="mx-auto rounded-xl"/>
+                  <Image src="https://pagedone.io/asset/uploads/1701162850.png" alt="perfume bottle image"
+                         className="mx-auto rounded-xl"/>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-4 w-full">
                   <div className="md:col-span-2">

@@ -10,6 +10,7 @@ import {CommonUtil} from "@/common/utils/common-util";
 import 'select2/dist/css/select2.min.css'
 import '@/../public/assets/css/components.css'
 import {toast} from "react-toastify";
+import Image from "next/image";
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
@@ -281,9 +282,9 @@ export default function Page() {
                   {lastFiveOrder?.length > 0 && lastFiveOrder.map((item, index) => {
                     return (
                       <li className="media" key={`last-five-orders-${index}`}>
-                        <img className="mr-3 rounded" width="55"
-                             src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${item?.assistance?.category?.logo}`}
-                             alt="product"/>
+                        <Image className="mr-3 rounded" width="55"
+                               src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${item?.assistance?.category?.logo}`}
+                               alt="product"/>
                         <div className="media-body">
                           <div className="float-right">
                             <div

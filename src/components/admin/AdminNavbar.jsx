@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import Link from "next/link";
 import {CommonUtil} from "@/common/utils/common-util";
+import Image from "next/image";
 
 export default function AdminNavbar({parsedJwt}) {
   return (<nav className="navbar navbar-expand-lg main-navbar">
@@ -25,9 +26,9 @@ export default function AdminNavbar({parsedJwt}) {
           <div className="dropdown-list-content dropdown-list-message">
             <a href="#" className="dropdown-item dropdown-item-unread">
               <div className="dropdown-item-avatar">
-                <img alt="image"
-                     src={`${parsedJwt?.photoPath === null ? '/assets/img/avatar/avatar-2.png' : process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${parsedJwt?.photoPath}`}
-                     className="rounded-circle"/>
+                <Image alt="image"
+                       src={`${parsedJwt?.photoPath === null ? '/assets/img/avatar/avatar-2.png' : process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${parsedJwt?.photoPath}`}
+                       className="rounded-circle"/>
                 <div className="is-online"></div>
               </div>
               <div className="dropdown-item-desc">
@@ -38,7 +39,7 @@ export default function AdminNavbar({parsedJwt}) {
             </a>
             <a href="#" className="dropdown-item dropdown-item-unread">
               <div className="dropdown-item-avatar">
-                <img alt="image" src="/assets/img/avatar/avatar-2.png" className="rounded-circle"/>
+                <Image alt="image" src="/assets/img/avatar/avatar-2.png" className="rounded-circle"/>
               </div>
               <div className="dropdown-item-desc">
                 <b>Dedik Sugiharto</b>
@@ -48,7 +49,7 @@ export default function AdminNavbar({parsedJwt}) {
             </a>
             <a href="#" className="dropdown-item dropdown-item-unread">
               <div className="dropdown-item-avatar">
-                <img alt="image" src="/assets/img/avatar/avatar-3.png" className="rounded-circle"/>
+                <Image alt="image" src="/assets/img/avatar/avatar-3.png" className="rounded-circle"/>
                 <div className="is-online"></div>
               </div>
               <div className="dropdown-item-desc">
@@ -59,7 +60,7 @@ export default function AdminNavbar({parsedJwt}) {
             </a>
             <a href="#" className="dropdown-item">
               <div className="dropdown-item-avatar">
-                <img alt="image" src="/assets/img/avatar/avatar-4.png" className="rounded-circle"/>
+                <Image alt="image" src="/assets/img/avatar/avatar-4.png" className="rounded-circle"/>
               </div>
               <div className="dropdown-item-desc">
                 <b>Ardian Rahardiansyah</b>
@@ -69,7 +70,7 @@ export default function AdminNavbar({parsedJwt}) {
             </a>
             <a href="#" className="dropdown-item">
               <div className="dropdown-item-avatar">
-                <img alt="image" src="/assets/img/avatar/avatar-5.png" className="rounded-circle"/>
+                <Image alt="image" src="/assets/img/avatar/avatar-5.png" className="rounded-circle"/>
               </div>
               <div className="dropdown-item-desc">
                 <b>Alfa Zulkarnain</b>
@@ -146,9 +147,9 @@ export default function AdminNavbar({parsedJwt}) {
       </li>
       <li className="dropdown"><a href="#" data-toggle="dropdown"
                                   className="nav-link dropdown-toggle nav-link-lg nav-link-user">
-        <img alt="image"
-             src={parsedJwt?.photoPath === null ? '/assets/img/avatar/avatar-2.png' : `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${parsedJwt?.photoPath}`}
-             className="rounded-circle mr-1" style={{
+        <Image alt="image"
+               src={parsedJwt?.photoPath === null ? '/assets/img/avatar/avatar-2.png' : `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${parsedJwt?.photoPath}`}
+               className="rounded-circle mr-1" style={{
           width: '35px', height: '35px', objectFit: 'cover',
         }}/>
         <div className="d-sm-none d-lg-inline-block">Hi, {parsedJwt?.name}</div>

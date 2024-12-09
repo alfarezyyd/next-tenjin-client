@@ -2,7 +2,7 @@
 import '@/../public/assets/css/educations.scss'
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import {useEffect, useState} from "react";
-
+import Image from "next/image"
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
@@ -116,8 +116,8 @@ export default function Page() {
               <div className="col-sm-12 col-md-6 col-lg-4 mb-4 p-0 card-content-data" key={mentorEducation.id}>
                 <div className="card-custom text-dark card-has-bg click-col"
                      style={{backgroundImage: `url(https://source.unsplash.com/600x900/?tech,street)`}}>
-                  <img className="card-img d-none" src="https://source.unsplash.com/600x900/?tech,street"
-                       alt=" Lorem Ipsum Sit Amet Consectetur dipisi?"/>
+                  <Image className="card-img d-none" src="https://source.unsplash.com/600x900/?tech,street"
+                         alt=" Lorem Ipsum Sit Amet Consectetur dipisi?"/>
                   <div className="card-img-overlay d-flex flex-column">
                     <div className="card-body">
                       <small
