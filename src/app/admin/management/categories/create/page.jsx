@@ -17,6 +17,7 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 // Style
 import '@/../public/assets/css/components.css'
 import 'filepond/dist/filepond.min.css'
+import {toast} from "react-toastify";
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -48,7 +49,6 @@ export default function Page() {
   // useCallback to memoize handleChange function
   const handleChange = useCallback((e) => {
     const {name, value} = e.target;
-    console.log(name, value)
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -59,6 +59,10 @@ export default function Page() {
   const handleSubmit = (async (event) => {
     event.preventDefault();
     const formDataPayload = new FormData();
+    if (files.length === 0) {
+      toast.error('Tolong upload minimal satu file')
+      return
+    }
     formDataPayload.append('name', formData.name);
     formDataPayload.append('logo', files[0].file);
 

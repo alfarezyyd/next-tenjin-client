@@ -57,7 +57,6 @@ export default function Page() {
         });
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
-          console.log(responseBody.result.data)
           setAllCategory(responseBody.result.data);
         } else {
           console.error('Failed to fetch category', responseBody);
@@ -81,7 +80,9 @@ export default function Page() {
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
           setAllCategory((prevAllMentorCategory) => prevAllMentorCategory.filter((category) => category.id !== id));
-          router.push('/admin/management/categories?notify=success');
+          toast.success('Data deleted successfully!', {
+            position: 'top-right', autoClose: 3000, toastId: 'categories-danger',
+          })
         } else {
           toast.error('Data gagal dihapus, kemungkinan terdapat asistensi yang menggunakan kategori tersebut')
           console.error('Failed to fetch categories', responseBody);

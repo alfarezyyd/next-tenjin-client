@@ -58,7 +58,6 @@ export default function Page() {
       setFiles([{
         source: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${responseBody.result.data.logo}`,
         options: {type: 'input'},
-
       }])
     } else {
       console.error('Failed to submit data', responseBody);
@@ -97,8 +96,8 @@ export default function Page() {
   // useCallback to memoize handleSubmit function
   const handleSubmit = (async (event) => {
     event.preventDefault();
-    console.log(files)
     const formDataPayload = new FormData();
+    console.log(files[0].file)
     formDataPayload.append('name', formData.name);
     formDataPayload.append('logo', files[0].file);
     const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/categories/${existingCategory.id}`, {
@@ -111,7 +110,7 @@ export default function Page() {
 
     if (fetchResponse.ok) {
       setErrors({});
-      router.push('/admin/management/categories?notify=success'); // Tambahkan query param
+      window.location.href = '/admin/management/categories?notify=success'; // Tambahkan query param
     } else {
       console.error('Failed to submit data', responseBody);
       const errorMessages = {};
