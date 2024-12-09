@@ -44,7 +44,6 @@ export default function Page({}) {
   useEffect(() => {
     if (accessToken) {
       setDecodedAccessToken(CommonUtil.parseJwt(accessToken));
-      console.log(CommonUtil.parseJwt(accessToken));
     }
   }, [accessToken]);
 
@@ -84,7 +83,6 @@ export default function Page({}) {
     });
     let responseBody = await responseFetch.json();
     let sumOfAllRating = 0;
-    console.log(responseBody['result']['data'])
     let firstAssistance = responseBody['result']['data']['Assistance'][0];
     if (responseFetch.ok) {
       setMentorData(responseBody['result']['data']);
@@ -97,8 +95,6 @@ export default function Page({}) {
       }
       setActiveCategory(firstAssistance);
       if (firstAssistance['AssistanceResource'].length > 0) {
-        console.log(firstAssistance['AssistanceResource']);
-        console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${responseBody['result']['data']['id']}/${firstAssistance['AssistanceResource'][0].assistantId}/${firstAssistance['AssistanceResource'][0].imagePath}`)
         setSlides(firstAssistance['AssistanceResource'].map((item) => {
           return {
             src: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${responseBody['result']['data']['id']}/${item.assistantId}/${item.imagePath}`,
@@ -261,17 +257,15 @@ export default function Page({}) {
                       return (<div key={`assistance-mentor${index}`}>
                         <Card shadow="sm" key={index} isPressable onPress={() => {
                           let sumOfAllRating = 0;
-                          console.log(item)
                           for (const reviewElement of item['Review']) {
                             sumOfAllRating += Number(reviewElement.rating)
                           }
-                          console.log(sumOfAllRating, item['Review'].length)
                           item.averageRating = sumOfAllRating === 0 ? 0 : sumOfAllRating / item['Review'].length
                           setActiveCategory(item)
                           setImageAssistant(item.AssistanceResource)
                           setSlides(item.AssistanceResource.map(resource => {
                             return {
-                              src: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${decodedAccessToken.mentorId}/${resource.assistantId}/${resource.imagePath}`,
+                              src: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${mentorData.id}/${resource.assistantId}/${resource.imagePath}`,
                               width: 3840,
                               height: 5760
                             }
@@ -342,7 +336,6 @@ export default function Page({}) {
                       radius="full" onClick={() => {
                       toggleChat()
                       setChatData((prevChatData) => {
-                        console.log(chatData[mentorData.user.uniqueId])
                         const updatedChatData = {...prevChatData}; // Salin data lama (spread operator untuk objek)
                         // Hindari duplikasi dan tambahkan hanya jika berbeda
                         if (mentorData.user.uniqueId !== prevChatData.uniqueId && !updatedChatData[mentorData.user.uniqueId]) {
@@ -350,7 +343,6 @@ export default function Page({}) {
                             name: mentorData.user.name, uniqueId: mentorData.user.uniqueId, userId: mentorData.user.id,
                           };
                         } else {
-                          console.log(chatData[mentorData.user.uniqueId])
                           setActiveChat({
                             name: chatData[mentorData.user.uniqueId].name,
                             messages: chatData[mentorData.user.uniqueId].messages,
@@ -392,9 +384,8 @@ export default function Page({}) {
                               className="w-full object-cover h-[140px]"
                               onClick={() => {
                                 setLightboxOpen(true)
-                                console.log(activeImage)
                               }}
-                              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${decodedAccessToken?.mentorId}/${item.assistantId}/${item.imagePath}`}
+                              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${mentorData.id}/${item.assistantId}/${item.imagePath}`}
                               width="100%"
                             />
                             <Lightbox
