@@ -11,6 +11,7 @@ import 'select2/dist/css/select2.min.css';
 
 // Style
 import '@/../public/assets/css/components.css'
+import {toast} from "react-toastify";
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
@@ -44,7 +45,6 @@ export default function Page() {
   // useCallback to memoize handleChange function
   const handleChange = useCallback((e) => {
     const {name, value} = e.target;
-    console.log(name, value)
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -74,7 +74,7 @@ export default function Page() {
       setErrors({});
       redirect('/admin/management/languages?notify=success'); // Tambahkan query param
     } else {
-      console.error('Failed to submit data', responseBody);
+      toast.error('Terdapat kesalahan dalam formulir Anda!')
       const errorMessages = {};
       responseBody.errors.message.forEach((error) => {
         errorMessages[error.path[0]] = error.message;

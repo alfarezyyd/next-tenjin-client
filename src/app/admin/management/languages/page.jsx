@@ -21,7 +21,7 @@ export default function Page() {
   });
   const router = useRouter();
   const [errors, setErrors] = useState({});
-  const [activeLanguage, setActiveLanguage] = useState({});
+  const [activeLanguage, setActiveLanguage] = useState(null);
   const categorySelectRef = useRef(null);
 
   useEffect(() => {
@@ -112,8 +112,8 @@ export default function Page() {
         });
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
-          setAllLanguage((prevAllMentorCategory) => prevAllMentorCategory.filter((education) => education.id !== id));
-          window.location.href = '/admin/management/languages?notify=success';
+          setAllLanguage((prevAllMentorCategory) => prevAllMentorCategory.filter((langauge) => langauge.id !== activeLanguage.id));
+          toast.success('Data berhasil dihapus')
         } else {
           toast.error('Data gagal dihapus, kemungkinan terdapat asistensi yang menggunakan kategori tersebut')
           console.error('Failed to fetch categories', responseBody);
@@ -231,7 +231,7 @@ export default function Page() {
                     <p className="lead">
                       Sorry we can not find any data, to get rid of this message, make at least 1 entry.
                     </p>
-                    <a href="/admin/management/categories/create" className="btn btn-primary mt-4">Create new
+                    <a href="/admin/management/languages/create" className="btn btn-primary mt-4">Create new
                       One</a>
                   </div>
                 </div>
