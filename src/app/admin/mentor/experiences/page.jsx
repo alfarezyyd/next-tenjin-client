@@ -79,9 +79,11 @@ export default function Page() {
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
           router.push('/admin/mentor/experiences?notify=success');
-          setAllMentorExperience({
-            ...allMentorExperience.filter((value) => value.id !== id),
-          })
+          setAllMentorExperience((prevState) => {
+            return prevState.filter((experience) => experience.id !== id);
+          });
+
+
         } else {
           console.error('Failed to fetch experiences', responseBody);
         }
@@ -117,7 +119,7 @@ export default function Page() {
                 <Loading/>) : (allMentorExperience.length > 0 ? (allMentorExperience.map((mentorExperience, index) => (
                 <article key={index} className="postcard light blue">
                   <a className="postcard__img_link" href="#">
-                    <Image width={100} height={100}
+                    <Image width={150} height={150}
                            className="postcard__img w-100 h-100"
                            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/experience-resources/${mentorExperience.mentorId}/${mentorExperience.id}/${mentorExperience.experienceResource[0].imagePath}`}
                            alt="Image Title"/>

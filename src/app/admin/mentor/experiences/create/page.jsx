@@ -196,170 +196,169 @@ export default function Page() {
   }
 
   return (
-    <>
-      {loading ? (
-        <Loading/>
-      ) : (
 
-        <AdminWrapper>
-          <section className="section">
-            <div className="section-header">
-              <h1>Pengalaman Mentor</h1>
-              <div className="section-header-breadcrumb">
-                <div className="breadcrumb-item active">
-                  <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin`}>Application</a>
-                </div>
-                <div className="breadcrumb-item">
-                  <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/experiences`}>Pengalaman Mentor</a>
-                </div>
-                <div className="breadcrumb-item">Buat Data</div>
+    loading ? (
+      <Loading/>
+    ) : (
+
+      <AdminWrapper>
+        <section className="section">
+          <div className="section-header">
+            <h1>Pengalaman Mentor</h1>
+            <div className="section-header-breadcrumb">
+              <div className="breadcrumb-item active">
+                <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin`}>Application</a>
               </div>
+              <div className="breadcrumb-item">
+                <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/experiences`}>Pengalaman Mentor</a>
+              </div>
+              <div className="breadcrumb-item">Buat Data</div>
             </div>
+          </div>
 
-            <div className="section-body">
-              <h2 className="section-title">Membuat Data Pengalaman Mentor Baru</h2>
-              <p className="section-lead col-6">
-                Pada halaman ini, Anda dapat membuat data pengalaman mentor baru dengan mengisi semua field formulir
-                yang telah disediakan. Dengan pengalaman yang menarik, Anda dapat menarik mentee untuk belajar.
-              </p>
+          <div className="section-body">
+            <h2 className="section-title">Membuat Data Pengalaman Mentor Baru</h2>
+            <p className="section-lead col-6">
+              Pada halaman ini, Anda dapat membuat data pengalaman mentor baru dengan mengisi semua field formulir
+              yang telah disediakan. Dengan pengalaman yang menarik, Anda dapat menarik mentee untuk belajar.
+            </p>
 
-              <div className="row">
-                <div className="col-12">
-                  <div className="card">
-                    <div className="card-header">
-                      <h4>Formulir Menambah Pengalaman Mentor Baru</h4>
-                    </div>
-                    <div className="card-body">
-                      <form onSubmit={handleSubmit}>
-                        <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Posisi</label>
-                          <div className="col-sm-12 col-md-7">
-                            <input
-                              type="text"
-                              className={`form-control ${errors.positionName ? 'is-invalid' : ''}`}
-                              name="positionName"
-                              value={formData.positionName}
-                              onChange={handleChange}
-                            />
-                            {errors.positionName && (
-                              <div className="invalid-feedback">{errors.positionName}</div>
-                            )}
-                          </div>
+            <div className="row">
+              <div className="col-12">
+                <div className="card">
+                  <div className="card-header">
+                    <h4>Formulir Menambah Pengalaman Mentor Baru</h4>
+                  </div>
+                  <div className="card-body">
+                    <form onSubmit={handleSubmit}>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Posisi</label>
+                        <div className="col-sm-12 col-md-7">
+                          <input
+                            type="text"
+                            className={`form-control ${errors.positionName ? 'is-invalid' : ''}`}
+                            name="positionName"
+                            value={formData.positionName}
+                            onChange={handleChange}
+                          />
+                          {errors.positionName && (
+                            <div className="invalid-feedback">{errors.positionName}</div>
+                          )}
                         </div>
-                        <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Nama
-                            Perusahaan</label>
-                          <div className="col-sm-12 col-md-7">
-                            <input
-                              type="text"
-                              className={`form-control ${errors.companyName ? 'is-invalid' : ''}`}
-                              name="companyName"
-                              value={formData.companyName}
-                              onChange={handleChange}
-                            />
-                            {errors.companyName && (
-                              <div className="invalid-feedback">{errors.companyName}</div>
-                            )}
-                          </div>
+                      </div>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Nama
+                          Perusahaan</label>
+                        <div className="col-sm-12 col-md-7">
+                          <input
+                            type="text"
+                            className={`form-control ${errors.companyName ? 'is-invalid' : ''}`}
+                            name="companyName"
+                            value={formData.companyName}
+                            onChange={handleChange}
+                          />
+                          {errors.companyName && (
+                            <div className="invalid-feedback">{errors.companyName}</div>
+                          )}
                         </div>
-                        <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tipe
-                            Employment</label>
-                          <div className="col-sm-12 col-md-7">
-                            <select className={`form-control select2 ${errors.employmentType ? 'is-invalid' : ''}`}
-                                    ref={employmentTypeRef} name="employmentType">
-                              {employmentTypes !== undefined && employmentTypes.map((value, index, array) => {
-                                return <option key={`employmentType-${index}`} value={value}>{value}</option>
-                              })}
-                            </select>
-                            {errors.employmentType && (
-                              <small className="invalid-feedback text-danger">{errors.employmentType}</small>
-                            )}
-                          </div>
+                      </div>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tipe
+                          Employment</label>
+                        <div className="col-sm-12 col-md-7">
+                          <select className={`form-control select2 ${errors.employmentType ? 'is-invalid' : ''}`}
+                                  ref={employmentTypeRef} name="employmentType">
+                            {employmentTypes !== undefined && employmentTypes.map((value, index, array) => {
+                              return <option key={`employmentType-${index}`} value={value}>{value}</option>
+                            })}
+                          </select>
+                          {errors.employmentType && (
+                            <small className="invalid-feedback text-danger">{errors.employmentType}</small>
+                          )}
                         </div>
-                        <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Lokasi</label>
-                          <div className="col-sm-12 col-md-7">
-                            <input
-                              type="text"
-                              className={`form-control ${errors.location ? 'is-invalid' : ''}`}
-                              name="location"
-                              value={formData.location}
-                              onChange={handleChange}
-                            />
-                            {errors.location && (
-                              <div className="invalid-feedback">{errors.location}</div>
-                            )}
-                          </div>
+                      </div>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Lokasi</label>
+                        <div className="col-sm-12 col-md-7">
+                          <input
+                            type="text"
+                            className={`form-control ${errors.location ? 'is-invalid' : ''}`}
+                            name="location"
+                            value={formData.location}
+                            onChange={handleChange}
+                          />
+                          {errors.location && (
+                            <div className="invalid-feedback">{errors.location}</div>
+                          )}
                         </div>
-                        <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tanggal Mulai</label>
-                          <div className="col-sm-12 col-md-7">
-                            <input
-                              type="text"
-                              ref={startDateRef}
-                              className={`form-control datepicker ${errors.startDate ? 'is-invalid' : ''}`}
-                              name="startDate"
-                              value={formData.startDate}
-                            />
-                            {errors.startDate && (
-                              <div className="invalid-feedback">{errors.startDate}</div>
-                            )}
-                          </div>
+                      </div>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tanggal Mulai</label>
+                        <div className="col-sm-12 col-md-7">
+                          <input
+                            type="text"
+                            ref={startDateRef}
+                            className={`form-control datepicker ${errors.startDate ? 'is-invalid' : ''}`}
+                            name="startDate"
+                            value={formData.startDate}
+                          />
+                          {errors.startDate && (
+                            <div className="invalid-feedback">{errors.startDate}</div>
+                          )}
                         </div>
-                        <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tanggal
-                            Selesai</label>
-                          <div className="col-sm-12 col-md-7">
-                            <input
-                              type="text"
-                              ref={endDateRef}
-                              className={`form-control datepicker ${errors.endDate ? 'is-invalid' : ''}`}
-                              name="endDate"
-                              value={formData.endDate}
-                            />
-                            {errors.endDate && (
-                              <div className="invalid-feedback">{errors.endDate}</div>
-                            )}
-                          </div>
+                      </div>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tanggal
+                          Selesai</label>
+                        <div className="col-sm-12 col-md-7">
+                          <input
+                            type="text"
+                            ref={endDateRef}
+                            className={`form-control datepicker ${errors.endDate ? 'is-invalid' : ''}`}
+                            name="endDate"
+                            value={formData.endDate}
+                          />
+                          {errors.endDate && (
+                            <div className="invalid-feedback">{errors.endDate}</div>
+                          )}
                         </div>
-                        <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
-                                 htmlFor="description">Deskripsi</label>
-                          <div className="col-sm-12 col-md-7">
+                      </div>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
+                               htmlFor="description">Deskripsi</label>
+                        <div className="col-sm-12 col-md-7">
                             <textarea ref={descriptionRef}
                                       className={`summernote-simple ${errors.description ? 'is-invalid' : ''}`}
                                       name="description" id="description"></textarea>
-                          </div>
                         </div>
-                        <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Gambar</label>
-                          <div className="col-sm-12 col-md-7">
-                            <FilePond
-                              files={files}
-                              onupdatefiles={setFiles}
-                              allowMultiple={true}
-                              maxFiles={3}
-                              name="experienceResources"
-                              labelIdle='Seret & Letakkan Gambar Anda atau <span class="filepond--label-action">Browse</span>'
-                            />
-                          </div>
+                      </div>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Gambar</label>
+                        <div className="col-sm-12 col-md-7">
+                          <FilePond
+                            files={files}
+                            onupdatefiles={setFiles}
+                            allowMultiple={true}
+                            maxFiles={3}
+                            name="experienceResources"
+                            labelIdle='Seret & Letakkan Gambar Anda atau <span class="filepond--label-action">Browse</span>'
+                          />
                         </div>
-                        <div className="form-group row mb-4">
-                          <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"></label>
-                          <div className="col-sm-12 col-md-7">
-                            <button className="btn btn-primary" type="submit">Publish</button>
-                          </div>
+                      </div>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"></label>
+                        <div className="col-sm-12 col-md-7">
+                          <button className="btn btn-primary" type="submit">Publish</button>
                         </div>
-                      </form>
-                    </div>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
             </div>
-          </section>
-        </AdminWrapper>
-      )}
-    </>
+          </div>
+        </section>
+      </AdminWrapper>
+    )
   );
 }
