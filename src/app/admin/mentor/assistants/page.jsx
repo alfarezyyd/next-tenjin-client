@@ -20,7 +20,7 @@ export default function Page() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('notify') === 'success') {
-      toast.success('Data deleted successfully!', {
+      toast.success('Data submitted successfully!', {
         position: 'top-right', autoClose: 3000, toastId: 'assistants-success',
       })
       // Bersihkan query param setelah menampilkan toast

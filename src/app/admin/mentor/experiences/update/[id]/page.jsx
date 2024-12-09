@@ -12,7 +12,7 @@ import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
 import CommonScript from "@/components/admin/CommonScript";
-import {useParams, useRouter} from "next/navigation";
+import {useParams} from "next/navigation";
 import {CommonUtil} from "@/common/utils/common-util";
 
 // Style
@@ -32,7 +32,6 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [employmentTypes, setEmploymentTypes] = useState([]);
   const [accessToken, setAccessToken] = useState();
-  const router = useRouter();
   const [files, setFiles] = useState([]);
   const [oldFiles, setOldFiles] = useState([]);
   const [errors, setErrors] = useState({});
@@ -174,7 +173,7 @@ export default function Page() {
     const responseBody = await fetchResponse.json();
     if (fetchResponse.ok) {
       setErrors({});
-      router.push('/admin/mentor/experiences?notify=success'); // Tambahkan query param
+      window.location.href = '/admin/mentor/experiences?notify=success'; // Tambahkan query param
     } else {
       const errorMessages = {};
       responseBody.errors?.message.forEach((error) => {

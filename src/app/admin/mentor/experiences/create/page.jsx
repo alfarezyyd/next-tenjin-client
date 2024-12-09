@@ -12,7 +12,6 @@ import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
 import CommonScript from "@/components/admin/CommonScript";
-import {useRouter} from "next/navigation";
 
 // Style
 import 'select2/dist/css/select2.min.css'
@@ -27,7 +26,6 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
-  const router = useRouter()
 
   const [employmentTypes, setEmploymentTypes] = useState([]);
   const [files, setFiles] = useState([]);
@@ -166,7 +164,7 @@ export default function Page() {
 
     if (fetchResponse.ok) {
       setErrors({});
-      router.push('/admin/mentor/experiences?notify=success'); // Tambahkan query param
+      window.location.href = '/admin/mentor/experiences?notify=success'; // Tambahkan query param
     } else {
       toast.error('Terdapat error dalam pengisian formulir Anda!')
       const errorMessages = {};
