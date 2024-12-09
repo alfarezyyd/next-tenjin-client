@@ -1,15 +1,12 @@
 export const Loading = () => {
-  return (<div className="w-screen h-screen flex justify-center items-center fixed inset-0">
-    <div className="lds-grid">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="relative">
+        <div className="h-24 w-24 rounded-full border-t-8 border-b-8 border-sky-400"></div>
+        <div
+          className="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-sky-900 animate-spin">
+        </div>
+      </div>
     </div>
-  </div>)
+  )
 }

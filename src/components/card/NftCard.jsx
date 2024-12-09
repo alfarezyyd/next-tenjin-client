@@ -37,9 +37,11 @@ const NftCard = ({title, author, price, image, uniqueId, mentorId, extra, durati
               {" "}
               {title}{" "}
             </p>
-            <p className="text-lg font-medium text-gray-600 md:mt-2">
-              By {author}{" "}
-            </p>
+            {author && (
+              <p className="text-lg font-medium text-gray-600 md:mt-2">
+                By {author}{" "}
+              </p>
+            )}
             <div className="flex flex-row items-center gap-3 mt-2">
               <Image src={"/assets/coin.svg"} className={"z-0"} alt="Star" width={30} height={30}/>
               <p className="mt-1 text-2xl font-bold text-amber-300 ">
@@ -62,7 +64,8 @@ const NftCard = ({title, author, price, image, uniqueId, mentorId, extra, durati
         </div>
       </div>
     </Card>
-  </Link>);
+  </Link>)
+    ;
 };
 
 export default NftCard;
