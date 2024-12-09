@@ -168,8 +168,9 @@ export default function Page() {
       setErrors({});
       router.push('/admin/mentor/experiences?notify=success'); // Tambahkan query param
     } else {
+      toast.error('Terdapat error dalam pengisian formulir Anda!')
       const errorMessages = {};
-      responseBody.errors.message.forEach((error) => {
+      responseBody.errors?.message.forEach((error) => {
         errorMessages[error.path[0]] = error.message;
       });
       setErrors(errorMessages);

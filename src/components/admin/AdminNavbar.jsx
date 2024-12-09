@@ -27,7 +27,6 @@ export default function AdminNavbar({parsedJwt}) {
       {/*      <a href="#" className="dropdown-item dropdown-item-unread">*/}
       {/*        <div className="dropdown-item-avatar">*/}
       {/*          <Image alt="image" width={0} height={0}*/}
-      {/*                 src={`${parsedJwt?.photoPath === null ? '/assets/img/avatar/avatar-2.png' : process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${parsedJwt?.photoPath}`}*/}
       {/*                 className="rounded-circle"/>*/}
       {/*          <div className="is-online"></div>*/}
       {/*        </div>*/}
@@ -149,7 +148,7 @@ export default function AdminNavbar({parsedJwt}) {
       <li className="dropdown"><a href="#" data-toggle="dropdown"
                                   className="nav-link dropdown-toggle nav-link-lg nav-link-user">
         <Image alt="image" width={0} height={0}
-               src={parsedJwt?.photoPath === null ? '/assets/img/avatar/avatar-2.png' : `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${parsedJwt?.photoPath}`}
+               src={parsedJwt?.photoPath === undefined || parsedJwt?.photoPath === null ? '/assets/img/avatar/avatar-2.png' : `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${parsedJwt?.photoPath}`}
                className="rounded-circle mr-1" style={{
           width: '35px', height: '35px', objectFit: 'cover',
         }}/>

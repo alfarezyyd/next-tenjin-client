@@ -117,7 +117,8 @@ export default function Page() {
                 <Loading/>) : (allMentorExperience.length > 0 ? (allMentorExperience.map((mentorExperience, index) => (
                 <article key={index} className="postcard light blue">
                   <a className="postcard__img_link" href="#">
-                    <Image className="postcard__img"
+                    <Image width={100} height={100}
+                           className="postcard__img w-100 h-100"
                            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/experience-resources/${mentorExperience.mentorId}/${mentorExperience.id}/${mentorExperience.experienceResource[0].imagePath}`}
                            alt="Image Title"/>
                   </a>

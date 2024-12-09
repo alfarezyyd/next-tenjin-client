@@ -22,6 +22,7 @@ import 'filepond/dist/filepond.min.css'
 import 'summernote/dist/summernote-bs4.css'
 import '@/../public/assets/css/components.css'
 import {toast} from "react-toastify";
+import ErrorPageAdmin from "@/app/errors/ErrorPageAdmin";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -35,13 +36,13 @@ export default function Page() {
   const [files, setFiles] = useState([]);
   const [oldFiles, setOldFiles] = useState([]);
   const [errors, setErrors] = useState({});
+  const [isPageError, setIsPageError] = useState(false);
 
   // Ref
   const employmentTypeRef = useRef(null)
   const startDateRef = useRef(null)
   const endDateRef = useRef(null)
   const descriptionRef = useRef(null)
-  const jQueryRef = useRef(null);
 
   const routerParam = useParams();
 
@@ -61,7 +62,7 @@ export default function Page() {
       await CommonScript();
       // Import jQuery
       const $ = (await import('jquery')).default;
-      jQueryRef.current = $;
+      window.jQuery = $;
 
       $(employmentTypeRef.current).on("change", () => {
         setFormDataRef((prevFormDataRef) => ({
@@ -103,8 +104,9 @@ export default function Page() {
 
     return () => {
       // Cleanup: Destroy select2 when component unmounts or before reinitializing
-      if (employmentTypeRef.current && jQueryRef.current) {
-        jQueryRef.current(employmentTypeRef.current).select2('destroy'); // Hancurkan select2
+      const $ = window.jQuery;
+      if (employmentTypeRef.current && $) {
+        $(employmentTypeRef.current).select2('destroy'); // Hancurkan select2
       }
     };
   }, []);
@@ -114,8 +116,8 @@ export default function Page() {
   }, [accessToken]);
 
   useEffect(() => {
-    if (jQueryRef.current && employmentTypeRef.current) {
-      const $ = jQueryRef.current;
+    const $ = window.jQuery;
+    if ($ && employmentTypeRef.current) {
 
       // Re-initialize select2 whenever component updates
       $(employmentTypeRef.current).select2(); // Pastikan hanya satu instance select2 yang aktif
@@ -164,9 +166,6 @@ export default function Page() {
       form.append(`experienceResources`, file.file);
     });
 
-    for (let [key, value] of form.entries()) {
-    }
-
     const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/experiences/${routerParam.id}`, {
       method: 'PUT', body: form, includeCredentials: true, headers: {
         'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
@@ -202,7 +201,9 @@ export default function Page() {
         ...prevFormDataRef, employmentType: responseBody['result']['data'][0],
       }))
     } else {
-      console.error(responseBody);
+      if (fetchResponse.status === 404) {
+        setIsPageError(true)
+      }
     }
   }
 
@@ -230,6 +231,9 @@ export default function Page() {
         endDate: resultData.endDate,
         description: resultData.description,
       })
+      const $ = window.jQuery;
+      $(employmentTypeRef.current).val(resultData.employmentType);
+
       const allFiles = [];
       for (const resourceElement of resultData['experienceResource']) {
         allFiles.push({
@@ -241,7 +245,9 @@ export default function Page() {
       setFiles(allFiles);
       setOldFiles(allFiles);
     } else {
-      console.error(responseBody);
+      if (fetchResponse.status === 404) {
+        setIsPageError(true);
+      }
     }
   }
 
@@ -254,6 +260,11 @@ export default function Page() {
     }
   }
 
+  if (isPageError) {
+    return (
+      <ErrorPageAdmin/>
+    )
+  }
   return (<>
     {loading ? (<Loading/>) : (<AdminWrapper>
       <section className="section">
@@ -320,7 +331,7 @@ export default function Page() {
                                 ref={employmentTypeRef} name="employmentType">
                           {employmentTypes !== undefined && employmentTypes.map((value, index, array) => {
                             return <option key={`employmentType-${index}`} value={value}
-                                           defaultChecked={value === formDataRef.employmentType}>{value}</option>
+                            >{value}</option>
                           })}
                         </select>
                         {errors.employmentType && (
