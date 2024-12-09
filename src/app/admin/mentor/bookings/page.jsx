@@ -8,12 +8,11 @@ import {useRouter} from "next/navigation";
 import {toast} from "react-toastify";
 
 import '@/../public/assets/css/components.css'
-import {CommonUtil} from "@/common/utils/common-util";
 
 export default function Page() {
   const [accessToken, setAccessToken] = useState(null);
-  const [decodedAccessToken, setDecodedAccessToken] = useState(null);
   const [allMentorOrder, setAllMentorOrder] = useState({});
+  const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [activeBooking, setActiveBooking] = useState(null);
@@ -33,6 +32,7 @@ export default function Page() {
   useEffect(() => {
     async function loadAssets() {
       const $ = (await import('jquery')).default;
+      await import('sweetalert/dist/sweetalert.min')
       await CommonScript();
     }
 
@@ -45,7 +45,6 @@ export default function Page() {
   useEffect(() => {
     if (accessToken) {
       fetchMentorNotDoneOrder();
-      setDecodedAccessToken(CommonUtil.parseJwt(accessToken));
     }
   }, [accessToken]);
 
@@ -70,34 +69,6 @@ export default function Page() {
     }
   }
 
-  async function triggerDeleteAssistant(id) {
-    if (accessToken) {
-      try {
-        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/assistants/${id}`, {
-          method: 'DELETE', includeCredentials: true, headers: {
-            'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
-          },
-        });
-        const responseBody = await responseFetch.json();
-        if (responseFetch.ok) {
-          toast.success('Data deleted successfully!', {
-            position: 'top-right', autoClose: 3000, toastId: 'booking-delete'
-          })
-          setAllMentorOrder(allMentorOrder.filter(value => value.id !== id));
-        } else {
-          console.error('Failed to fetch assistance', responseBody);
-        }
-      } catch (error) {
-        console.error('Error fetching experiences:', error);
-      } finally {
-        setLoading(false); // Menghentikan loading ketika data sudah diterima
-      }
-    }
-  }
-
-  useEffect(() => {
-
-  }, [allMentorOrder])
 
   async function triggerUpdateBooking(orderId, condition) {
     if (accessToken) {
@@ -119,10 +90,11 @@ export default function Page() {
           mentorOrder.orderCondition = condition;
           console.log(allMentorOrder, mentorOrder);
 
-          setAllMentorOrder([
-            ...allMentorOrder.filter(value => value.id !== orderId),
-            mentorOrder,
-          ]);
+          setAllMentorOrder((prevOrders) =>
+            prevOrders.map((order) =>
+              order.id === activeBooking.id ? {...order, ...mentorOrder} : order
+            )
+          );
         } else {
           console.error('Failed to fetch assistance', responseBody);
         }
@@ -171,6 +143,43 @@ export default function Page() {
         setLoading(false); // Menghentikan loading ketika data sudah diterima
       }
     }
+  }
+
+  async function triggerRejectBooking() {
+    if (accessToken) {
+      try {
+        const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors/orders/booking/reject`, {
+          method: 'POST', includeCredentials: true, headers: {
+            'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json',
+          }, body: JSON.stringify({
+            orderId: activeBooking.id,
+            reason: reason,
+          }),
+        });
+        const responseBody = await responseFetch.json();
+        if (responseFetch.ok) {
+          toast.success('Booking successfully rejected!', {
+            position: 'top-right', autoClose: 3000, toastId: 'booking-update'
+          })
+          const mentorOrder = allMentorOrder.find(value => value.id === activeBooking.id
+          );
+          mentorOrder.orderCondition = "REJECT";
+
+          setAllMentorOrder((prevOrders) =>
+            prevOrders.map((order) =>
+              order.id === activeBooking.id ? {...order, ...mentorOrder} : order
+            )
+          );
+        } else {
+          console.error('Failed to fetch assistance', responseBody);
+        }
+      } catch (error) {
+        console.error('Error fetching experiences:', error);
+      } finally {
+        setLoading(false); // Menghentikan loading ketika data sudah diterima
+      }
+    }
+
   }
 
   return (<AdminWrapper>
@@ -222,7 +231,7 @@ export default function Page() {
                           <li className="list-group-item d-flex justify-content-between align-items-center">
                             Status
                             <span
-                              className={`badge badge-${value.orderCondition === "WAITING" ? 'warning' : 'primary'} badge-pill ml-3`}>{value.orderCondition}</span>
+                              className={`badge badge-${value.orderCondition === "WAITING" ? 'warning' : value.orderCondition === "REJECT" ? 'danger' : 'primary'} badge-pill ml-3`}>{value.orderCondition}</span>
                           </li>
                           <li className="list-group-item d-flex justify-content-between align-items-center">
                             Meeting Link
@@ -233,11 +242,29 @@ export default function Page() {
                           {value.orderCondition === "WAITING" &&
                             <li className="list-group-item d-flex justify-content-between align-items-center">
                               <button className="btn btn-sm btn-primary" onClick={() => {
-                                triggerUpdateBooking(value.id, "APPROVED")
+                                swal({
+                                  title: 'Apakah anda yakin menerima pesanan?',
+                                  text: 'Ketika menerima, Anda harus menyelesaikan pertemuan tersebut',
+                                  icon: 'warning',
+                                  buttons: true,
+                                  dangerMode: true,
+                                })
+                                  .then((willDelete) => {
+                                    if (willDelete) {
+                                      triggerUpdateBooking(value.id, "APPROVED")
+                                      swal('Booking berhasil diterima', {
+                                        icon: 'success',
+                                      });
+                                    } else {
+                                      swal('Booking tetap dalam keadaan WAIITNG');
+                                    }
+                                  });
                               }}>Setujui
                               </button>
                               <button className="btn btn-sm btn-danger" onClick={() => {
-                                triggerUpdateBooking(value.id, "REJECT")
+                                setActiveBooking(value)
+                                const $ = window.jQuery;
+                                $('#exampleModal1').modal('show');
                               }}>Tolak
                               </button>
                             </li>
@@ -296,6 +323,36 @@ export default function Page() {
               <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
               <button type="button" className="btn btn-primary" onClick={() => {
                 triggerUpdateLink()
+              }}>Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="modal fade" tabIndex="-1" role="dialog" id="exampleModal1">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Alasan Penolakan</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>Berikan alasan yang dapat diterima mengapa anda menolak</p>
+              <div className="form-group">
+                <div className="form-group">
+                  <input type="text" className="form-control" name="meetingPasskey" value={reason}
+                         onChange={(e) => {
+                           setReason(e.target.value)
+                         }}/>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer bg-whitesmoke br">
+              <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" className="btn btn-primary" onClick={() => {
+                triggerRejectBooking()
               }}>Save changes
               </button>
             </div>
