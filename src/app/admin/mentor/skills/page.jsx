@@ -38,6 +38,7 @@ export default function Page() {
   useEffect(() => {
     async function loadAssets() {
       const $ = (await import('jquery')).default;
+      window.jQuery = $;
       await import('summernote/dist/summernote-bs4.js');
       await CommonScript();
       $(descriptionRef.current).on("summernote.change", () => {
@@ -81,10 +82,25 @@ export default function Page() {
     if (fetchResponse.ok) {
       setErrors({});
       router.push('/admin/mentor/skills?notify=success');
+      setAllMentorSkill((prevState) => {
+        return prevState.map((skill) => {
+          if (skill.id === activeId) {
+            // Buat salinan skill untuk memastikan immutability
+            return {
+              ...skill,
+              name: formData.name,
+              description: formData.description,
+            };
+          }
+          return skill;
+        });
+      });
     } else {
-      console.error('Failed to submit data', responseBody);
+      toast.error('Data failed to be updated', {
+        position: 'top-right', autoClose: 3000, toastId: 'skills-danger'
+      });
       const errorMessages = {};
-      responseBody.errors.message.forEach((error) => {
+      responseBody.errors?.message.forEach((error) => {
         errorMessages[error.path[0]] = error.message;
       });
       setErrors(errorMessages);
@@ -144,6 +160,7 @@ export default function Page() {
           toast.success('Data submitted successfully!', {
             position: 'top-right', autoClose: 10000,
           });
+          const $ = window.jQuery;
           $(descriptionRef.current).summernote('code', '');
           setActiveId(null);
           setFormData({
