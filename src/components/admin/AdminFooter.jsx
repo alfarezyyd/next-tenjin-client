@@ -4,7 +4,7 @@ export default function AdminFooter() {
       Copyright &copy; {new Date().getFullYear()}
       <div className="bullet"></div>
       Developed By <a href={`${process.env.NEXT_PUBLIC_BASE_URL}`}>
-      Tenjin Tomodachi
+      Programmer Pemulax
     </a>
     </div>
     <div className="footer-right">

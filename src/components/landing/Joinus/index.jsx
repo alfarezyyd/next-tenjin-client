@@ -1,6 +1,6 @@
 const Join = () => {
   return (
-    <div className="bg-joinus my-32">
+    <div className="bg-joinus my-32" id="join-us-section">
       <div className='mx-auto max-w-2xl lg:max-w-7xl sm:py-4 lg:px-8'>
 
         <div className="text-center">

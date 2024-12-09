@@ -10,7 +10,7 @@ const navigation = [{name: 'About Us', href: '#aboutus-section', current: false}
   name: 'Vision', href: '#vision-section', current: false
 }, {name: 'Our Mentors', href: '#our-mentors-section', current: false}, {
   name: 'Testimonial', href: '#testimonial-section', current: false
-}, {name: 'Blog', href: '#blog-section', current: false},];
+}, {name: 'Join Us', href: '#join-us-section', current: false},];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');

@@ -40,20 +40,6 @@ const footer = () => {
 
           <div className='col-span-4'>
             <h3 className='text-white text-4xl font-semibold leading-9 mb-4 lg:mb-20'>Tenjin Platform</h3>
-            <div className='flex gap-4'>
-              <div className='footer-icons'>
-                <Link href="https://facebook.com"><Image src={'/images/footer/vec.svg'} alt="facebook" width={15}
-                                                         height={20}/></Link>
-              </div>
-              <div className='footer-icons'>
-                <Link href="https://twitter.com"><Image src={'/images/footer/twitter.svg'} alt="twitter" width={20}
-                                                        height={20}/></Link>
-              </div>
-              <div className='footer-icons'>
-                <Link href="https://instagram.com"><Image src={'/images/footer/instagram.svg'} alt="instagram"
-                                                          width={20} height={20}/></Link>
-              </div>
-            </div>
           </div>
 
           {/* CLOUMN-2/3 */}
@@ -83,12 +69,9 @@ const footer = () => {
             <div>
               <h3 className='text-center md:text-start text-offwhite text-lg'>@{new Date().getFullYear()} - All Rights
                 Reserved by <Link
-                  href="https://adminmart.com/" target="_blank"> Tenjin Tomodachi</Link></h3>
+                  href="/" target="_blank"> Programmer Pemulax</Link></h3>
             </div>
             <div className="flex justify-center md:justify-end">
-              <Link href="/public">
-                <h3 className="text-offwhite pr-6">Privacy policy</h3>
-              </Link>
               <Link href="/tos">
                 <h3 className="text-offwhite pl-6 border-solid border-l border-footer">Terms & conditions</h3>
               </Link>

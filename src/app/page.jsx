@@ -8,7 +8,6 @@ import Beliefs from '/src/components/landing/Beliefs/index';
 import Wework from '/src/components/landing/Wework/index';
 import FAQ from '/src/components/landing/FAQ/index';
 import Testimonials from '/src/components/landing/Testimonials/index';
-import Articles from '/src/components/landing/Articles/index';
 import Joinus from '/src/components/landing/Joinus/index';
 import './globals.css'
 
@@ -24,7 +23,6 @@ export default function Page() {
       <Wework/>
       <FAQ/>
       <Testimonials/>
-      <Articles/>
       <Joinus/>
     </main>
     <Footer/>
