@@ -125,7 +125,7 @@ export default function Page() {
 
     if (fetchResponse.ok) {
       setErrors({});
-      router.push('/admin/mentor/educations?notify=success'); // Tambahkan query param
+      window.location.href = '/admin/mentor/educations?notify=success'; // Tambahkan query param
     } else {
       toast.error('Terdapat error dalam pengisian formulir Anda!')
       const errorMessages = {};
