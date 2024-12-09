@@ -197,7 +197,6 @@ export default function Page() {
                         Sorry we can not find any data, to get rid of this message, make at least 1 entry.
                       </p>
                       <a href="/admin/mentor/educations/create" className="btn btn-primary mt-4">Create new One</a>
-                      <a href="#" className="mt-4 bb">Need Help?</a>
                     </div>
                   </div>
                 </div>

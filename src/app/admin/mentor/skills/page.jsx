@@ -176,7 +176,7 @@ export default function Page() {
           <h2 className="section-title">Overview</h2>
           <p className="section-lead w-50">
             Atur keahlian mentor dengan mudah. Tambahkan, perbarui, atau hapus keterampilan untuk mencerminkan kemampuan
-            mereka secara akurat.
+            mentor secara akurat.
           </p>
           <section className="hero-section">
             <div className="d-flex flex-row">
@@ -205,7 +205,6 @@ export default function Page() {
                             </p>
                             <a href="/admin/mentor/skills/create" className="btn btn-primary mt-4">Create new
                               One</a>
-                            <a href="#" className="mt-4 bb">Need Help?</a>
                           </div>
                         </div>
                       </div>
