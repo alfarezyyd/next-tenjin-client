@@ -22,7 +22,7 @@ export default function Page() {
   });
   const router = useRouter();
   const [errors, setErrors] = useState({});
-  const [activeTag, setActiveTag] = useState({});
+  const [activeTag, setActiveTag] = useState(null);
   const [allCategory, setAllCategory] = useState([]);
   const categorySelectRef = useRef(null);
 
@@ -44,7 +44,6 @@ export default function Page() {
       window.jQuery = $
       await import('select2/dist/js/select2.min');
       $(categorySelectRef.current).on("change", () => {
-        console.log($(categorySelectRef.current).val())
         setSelectedCategoryId($(categorySelectRef.current).val());
       });
       await CommonScript();
@@ -116,13 +115,14 @@ export default function Page() {
             'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`,
           },
         });
-        const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
           setAllTags((prevAllMentorCategory) => prevAllMentorCategory.filter((category) => category.id !== activeTag.id));
           setFormData({
             name: ''
           })
-          window.location.href = '/admin/management/tags?notify=success';
+          toast.success('Tags deleted successfully!', {
+            position: 'top-right', autoClose: 3000, toastId: 'tags-danger',
+          })
         } else {
           toast.error('Data gagal dihapus, kemungkinan terdapat asistensi yang menggunakan tag tersebut')
         }
@@ -151,6 +151,7 @@ export default function Page() {
 
     if (fetchResponse.ok) {
       setErrors({});
+      toast.success('Data berhasil diperbarui')
       const tag = allTags.find((tag) => tag.id === activeTag.id);
       tag.name = formData.name
       setAllTags([
@@ -158,7 +159,7 @@ export default function Page() {
         tag // Tambahkan tag baru
       ]);
     } else {
-      console.error('Failed to submit data', responseBody);
+      toast.error('Terdapat kesalahan dalam formulir Anda!')
       const errorMessages = {};
       responseBody.errors.message.forEach((error) => {
         errorMessages[error.path[0]] = error.message;
@@ -181,13 +182,8 @@ export default function Page() {
   }, [errors]);
 
 
-  async function triggerDelete() {
-
-  }
-
   async function triggerEditForm(tag) {
     const $ = window.jQuery;
-    console.log(tag)
     $(categorySelectRef.current).val(tag.categoryId).trigger('change');
     setActiveTag(tag)
     setFormData((prevFormData) => ({
@@ -240,7 +236,7 @@ export default function Page() {
                     <p className="lead">
                       Sorry we can not find any data, to get rid of this message, make at least 1 entry.
                     </p>
-                    <a href="/admin/management/categories/create" className="btn btn-primary mt-4">Create new
+                    <a href="/admin/management/tags/create" className="btn btn-primary mt-4">Create new
                       One</a>
                   </div>
                 </div>

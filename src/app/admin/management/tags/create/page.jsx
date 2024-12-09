@@ -5,12 +5,12 @@ import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
 import CommonScript from "@/components/admin/CommonScript";
-import {redirect, useRouter} from "next/navigation";
 
 import 'select2/dist/css/select2.min.css';
 
 // Style
 import '@/../public/assets/css/components.css'
+import {toast} from "react-toastify";
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
@@ -25,7 +25,6 @@ export default function Page() {
   });
 
   const [errors, setErrors] = useState({});
-  const router = useRouter()
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -33,7 +32,7 @@ export default function Page() {
       const $ = (await import('jquery')).default;
       await import('select2/dist/js/select2.min');
       $(categorySelectRef.current).on("change", () => {
-        console.log($(categorySelectRef.current).val())
+
         setSelectedCategoryId($(categorySelectRef.current).val());
       });
       await CommonScript()
@@ -59,7 +58,6 @@ export default function Page() {
       });
       const responseBody = await responseFetch.json();
       if (responseFetch.ok) {
-        console.log(responseBody.result.data)
         setAllCategory(responseBody.result.data);
         setSelectedCategoryId(responseBody.result.data[0].id);
       } else {
@@ -82,7 +80,6 @@ export default function Page() {
   // useCallback to memoize handleChange function
   const handleChange = useCallback((e) => {
     const {name, value} = e.target;
-    console.log(name, value)
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -111,9 +108,9 @@ export default function Page() {
 
     if (fetchResponse.ok) {
       setErrors({});
-      redirect('/admin/management/tags?notify=success'); // Tambahkan query param
+      window.location.href = '/admin/management/tags?notify=success'; // Tambahkan query param
     } else {
-      console.error('Failed to submit data', responseBody);
+      toast.error('Terdapat kesalahan dalam formulir Anda!')
       const errorMessages = {};
       responseBody.errors.message.forEach((error) => {
         errorMessages[error.path[0]] = error.message;
