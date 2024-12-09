@@ -70,16 +70,14 @@ export default function Page() {
       $(tagsSelectRef.current).on("change", () => {
         const selectedValues = $(tagsSelectRef.current).val(); // Menghasilkan array
         setFormData((prev) => ({
-          ...prev,
-          tagId: [...new Set([...prev.tagId, ...selectedValues.map(Number)])], // Gabungkan & hilangkan duplikat
+          ...prev, tagId: [...new Set([...prev.tagId, ...selectedValues.map(Number)])], // Gabungkan & hilangkan duplikat
         }));
       });
 
       $(languagesSelectRef.current).on("change", () => {
         const selectedValues = $(languagesSelectRef.current).val(); // Menghasilkan array
         setFormData((prev) => ({
-          ...prev,
-          languages: [...new Set([...prev.languages, ...selectedValues.map(Number)])], // Gabungkan & hilangkan duplikat
+          ...prev, languages: [...new Set([...prev.languages, ...selectedValues.map(Number)])], // Gabungkan & hilangkan duplikat
         }));
       });
       $(formatSelectRef.current).on("change", () => {
@@ -139,8 +137,7 @@ export default function Page() {
           $(tagsSelectRef.current).on("change", () => {
             const selectedValues = $(tagsSelectRef.current).val(); // Menghasilkan array
             setFormData((prev) => ({
-              ...prev,
-              tagId: [...new Set([...prev.tagId, ...selectedValues.map(Number)])], // Gabungkan & hilangkan duplikat
+              ...prev, tagId: [...new Set([...prev.tagId, ...selectedValues.map(Number)])], // Gabungkan & hilangkan duplikat
             }));
           });
         }
@@ -295,6 +292,7 @@ export default function Page() {
       $(formatSelectRef.current).val(existingAssistance.format)
 
       const validTagIds = existingAssistance.AssistanceTag.map(item => item.tagId);
+      console.log(validTagIds)
       $(tagsSelectRef.current).val(validTagIds).trigger('change'); // Set default value
       const languageId = existingAssistance.AssistanceLanguage.map(language => language.languageId)
       $(languagesSelectRef.current).val(languageId).trigger('change');
@@ -323,29 +321,35 @@ export default function Page() {
   }), [errors]);
 
   async function handleRemoveFile(error, file) {
-    setFormData((prevFormData) => ({
-      ...prevFormData, deletedFilesName: [...formData.deletedFilesName, file.file.name]
-    }))
+    if (formData.deletedFilesName.indexOf(file.file.name) === -1) {
+      console.log(file.file)
+      setFormData({
+        ...formData, deletedFilesName: [...formData.deletedFilesName, file.file.name], // Mengubah salinan baru dari array dan menambahkannya
+      });
+    }
   }
 
+  useEffect(() => {
+
+  }, [formData.topic]);
   return (<>
     {loading ? (<Loading/>) : (<AdminWrapper>
       <section className="section">
         <div className="section-header">
-          <h1>Pendidikan Mentor</h1>
+          <h1>Asistensi Mentor</h1>
           <div className="section-header-breadcrumb">
             <div className="breadcrumb-item active">
               <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin`}>Application</a>
             </div>
             <div className="breadcrumb-item">
-              <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/experiences`}>Pendidikan Mentor</a>
+              <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/experiences`}>Asistensi Mentor</a>
             </div>
             <div className="breadcrumb-item">Buat Data</div>
           </div>
         </div>
 
         <div className="section-body">
-          <h2 className="section-title">Membuat Data Pendidikan Mentor Baru</h2>
+          <h2 className="section-title">Membuat Data Asistensi Mentor Baru</h2>
           <p className="section-lead col-6">
             Pada halaman ini, Anda dapat membuat data pendidikan mentor baru dengan mengisi semua field formulir
             yang telah disediakan. Dengan jejak edukasi yang memukau, Anda dapat menarik cohort untuk belajar.
@@ -355,10 +359,10 @@ export default function Page() {
             <div className="col-12">
               <div className="card">
                 <div className="card-header">
-                  <h4>Formulir Menambah Pendidikan Mentor Baru</h4>
+                  <h4>Formulir Menambah Asistensi Mentor Baru</h4>
                 </div>
                 <div className="card-body">
-                  <form onSubmit={handleSubmit} encType={"multipart/form-data"}>
+                  {formData.topic !== '' && <form onSubmit={handleSubmit} encType={"multipart/form-data"}>
                     <div className="form-group row mb-4">
                       <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="categoryId">
                         Kategori Asistensi
@@ -525,7 +529,7 @@ export default function Page() {
                         </button>
                       </div>
                     </div>
-                  </form>
+                  </form>}
                 </div>
               </div>
             </div>
