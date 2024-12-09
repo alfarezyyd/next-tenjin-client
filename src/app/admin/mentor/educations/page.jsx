@@ -114,11 +114,11 @@ export default function Page() {
           mendukung profil mentor yang kredibel.
         </p>
         <div className="container">
-          <div className="row">
+          <div className="d-flex justify-content-around flex-wrap" style={{gap: 4 + 'px'}}>
             {loading ? (  // Tampilkan loading selama data belum tersedia
               <Loading/>) : (allMentorEducation.length > 0 ? (
               allMentorEducation.map((mentorEducation) => (
-                <div className="col-sm-12 col-md-6 col-lg-4 mb-4 p-0 card-content-data mx-2" key={mentorEducation.id}>
+                <div className="col-sm-12 col-md-6 col-lg-4 mb-4 p-0 card-content-data" key={mentorEducation.id}>
                   <div className="card-custom text-dark card-has-bg click-col">
                     <div className="card-img-overlay d-flex flex-column">
                       <div className="card-body">
