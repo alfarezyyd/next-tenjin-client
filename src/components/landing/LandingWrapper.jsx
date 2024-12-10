@@ -58,77 +58,84 @@ export default function LandingWrapper({children}) {
           return updatedChatData; // Kembalikan array yang diperbarui
         });
       });
+
+      socket.on("privateMessage", handlePrivateMessage);
+
     }
   }, [socket, decodedAccessToken]);
   useEffect(() => {
   }, [activeChat])
 
-  useEffect(() => {
-    if (socket) {
-      socket.on("privateMessage", (message) => {
-        if (message.message.isSender) {
-          setActiveChat({
-            ...activeChatRef.current, messages: [...(activeChatRef.current?.messages ?? []), {
+  const handlePrivateMessage = (message) => {
+    console.log("Message" + message);
+    setChatData((prevChatData) => {
+      console.log(prevChatData);
+      const updatedChatData = {...prevChatData};
+      if (message.message.isSender) {
+        if (updatedChatData[message.destinationUserUniqueId]) {
+          updatedChatData[message.destinationUserUniqueId].messages = [...(updatedChatData[message.destinationUserUniqueId].messages || []), {
+            isSender: message.message.isSender,
+            message: message.message.message,
+            timestamp: message.message.timestamp,
+            status: message.message.status,
+          },];
+        } else {
+          updatedChatData[message.destinationUserUniqueId] = {
+            name: message.originUserName,
+            uniqueId: message.destinationUserUniqueId,
+            userId: message.userId,
+            messages: [{
               isSender: message.message.isSender,
               message: message.message.message,
               timestamp: message.message.timestamp,
               status: message.message.status,
-            }]
-          })
+            },],
+          };
         }
-        // Update chatData secara dinamis
-        setChatData((prevChatData) => {
-          const updatedChatData = {...prevChatData};
-          console.log(message)
-          if (message.message.isSender) {
-            if (updatedChatData[message.destinationUserUniqueId]) {
-              updatedChatData[message.destinationUserUniqueId].messages = [...(updatedChatData[message.destinationUserUniqueId].messages || []), {
-                isSender: message.message.isSender,
-                message: message.message.message,
-                timestamp: message.message.timestamp,
-                status: message.message.status,
-              },];
-            } else {
-              updatedChatData[message.destinationUserUniqueId] = {
-                name: message.originUserName,
-                uniqueId: message.destinationUserUniqueId,
-                userId: message.userId,
-                messages: [{
-                  isSender: message.message.isSender,
-                  message: message.message.message,
-                  timestamp: message.message.timestamp,
-                  status: message.message.status,
-                },],
-              };
-            }
-          } else {
-            if (updatedChatData[message.originUserUniqueId]) {
-              updatedChatData[message.originUserUniqueId].messages = [...(updatedChatData[message.originUserUniqueId].messages || []), {
-                isSender: message.message.isSender,
-                message: message.message.message,
-                timestamp: message.message.timestamp,
-                status: message.message.status,
-              },];
-            } else {
-              updatedChatData[message.originUserUniqueId] = {
-                name: message.originUserName, uniqueId: message.originUserUniqueId, userId: message.userId, messages: [{
-                  isSender: message.message.isSender,
-                  message: message.message.message,
-                  timestamp: message.message.timestamp,
-                  status: message.message.status,
-                },],
-              };
-            }
-          }
+      } else {
+        if (updatedChatData[message.originUserUniqueId]) {
+          updatedChatData[message.originUserUniqueId].messages = [...(updatedChatData[message.originUserUniqueId].messages || []), {
+            isSender: message.message.isSender,
+            message: message.message.message,
+            timestamp: message.message.timestamp,
+            status: message.message.status,
+          },];
+        } else {
+          updatedChatData[message.originUserUniqueId] = {
+            name: message.originUserName, uniqueId: message.originUserUniqueId, userId: message.userId, messages: [{
+              isSender: message.message.isSender,
+              message: message.message.message,
+              timestamp: message.message.timestamp,
+              status: message.message.status,
+            },],
+          };
+        }
+      }
+      return {...updatedChatData};
+    });
 
-          return {...updatedChatData}; // Ganti referensi utama
-        });
+    if (message.message.isSender) {
+      setActiveChat({
+        ...activeChatRef.current, messages: [...(activeChatRef.current?.messages ?? []), {
+          isSender: message.message.isSender,
+          message: message.message.message,
+          timestamp: message.message.timestamp,
+          status: message.message.status,
+        },],
       });
-
-      // Cleanup listener saat komponen unmount
-      return () => socket.off("privateMessage");
     }
-  }, [socket]);
+
+    if (activeChatRef.current?.destinationUserUniqueId === message.originUserUniqueId) {
+      setActiveChat({
+        ...activeChatRef.current, messages: [...(activeChatRef.current?.messages ?? []), {
+          isSender: message.message.isSender,
+          message: message.message.message,
+          timestamp: message.message.timestamp,
+          status: message.message.status,
+        },],
+      });
+    }
+  };
 
   useEffect(() => {
     if (lastMessageRef.current) {
@@ -225,8 +232,8 @@ export default function LandingWrapper({children}) {
                       <div>
                         <h4 className="text-sm font-semibold text-gray-800 group-hover:text-white">{chat.name}</h4>
                         {chat.messages !== undefined && chat.messages.length > 0 && (<p
-                            className="text-xs text-gray-500 text-left group-hover:text-white">{chat.messages[chat.messages.length - 1].message} ·
-                            {CommonUtil.diffForHumans(chat.messages[chat.messages.length - 1].timestamp)}</p>)}
+                          className="text-xs text-gray-500 text-left group-hover:text-white">{chat.messages[chat.messages.length - 1].message} ·
+                          {CommonUtil.diffForHumans(chat.messages[chat.messages.length - 1].timestamp)}</p>)}
                       </div>
                     </button>)
                   })}
