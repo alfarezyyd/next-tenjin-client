@@ -95,12 +95,13 @@ export default function Page() {
         });
         const responseBody = await responseFetch.json();
         if (responseFetch.ok) {
-          const withdraw = allWithdraws.find(value => value.id === activeWithdraw.id)
-          withdraw.withdrawPaymentStatus = "SENT"
-          setAllWithdraws({
-            ...allWithdraws.filter(value => value.id === activeWithdraw.id),
-            withdraw
-          })
+          setAllWithdraws((prevAllWithdraws) =>
+            prevAllWithdraws.map((value) =>
+              value.id === activeWithdraw.id
+                ? {...value, withdrawPaymentStatus: "SENT"} // Update elemen yang cocok
+                : value // Elemen lain tetap sama
+            )
+          );
         } else {
           console.error('Failed to fetch education', responseBody);
         }
@@ -142,12 +143,16 @@ export default function Page() {
                       <i className="fas fa-list"></i> All Tickets
                     </a>
                     <div className="tickets">
-                      <div className="ticket-items" id="ticket-items">
+                      <div className="ticket-items " id="ticket-items">
                         {allWithdraws.length > 0 && (allWithdraws.map((item) => {
                           return (
-                            <div className="ticket-item active" key={`withdraws-${item.id}`} onClick={() => {
-                              setActiveWithdraw(item);
-                            }}>
+                            <div className={`ticket-item ${activeWithdraw.id === item.id ? 'active' : ''}`}
+                                 key={`withdraws-${item.id}`}
+                                 onClick={() => {
+                                   setActiveWithdraw(item);
+                                   console.log(item);
+                                   console.log(activeWithdraw);
+                                 }}>
                               <div className="ticket-title">
                                 <h4>{item?.user?.name}</h4>
                               </div>
@@ -229,9 +234,11 @@ export default function Page() {
                               <div className="form-group">
                               </div>
                               <div className="form-group text-right">
-                                <button className="btn btn-primary btn-lg">
-                                  Konfirmasi Dikirim
-                                </button>
+                                {activeWithdraw.withdrawPaymentStatus !== 'SENT' &&
+                                  <button className="btn btn-primary btn-lg">
+                                    Konfirmasi Dikirim
+                                  </button>
+                                }
                               </div>
                             </form>
                           </div>

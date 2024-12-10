@@ -60,8 +60,13 @@ export default function Page() {
     });
 
     const responseBody = await fetchResponse.json();
-
     if (fetchResponse.ok) {
+      setUserData((prevValue) => {
+        return {
+          ...prevValue,
+          totalBalance: userData.totalBalance - withdrawValue,
+        }
+      })
       toast.success("Withdraw request successfully created! please wait")
     } else {
 

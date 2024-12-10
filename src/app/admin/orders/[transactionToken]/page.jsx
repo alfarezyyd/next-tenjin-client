@@ -163,20 +163,20 @@ export default function Page() {
                         <div className="invoice-detail-item">
                           <div className="invoice-detail-name">Subtotal</div>
                           <div className="invoice-detail-value">
-                            {Number(order?.assistance?.price || 0)}
+                            {Number(order?.assistance?.price || 0) * Number(order?.quantity || 0)}
                           </div>
                         </div>
                         <div className="invoice-detail-item">
                           <div className="invoice-detail-name">Tax</div>
                           <div className="invoice-detail-value">
-                            {Number((order?.assistance?.price || 0) * 0.1)}
+                            {Number((order?.assistance?.price || 0) * Number(order?.quantity || 0) * 0.1)}
                           </div>
                         </div>
                         <hr className="mt-2 mb-2"/>
                         <div className="invoice-detail-item">
                           <div className="invoice-detail-name">Total</div>
                           <div className="invoice-detail-value invoice-detail-value-lg">
-                            {Number(order?.assistance?.price || 0) + Number((order?.assistance?.price || 0) * 0.1)}
+                            {Number((order?.totalPrice || 0))}
                           </div>
                         </div>
                       </div>
