@@ -34,6 +34,7 @@ export default function Page() {
 
     async function loadAssets() {
       const $ = (await import('jquery')).default;
+      await import('sweetalert/dist/sweetalert.min')
       await import('summernote/dist/summernote-bs4.js');
       $(reviewRef.current).on("summernote.change", () => {
         setReview(($(reviewRef.current).val()));
@@ -199,7 +200,7 @@ export default function Page() {
                     <Image src={`/images/authentication/login.jpg`} alt=""
                            className="w-100 h-100 m-0 p-0 object-cover" width={500}
                            height={500}/>
-                    {(mentorAssistance.orderStatus === "FINISHED" || mentorAssistance.orderStatus === "CONFIRMED" || mentorAssistance.orderStatus === "REVIEWED") ? (
+                    {(mentorAssistance.orderPaymentStatus === "PAID") ? (
                       <div className="expired-overlay">
                         <span className="expired-text">LUNAS</span>
                       </div>) : (
@@ -222,12 +223,11 @@ export default function Page() {
                       </div>
                       <p dangerouslySetInnerHTML={{__html: mentorAssistance.assistance.description}}></p>
                       <div className="article-user">
-                        <img alt="image" src="../assets/img/avatar/avatar-1.png"/>
                         <div className="article-user-details float-left">
                           <div className="user-detail-name">
-                            <a href="#">{mentorAssistance.assistance.mentor.user.name}</a>
+                            <a href="#">Order Status : {mentorAssistance.orderStatus}</a>
                           </div>
-                          <div className="text-job">{mentorAssistance.assistance.mentor.user.gender}</div>
+                          <div className="text-job">Booking Status : {mentorAssistance.orderCondition}</div>
                         </div>
                         {!isOrderExpired(mentorAssistance.createdAt) && (mentorAssistance.orderPaymentStatus === "NOT_YET_PAID") && (<>
                           <a href="#" className="btn btn-outline-primary float-right mt-1 ml-2">Cancel</a>
@@ -235,14 +235,30 @@ export default function Page() {
                             initiatePayment(mentorAssistance['transactionToken'])
                           }} className="btn  btn-primary float-right mt-1">Continue</a>
                         </>)}
-                        {(mentorAssistance.orderStatus === "FINISHED" || mentorAssistance.orderStatus === "CONFIRMED" || mentorAssistance.orderStatus === "REVIEWED") &&
+                        {(mentorAssistance.orderPaymentStatus === "PAID") &&
                           (<a
                             href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/orders/${mentorAssistance.transactionToken.toString()}`}
                             className="btn  btn-outline-success float-right mt-1">Invoice</a>)}
                         {((mentorAssistance.orderStatus !== "FINISHED" && mentorAssistance.orderStatus !== "REVIEWED") && (mentorAssistance.orderPaymentStatus === "PAID") && mentorAssistance.orderCondition === "APPROVED") &&
                           (<button
                             className="btn  btn-primary float-right mt-1 mr-1" onClick={() => {
-                            handleOrderDone(mentorAssistance);
+                            swal({
+                              title: 'Apakah anda yakin pesanan anda selesai?',
+                              text: 'Anda tidak dapat mengubah kembali jika sudah konfirmasi selesai',
+                              icon: 'warning',
+                              buttons: true,
+                              dangerMode: true,
+                            })
+                              .then((willDelete) => {
+                                if (willDelete) {
+                                  handleOrderDone(mentorAssistance);
+                                  swal('Konfirmasi selesai berhasil dilakukan! Tolong berikan review', {
+                                    icon: 'success',
+                                  });
+                                } else {
+                                  swal('Konfirmasi selesai dibatalkan');
+                                }
+                              });
                           }}>Konfirmasi
                             Selesai</button>)}
                         {(mentorAssistance.orderStatus === "FINISHED" && (mentorAssistance.orderPaymentStatus === "PAID") && mentorAssistance.orderCondition === "APPROVED") &&

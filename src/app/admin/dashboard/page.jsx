@@ -327,8 +327,7 @@ export default function Page() {
               </ul>
             </div>
             <div className="modal-footer bg-whitesmoke br">
-              <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" className="btn btn-primary">Save changes</button>
+              <button type="button" className="btn btn-primary" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
