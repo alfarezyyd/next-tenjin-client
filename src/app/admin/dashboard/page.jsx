@@ -282,7 +282,7 @@ export default function Page() {
                   {lastFiveOrder?.length > 0 && lastFiveOrder.map((item, index) => {
                     return (
                       <li className="media" key={`last-five-orders-${index}`}>
-                        <Image className="mr-3 rounded" width="55"
+                        <Image className="mr-3 rounded" width={55} height={55}
                                src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${item?.assistance?.category?.logo}`}
                                alt="product"/>
                         <div className="media-body">

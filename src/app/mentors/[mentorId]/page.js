@@ -59,7 +59,7 @@ export default function Page({}) {
       price: activeCategory['price'],
       minutesDurations: activeCategory['durationMinutes'],
       logo: activeCategory['category']['logo'],
-      note: "Testing",
+      note: "",
     })
     localStorage.setItem("checkoutItem", checkoutItem);
     setCheckout(checkoutItem)

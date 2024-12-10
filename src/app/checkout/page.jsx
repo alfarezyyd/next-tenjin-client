@@ -299,12 +299,12 @@ export default function Page() {
                 </div>
               </div>
               <label htmlFor="billing-address" className="mt-4 mb-2 block text-sm font-medium">Notes</label>
-              <div className="flex flex-col sm:flex-row">
-                <div className="relative flex-shrink-0 sm:w-7/12">
+              <div className="flex flex-col sm:flex-row w-full">
+                <div className="relative flex-shrink-0 w-full">
                   <input type="text" id="billing-address" name="billing-address"
                          value={`${checkoutItem.note}`}
                          className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                         placeholder="Street Address" onChange={(e) => {
+                         placeholder="Catatan" onChange={(e) => {
                     setCheckoutItem((prevState) => ({
                         ...prevState,
                         note: e.target.value

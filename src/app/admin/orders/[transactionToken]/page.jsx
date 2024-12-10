@@ -52,6 +52,7 @@ export default function Page() {
       const responseBody = await responseFetch.json();
       if (responseFetch.ok) {
         setOrder(responseBody.result.data)
+        console.log(responseBody.result.data)
       } else {
         console.error('Failed to fetch experiences', responseBody);
       }
@@ -141,8 +142,10 @@ export default function Page() {
                           <td>1</td>
                           <td>{order?.assistance?.topic}</td>
                           <td className="text-center">{Number(order?.assistance?.price || 0)}</td>
-                          <td className="text-center">1</td>
-                          <td className="text-right">{Number(order?.assistance?.price || 0)}</td>
+                          <td
+                            className="text-center">{Number(order?.quantity || 0)}</td>
+                          <td
+                            className="text-right">{Number(order?.assistance?.price || 0) * Number(order?.quantity || 0)}</td>
                         </tr>
 
                         </tbody>
@@ -150,26 +153,21 @@ export default function Page() {
                     </div>
                     <div className="row mt-4">
                       <div className="col-lg-8">
-                        <div className="section-title">Payment Method</div>
-                        <p className="section-lead">The payment method that we provide is to make it easier for you to
-                          pay
-                          invoices.</p>
-                        <div className="d-flex">
-                          <div className="mr-2 bg-visa" data-width="61" data-height="38"></div>
-                          <div className="mr-2 bg-jcb" data-width="61" data-height="38"></div>
-                          <div className="mr-2 bg-mastercard" data-width="61" data-height="38"></div>
-                          <div className="bg-paypal" data-width="61" data-height="38"></div>
-                        </div>
+                        <div className="section-title">Catatan</div>
+                        <p className="section-lead">
+                          {order.note}
+                        </p>
+
                       </div>
                       <div className="col-lg-4 text-right">
                         <div className="invoice-detail-item">
                           <div className="invoice-detail-name">Subtotal</div>
                           <div className="invoice-detail-value">
-                            {Number(order?.assistance?.price || 0) - Number((order?.assistance?.price || 0) * 0.1)}
+                            {Number(order?.assistance?.price || 0)}
                           </div>
                         </div>
                         <div className="invoice-detail-item">
-                          <div className="invoice-detail-name">Shipping</div>
+                          <div className="invoice-detail-name">Tax</div>
                           <div className="invoice-detail-value">
                             {Number((order?.assistance?.price || 0) * 0.1)}
                           </div>
@@ -178,7 +176,7 @@ export default function Page() {
                         <div className="invoice-detail-item">
                           <div className="invoice-detail-name">Total</div>
                           <div className="invoice-detail-value invoice-detail-value-lg">
-                            {Number(order?.assistance?.price || 0)}
+                            {Number(order?.assistance?.price || 0) + Number((order?.assistance?.price || 0) * 0.1)}
                           </div>
                         </div>
                       </div>
