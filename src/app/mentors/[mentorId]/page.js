@@ -104,10 +104,12 @@ export default function Page({}) {
         }))
         setImageAssistant(firstAssistance['AssistanceResource']);
       }
+      setLoading(false);
     } else {
       setIsStateError(true);
+      setLoading(false);
+
     }
-    setLoading(false);
   }
 
   function handleShare() {
@@ -198,7 +200,7 @@ export default function Page({}) {
               <div className="flex flex-col gap-3 mt-5">
                 <Alert
                   color="success"
-                  description={`${mentorData?.Education[0]?.name} - ${mentorData?.Education[0].studyField}`}
+                  description={`${mentorData?.Education[0]?.name} - ${mentorData?.Education[0]?.studyField}`}
                   isVisible={true}
                   title={"Pendidikan Terakhir"}
                   variant="faded"
@@ -211,7 +213,7 @@ export default function Page({}) {
                 />
                 <Alert
                   color="primary"
-                  description={`${mentorData?.Experience[0].positionName} - ${mentorData?.Experience[0].companyName}`}
+                  description={`${mentorData?.Experience[0]?.positionName} - ${mentorData?.Experience[0]?.companyName}`}
                   isVisible={true}
                   title={"Pengalaman Kerja Terakhir"}
                   variant="flat"
@@ -236,14 +238,14 @@ export default function Page({}) {
                         <Image
                           shadow="sm"
                           radius="lg"
-                          alt={item.title}
+                          alt={item?.title}
                           className="object-cover h-[140px] w-full"
                           src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/category-icon/${activeCategory?.category.logo}`}
                         />
                       </CardBody>
                       <CardFooter className="text-small justify-between">
-                        <b>{item.title}</b>
-                        <p className="text-default-500">{item.price}</p>
+                        <b>{item?.title}</b>
+                        <p className="text-default-500">{item?.price}</p>
                       </CardFooter>
                     </Card>))}
                 </div>
