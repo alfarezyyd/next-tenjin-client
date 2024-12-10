@@ -340,7 +340,7 @@ export default function Page({}) {
                         // Hindari duplikasi dan tambahkan hanya jika berbeda
                         if (mentorData.user.uniqueId !== prevChatData.uniqueId && !updatedChatData[mentorData.user.uniqueId]) {
                           updatedChatData[mentorData.user.uniqueId] = {
-                            name: mentorData.user.name, uniqueId: mentorData.user.uniqueId, userId: mentorData.user.id,
+                            name: mentorData.user?.name, uniqueId: mentorData.user.uniqueId, userId: mentorData.user.id,
                           };
                         } else {
                           setActiveChat({

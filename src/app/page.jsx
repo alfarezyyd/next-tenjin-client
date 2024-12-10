@@ -10,9 +10,10 @@ import FAQ from '/src/components/landing/FAQ/index';
 import Testimonials from '/src/components/landing/Testimonials/index';
 import Joinus from '/src/components/landing/Joinus/index';
 import './globals.css'
+import ErrorBoundary from "@/app/errors/ErrorBoundary";
 
 export default function Page() {
-  return (<>
+  return (<ErrorBoundary>
     <Navbar/>
     <main>
       <Banner/>
@@ -26,5 +27,5 @@ export default function Page() {
       <Joinus/>
     </main>
     <Footer/>
-  </>)
+  </ErrorBoundary>)
 }
