@@ -317,7 +317,7 @@ export default function LandingWrapper({children}) {
                     }}
                   />
                   <button onClick={triggerSendMessage} type="button"
-                          disabled={activeChat?.destinationUserUniqueId === undefined}
+                          disabled={activeChat?.destinationUserUniqueId === undefined || message === ""}
                           className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800">
                     Send
                   </button>
