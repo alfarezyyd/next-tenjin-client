@@ -198,7 +198,7 @@ export default function Page({}) {
               <div className="flex flex-col gap-3 mt-5">
                 <Alert
                   color="success"
-                  description={`${mentorData?.Education[0].name} - ${mentorData?.Education[0].studyField}`}
+                  description={`${mentorData?.Education[0]?.name} - ${mentorData?.Education[0].studyField}`}
                   isVisible={true}
                   title={"Pendidikan Terakhir"}
                   variant="faded"
@@ -286,7 +286,7 @@ export default function Page({}) {
                               <div
                                 className="flex flex-col max-h-[100px] max-w-36 text-wrap truncate py-auto px-3 overflow-y-hidden justify-center">
                                 <h3 className="font-semibold">{item.format}</h3>
-                                <p className="text-xs">{item.category.name}</p>
+                                <p className="text-xs">{item.category?.name}</p>
                                 <h1 className="text-large font-sm overflow-y-hidden truncate">{item.topic}</h1>
                               </div>
                             </div>
@@ -344,7 +344,7 @@ export default function Page({}) {
                           };
                         } else {
                           setActiveChat({
-                            name: chatData[mentorData.user.uniqueId].name,
+                            name: chatData[mentorData.user.uniqueId]?.name,
                             messages: chatData[mentorData.user.uniqueId].messages,
                             destinationUserUniqueId: chatData[mentorData.user.uniqueId].uniqueId,
                             userId: chatData[mentorData.user.uniqueId].userId
@@ -401,7 +401,7 @@ export default function Page({}) {
                 <Divider/>
                 <CardFooter className={"flex flex-row gap-3"}>
                   {activeCategory?.AssistanceTag.map(tag => (
-                    <Chip color="primary" key={`assistance-tag${tag.tagId}`}>{tag.tag.name}</Chip>))}
+                    <Chip color="primary" key={`assistance-tag${tag.tagId}`}>{tag.tag?.name}</Chip>))}
                 </CardFooter>
               </Card>
               <Card className="max-w">
