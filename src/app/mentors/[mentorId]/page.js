@@ -200,7 +200,7 @@ export default function Page({}) {
               <div className="flex flex-col gap-3 mt-5">
                 <Alert
                   color="success"
-                  description={`${mentorData?.Education[0]?.name} - ${mentorData?.Education[0]?.studyField}`}
+                  description={`${mentorData?.Education[0]?.name ?? '-'} - ${mentorData?.Education[0]?.studyField ?? '-'}`}
                   isVisible={true}
                   title={"Pendidikan Terakhir"}
                   variant="faded"
@@ -213,7 +213,7 @@ export default function Page({}) {
                 />
                 <Alert
                   color="primary"
-                  description={`${mentorData?.Experience[0]?.positionName} - ${mentorData?.Experience[0]?.companyName}`}
+                  description={`${mentorData?.Experience[0]?.positionName ?? '-'} - ${mentorData?.Experience[0]?.companyName ?? '-'}`}
                   isVisible={true}
                   title={"Pengalaman Kerja Terakhir"}
                   variant="flat"
