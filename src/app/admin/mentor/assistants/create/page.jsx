@@ -252,30 +252,31 @@ export default function Page() {
     {loading ? (<Loading/>) : (<AdminWrapper>
       <section className="section">
         <div className="section-header">
-          <h1>Pendidikan Mentor</h1>
+          <h1>Asistensi Mentor</h1>
           <div className="section-header-breadcrumb">
             <div className="breadcrumb-item active">
               <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin`}>Application</a>
             </div>
             <div className="breadcrumb-item">
-              <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/experiences`}>Pendidikan Mentor</a>
+              <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/experiences`}>Asistensi Mentor</a>
             </div>
             <div className="breadcrumb-item">Buat Data</div>
           </div>
         </div>
 
         <div className="section-body">
-          <h2 className="section-title">Membuat Data Pendidikan Mentor Baru</h2>
+          <h2 className="section-title">Membuat Data Asistensi Mentor Baru</h2>
           <p className="section-lead col-6">
-            Pada halaman ini, Anda dapat membuat data pendidikan mentor baru dengan mengisi semua field formulir
-            yang telah disediakan. Dengan jejak edukasi yang memukau, Anda dapat menarik cohort untuk belajar.
+            Pada halaman ini, Anda dapat membuat data asistensi baru dengan mengisi semua field formulir yang tersedia.
+            Dengan informasi yang lengkap dan jelas, Anda dapat mengelola dan memfasilitasi proses bimbingan yang
+            efektif dan bermanfaat bagi setiap mentor dan cohort.
           </p>
 
           <div className="row">
             <div className="col-12">
               <div className="card">
                 <div className="card-header">
-                  <h4>Formulir Menambah Pendidikan Mentor Baru</h4>
+                  <h4>Formulir Menambah Asistensi Mentor Baru</h4>
                 </div>
                 <div className="card-body">
                   <form onSubmit={handleSubmit} encType={"multipart/form-data"}>

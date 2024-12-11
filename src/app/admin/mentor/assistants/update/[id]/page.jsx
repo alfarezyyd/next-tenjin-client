@@ -349,10 +349,11 @@ export default function Page() {
         </div>
 
         <div className="section-body">
-          <h2 className="section-title">Membuat Data Asistensi Mentor Baru</h2>
+          <h2 className="section-title">Mengubah Data Asistensi Mentor</h2>
           <p className="section-lead col-6">
-            Pada halaman ini, Anda dapat membuat data pendidikan mentor baru dengan mengisi semua field formulir
-            yang telah disediakan. Dengan jejak edukasi yang memukau, Anda dapat menarik cohort untuk belajar.
+            Pada halaman ini, Anda dapat mengubah data asistensi baru dengan mengisi semua field formulir yang tersedia.
+            Dengan informasi yang lengkap dan jelas, Anda dapat mengelola dan memfasilitasi proses bimbingan yang
+            efektif dan bermanfaat bagi setiap mentor dan cohort.
           </p>
 
           <div className="row">
