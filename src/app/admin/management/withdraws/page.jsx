@@ -234,7 +234,7 @@ export default function Page() {
                               <div className="form-group">
                               </div>
                               <div className="form-group text-right">
-                                {activeWithdraw.withdrawPaymentStatus !== 'SENT' &&
+                                {activeWithdraw?.withdrawPaymentStatus !== 'SENT' &&
                                   <button className="btn btn-primary btn-lg">
                                     Konfirmasi Dikirim
                                   </button>
