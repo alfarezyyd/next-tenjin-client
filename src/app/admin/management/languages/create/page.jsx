@@ -5,7 +5,6 @@ import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
 import CommonScript from "@/components/admin/CommonScript";
-import {redirect} from "next/navigation";
 
 import 'select2/dist/css/select2.min.css';
 
@@ -72,7 +71,7 @@ export default function Page() {
 
     if (fetchResponse.ok) {
       setErrors({});
-      redirect('/admin/management/languages?notify=success'); // Tambahkan query param
+      window.location.href = '/admin/management/languages?notify=success'; // Tambahkan query param
     } else {
       toast.error('Terdapat kesalahan dalam formulir Anda!')
       const errorMessages = {};
