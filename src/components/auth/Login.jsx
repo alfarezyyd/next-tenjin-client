@@ -116,7 +116,7 @@ export default function Login() {
         <p className="text-base text-gray-600 dark:text-white"> or </p>
         <div className="h-px w-full bg-gray-200 dark:bg-navy-700"/>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form>
         {/* Email */}
 
         <Input
@@ -165,6 +165,7 @@ export default function Login() {
           size="lg"
           isLoading={loading}
           color="primary"
+          onClick={handleSubmit}
           className="linear mt-2 w-full rounded-xl font-light bg-brand-500 py-[12px] text-base text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700">
           Sign In
         </Button>
