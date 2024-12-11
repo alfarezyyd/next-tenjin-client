@@ -336,7 +336,7 @@ export default function Page() {
                 <p
                   className="text-2xl font-semibold text-gray-900">
                   Rp{' '}
-                  {totalPrice === 0 ? checkoutItem['price'] : (totalPrice + totalPrice * 0.11).toFixed(1)}                </p>
+                  {totalPrice === 0 ? (checkoutItem['price'] + checkoutItem['price'] * 0.11) : (totalPrice + totalPrice * 0.11).toFixed(1)} </p>
               </div>
             </div>
             <button onClick={triggerPayment}
