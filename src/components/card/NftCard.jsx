@@ -1,4 +1,3 @@
-import {IoHeart, IoHeartOutline} from "react-icons/io5";
 import {useState} from "react";
 import Card from "@/components/card/index";
 import Link from "next/link";
@@ -19,15 +18,6 @@ const NftCard = ({title, author, price, image, uniqueId, mentorId, extra, durati
             className="mb-3 rounded-xl object-fill 3xl:h-full 3xl:w-full z-0"
             alt=""
           />
-          <button
-            onClick={() => setHeart(!heart)}
-            className="absolute top-3 right-3 flex items-center justify-center rounded-full bg-white p-2 text-brand-500 hover:cursor-pointer"
-          >
-            <div
-              className="flex h-full w-full items-center justify-center rounded-full text-xl hover:bg-gray-50">
-              {heart ? (<IoHeartOutline/>) : (<IoHeart className="text-brand-500"/>)}
-            </div>
-          </button>
         </div>
 
         <div
