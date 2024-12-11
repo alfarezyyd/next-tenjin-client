@@ -93,6 +93,7 @@ export default function Page({}) {
       firstAssistance = {
         ...firstAssistance, averageRating: isNaN(averageRatingOperation) ? 0 : averageRatingOperation,
       }
+      console.log(firstAssistance);
       setActiveCategory(firstAssistance);
       if (firstAssistance['AssistanceResource'].length > 0) {
         setSlides(firstAssistance['AssistanceResource'].map((item) => {
@@ -127,6 +128,32 @@ export default function Page({}) {
   if (isStateError) {
     return (<ErrorPage/>)
   }
+
+  async function loadMoreReview() {
+    console.log(activeCategory)
+    console.log({
+      mentorUniqueId: pathName.mentorId,
+      assistantId: activeCategory.id,
+      lastReviewId: activeCategory.Review[activeCategory.Review.length - 1].id,
+    });
+    let responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/reviews/more-review`, {
+      method: 'POST', headers: {
+        'Accept': 'application/json', 'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        mentorUniqueId: pathName.mentorId,
+        assistantId: activeCategory.assistantId,
+        lastReviewId: activeCategory.Review[activeCategory.Review.length - 1].id,
+      })
+    });
+    const responseBody = await responseFetch.json();
+    if (responseFetch.ok) {
+      console.log(responseBody.result.data)
+    } else {
+      toast.error('Terdapat kesalahan ketika meload review')
+    }
+  }
+
   return (loading ? <Loading/> : (<LandingWrapper>
     <div id="upper-mentor"
          className='mx-auto max-w-7xl py-8 lg:px-4 md:px-2 sm:px-0 bg-faqblue rounded-t-2xl mt-12 relative z-0 mb-12'>
@@ -146,9 +173,7 @@ export default function Page({}) {
                 >
                   {mentorData.user?.gender === "MAN" ? "Laki-Laki" : "Perempuan"}
                 </Chip>
-                <Chip color="success" className="text-white w-fit" size="sm">
-                  Online
-                </Chip>
+
               </div>
               <div className="flex flex-row gap-1 items-center">
                 <h6 className="text-xs font-bold bg-zinc-200 rounded-full italic px-2 text-white">ID</h6>
@@ -157,15 +182,13 @@ export default function Page({}) {
             </div>
           </div>
           <div className="flex flex-col md:flex-row gap-3 items-center">
-            <Button color="primary" className="w-1/2" variant={"bordered"}>
-              <MdOutlineChat className={"p-0 text-lg"}/>
-            </Button>
-            <Button color="primary" className="" variant={"ghost"} onClick={handleShare}>Share</Button>
-            <Button color="primary" className="">Ikuti</Button>
+
+            <Button color="primary" className="" variant={"solid"} onClick={handleShare}>Share</Button>
           </div>
         </div>
         <div className="w-full md:mx-auto md:w-full max-w-7xl rounded-2xl mb-5">
-          <div className="flex flex-col md:flex-row  md:gap-5 items-center px-0 md:pl-0 justify-center md:items-start">
+          <div
+            className="flex flex-col md:flex-row  md:gap-5 items-center px-0 md:pl-0 justify-center md:items-start">
             <div className="w-[95%] md:w-1/3 z-0">
               <Card isFooterBlurred radius="lg" className="border-none">
                 <Image
@@ -313,7 +336,7 @@ export default function Page({}) {
                         <Image src={"/assets/star.svg"} alt="Star" width={25}/>
                         <span className="text-xl font-bold">{activeCategory?.averageRating}.00</span>
                         <Divider orientation="vertical" className="bg-black"/>
-                        <div className="text-xl font-light">Order 133</div>
+                        <div className="text-xl font-light">Total Order {activeCategory?._count?.Order || 0}</div>
                       </div>
                       <div className="flex flex-row gap-3">
                         <Image src={"/assets/coin.svg"} alt="Star" width={40}/>
@@ -342,7 +365,9 @@ export default function Page({}) {
                         // Hindari duplikasi dan tambahkan hanya jika berbeda
                         if (mentorData.user.uniqueId !== prevChatData.uniqueId && !updatedChatData[mentorData.user.uniqueId]) {
                           updatedChatData[mentorData.user.uniqueId] = {
-                            name: mentorData.user?.name, uniqueId: mentorData.user.uniqueId, userId: mentorData.user.id,
+                            name: mentorData.user?.name,
+                            uniqueId: mentorData.user.uniqueId,
+                            userId: mentorData.user.id,
                           };
                         } else {
                           setActiveChat({
@@ -425,8 +450,8 @@ export default function Page({}) {
                       return (<div className="flex flex-row gap-3" key={`review-${review.id}`}>
                         <div className="flex flex-row gap-5">
                           <Avatar
-                            src="https://i.pravatar.cc/150?u=a04258114e29026302d"
-                            size="lg"
+                            src={review.User?.photoPath === null || review.User?.photoPath === undefined ? "https://i.pravatar.cc/150?u=a04258114e29026302d" : `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${review.User.photoPath}`}
+                            size="md"
                             className="rounded-full flex-shrink-0"
                           />
                           <div className="flex flex-col">
@@ -443,7 +468,8 @@ export default function Page({}) {
 
                 </CardBody>
                 <CardFooter>
-                  <Button color="primary" variant="bordered" radius="full" className="mx-auto">
+                  <Button color="primary" variant="bordered" radius="full" className="mx-auto"
+                          onClick={loadMoreReview}>
                     Lihat lebih banyak
                   </Button>
                 </CardFooter>
