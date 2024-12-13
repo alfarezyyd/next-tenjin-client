@@ -2,13 +2,13 @@
 import LandingWrapper from "@/components/landing/LandingWrapper";
 import React, {useEffect, useState} from "react";
 import {Button, Card, CardBody, Image, Tab, Tabs} from "@nextui-org/react";
-import {MdOutlineChat} from "react-icons/md";
 import {FaBriefcase, FaCircle, FaMapMarkerAlt, FaUniversity} from "react-icons/fa";
 import {useParams} from "next/navigation";
 import {Loading} from "@/components/admin/Loading";
 import NftCard from "@/components/card/NftCard";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
+import {toast} from "react-toastify";
 
 const Page = () => {
   const routerParam = useParams()
@@ -23,6 +23,18 @@ const Page = () => {
   const [mentorExperience, setMentorExperience] = useState([]);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [slides, setSlides] = useState([])
+
+  function handleShare() {
+    const currentUrl = window.location.href; // Mendapatkan URL halaman saat ini
+
+    navigator.clipboard.writeText(currentUrl)
+      .then(() => {
+        toast.success("Link copied to clipboard!")
+      })
+      .catch(err => {
+        toast.error("Error copied to clipboard!")
+      });
+  }
 
   async function fetchAllAssistance() {
     setLoading(true)
@@ -121,29 +133,21 @@ const Page = () => {
                     <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
                       <div
                         className="py-6 mt-20  lg:mt-0 flex flex-row items-center gap-2 justify-center lg:justify-end">
-                        <Button color="primary" variant={"bordered"}>
-                          <MdOutlineChat className={"p-0 text-lg"}/>
-                        </Button>
-                        <Button color="primary" className="" variant={"ghost"}>Share</Button>
-                        <Button color="primary" className="">Ikuti</Button>
+                        <Button color="primary" className="" variant={"solid"} onClick={handleShare}>Share</Button>
+
                       </div>
                     </div>
                     <div className="w-full lg:w-4/12 px-4 lg:order-1">
                       <div className="flex  justify-center py-4 lg:pt-4 pt-8">
                         <div className="mr-4 p-3 text-center">
                         <span
-                          className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">{mentorData?._count?.Order}</span><span
+                          className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">{mentorData?._count?.Order ?? 0}</span><span
                           className="text-sm text-blueGray-400">Total Orders</span>
                         </div>
                         <div className="mr-4 p-3 text-center">
                         <span
                           className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">{mentorData?.Assistance?.length}</span><span
                           className="text-sm text-blueGray-400">Assistance</span>
-                        </div>
-                        <div className="lg:mr-4 p-3 text-center">
-                        <span
-                          className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">89</span><span
-                          className="text-sm text-blueGray-400">Comments</span>
                         </div>
                       </div>
                     </div>

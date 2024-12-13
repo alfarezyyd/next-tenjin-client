@@ -9,11 +9,11 @@ import Cookies from "js-cookie";
 import {CommonUtil} from "@/common/utils/common-util";
 import {BsInfoSquareFill} from "react-icons/bs";
 import {PiHandWavingFill} from "react-icons/pi";
-import {MdOutlineChat} from "react-icons/md";
 import {toast} from "react-toastify";
 import ErrorPage from "@/app/errors/ErrorPage";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
+import Link from "next/link";
 
 
 export default function Page({}) {
@@ -158,34 +158,36 @@ export default function Page({}) {
     <div id="upper-mentor"
          className='mx-auto max-w-7xl py-8 lg:px-4 md:px-2 sm:px-0 bg-faqblue rounded-t-2xl mt-12 relative z-0 mb-12'>
       <div className="w-full mx-0">
-        <div
-          className="mx-3 md:mx-auto w-[95%] md:w-full max-w-7xl rounded-2xl bg-white py-6 px-3 md:px-6 mb-5 flex flex-row gap-5 justify-between">
-          <div className="flex flex-row gap-5">
-            <Avatar
-              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${mentorData?.user?.photoPath}`}
-              className="w-20 h-20 hidden md:block"/>
-            <div className="flex flex-col md:gap-0.5">
-              <h1 className="text-xl font-semibold">{mentorData.user?.name}</h1>
-              <div className="flex flex-col md:flex-row gap-2">
-                <Chip
-                  className={`text-white w-fit ${mentorData.user?.gender === "MAN" ? "bg-sky-400" : "bg-rose-400"}`}
-                  size="sm"
-                >
-                  {mentorData.user?.gender === "MAN" ? "Laki-Laki" : "Perempuan"}
-                </Chip>
+        <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}mentors/profile/${mentorData.user.uniqueId}`}>
+          <div
+            className="mx-3 md:mx-auto w-[95%] md:w-full max-w-7xl rounded-2xl bg-white py-6 px-3 md:px-6 mb-5 flex flex-row gap-5 justify-between">
+            <div className="flex flex-row gap-5">
+              <Avatar
+                src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${mentorData?.user?.photoPath}`}
+                className="w-20 h-20 hidden md:block"/>
+              <div className="flex flex-col md:gap-0.5">
+                <h1 className="text-xl font-semibold">{mentorData.user?.name}</h1>
+                <div className="flex flex-col md:flex-row gap-2">
+                  <Chip
+                    className={`text-white w-fit ${mentorData.user?.gender === "MAN" ? "bg-sky-400" : "bg-rose-400"}`}
+                    size="sm"
+                  >
+                    {mentorData.user?.gender === "MAN" ? "Laki-Laki" : "Perempuan"}
+                  </Chip>
 
-              </div>
-              <div className="flex flex-row gap-1 items-center">
-                <h6 className="text-xs font-bold bg-zinc-200 rounded-full italic px-2 text-white">ID</h6>
-                <h6 className="text-gray-600 font-medium">{mentorData.user?.uniqueId}</h6>
+                </div>
+                <div className="flex flex-row gap-1 items-center">
+                  <h6 className="text-xs font-bold bg-zinc-200 rounded-full italic px-2 text-white">ID</h6>
+                  <h6 className="text-gray-600 font-medium">{mentorData.user?.uniqueId}</h6>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="flex flex-col md:flex-row gap-3 items-center">
+            <div className="flex flex-col md:flex-row gap-3 items-center">
 
-            <Button color="primary" className="" variant={"solid"} onClick={handleShare}>Share</Button>
+              <Button color="primary" className="" variant={"solid"} onClick={handleShare}>Share</Button>
+            </div>
           </div>
-        </div>
+        </Link>
         <div className="w-full md:mx-auto md:w-full max-w-7xl rounded-2xl mb-5">
           <div
             className="flex flex-col md:flex-row  md:gap-5 items-center px-0 md:pl-0 justify-center md:items-start">
