@@ -49,11 +49,11 @@ export default function Page() {
     <AdminWrapper>
       <section className="section">
         <div className="section-header">
-          <h1>Riwayat Menarik Saldo</h1>
+          <h1>Riwayat Penarikan Saldo</h1>
           <div className="section-header-breadcrumb">
-            <div className="breadcrumb-item active"><a href="#">Admin</a></div>
-            <div className="breadcrumb-item"><a href="#">Mentor</a></div>
-            <div className="breadcrumb-item">Pendidikan</div>
+            <div className="breadcrumb-item "><a href="/admin/dashboard">Dashboard</a></div>
+            <div className="breadcrumb-item"><a href="/admin/finance/withdraw">Penarikan Saldo</a></div>
+            <div className="breadcrumb-item active">Riwayat Penarikan Saldo</div>
           </div>
         </div>
 

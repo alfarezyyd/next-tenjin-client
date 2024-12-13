@@ -255,10 +255,10 @@ export default function Page() {
           <h1>Asistensi Mentor</h1>
           <div className="section-header-breadcrumb">
             <div className="breadcrumb-item active">
-              <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin`}>Application</a>
+              <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/dashboard`}>Dashboard</a>
             </div>
             <div className="breadcrumb-item">
-              <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/experiences`}>Asistensi Mentor</a>
+              <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/assistants`}>Asistensi Mentor</a>
             </div>
             <div className="breadcrumb-item">Buat Data</div>
           </div>

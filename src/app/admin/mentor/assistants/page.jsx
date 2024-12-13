@@ -102,9 +102,8 @@ export default function Page() {
       <div className="section-header">
         <h1>Asistensi Mentor</h1>
         <div className="section-header-breadcrumb">
-          <div className="breadcrumb-item active"><a href="#">Admin</a></div>
-          <div className="breadcrumb-item"><a href="#">Mentor</a></div>
-          <div className="breadcrumb-item">Asistensi</div>
+          <div className="breadcrumb-item "><a href="/admin/dashboard">Dashboard</a></div>
+          <div className="breadcrumb-item active">Asistensi</div>
         </div>
       </div>
 
