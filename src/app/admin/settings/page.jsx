@@ -6,7 +6,6 @@ import Cookies from "js-cookie";
 import {CommonUtil} from "@/common/utils/common-util";
 import AdminWrapper from "@/components/admin/AdminWrapper";
 import {Loading} from "@/components/admin/Loading";
-import Link from "next/link";
 
 export default function Page() {
   const [accessToken, setAccessToken] = useState(null);
@@ -77,8 +76,8 @@ export default function Page() {
                 <div className="card-body">
                   <h4>Password</h4>
                   <p>Pengaturan mengenai perubahan password yang dimiliki pengguna</p>
-                  <Link href="/admin/settings/password" className="card-cta">Change Setting <i
-                    className="fas fa-chevron-right"></i></Link>
+                  <a href="/admin/settings/password" className="card-cta">Change Setting <i
+                    className="fas fa-chevron-right"></i></a>
                 </div>
               </div>
             </div>
@@ -91,8 +90,8 @@ export default function Page() {
                   <div className="card-body">
                     <h4>Informasi Mentor</h4>
                     <p>Perubahan mengenai data pribadi mentor yang dimiliki</p>
-                    <Link href="/admin/settings/mentor-information" className="card-cta">Change Setting <i
-                      className="fas fa-chevron-right"></i></Link>
+                    <a href="/admin/settings/mentor-information" className="card-cta">Change Setting <i
+                      className="fas fa-chevron-right"></i></a>
                   </div>
                 </div>
               </div>
@@ -104,8 +103,8 @@ export default function Page() {
                   <div className="card-body">
                     <h4>Rekening</h4>
                     <p>Pengaturan mengenai rekening yang digunakan oleh mentor</p>
-                    <Link href="/admin/settings/mentor-information-account" className="card-cta">Change Setting <i
-                      className="fas fa-chevron-right"></i></Link>
+                    <a href="/admin/settings/mentor-information-account" className="card-cta">Change Setting <i
+                      className="fas fa-chevron-right"></i></a>
                   </div>
                 </div>
               </div>

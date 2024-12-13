@@ -5,7 +5,6 @@ import {useEffect, useState} from "react";
 import CommonScript from "@/components/admin/CommonScript";
 import Cookies from "js-cookie";
 import {Image} from "@nextui-org/react";
-import Link from "next/link";
 
 export default function Page() {
   const [accessToken, setAccessToken] = useState(null);
@@ -39,8 +38,8 @@ export default function Page() {
                          alt="image" width={400}/>
                   <h2 className="mt-0">Terima Kasih atas Partisipasi Anda!</h2>
 
-                  <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/dashboard`} className="btn btn-primary mt-3">Kembali
-                    ke Admin</Link>
+                  <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/dashboard`} className="btn btn-primary mt-3">Kembali
+                    ke Admin</a>
                 </div>
               </div>
             </div>

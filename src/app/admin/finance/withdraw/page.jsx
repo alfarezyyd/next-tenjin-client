@@ -9,7 +9,6 @@ import '@/../public/assets/css/withdraw.scss'
 import Image from "next/image";
 import {CommonUtil} from "@/common/utils/common-util";
 import CommonScript from "@/components/admin/CommonScript";
-import Link from "next/link";
 
 export default function Page() {
   const [accessToken, setAccessToken] = useState(null);
@@ -172,7 +171,7 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-              <Link href="/admin/finance/withdraw/history">
+              <a href="/admin/finance/withdraw/history">
                 <div className="alert alert-primary alert-has-icon">
                   <div className="alert-icon"><i className="far fa-lightbulb"></i></div>
                   <div className="alert-body">
@@ -181,7 +180,7 @@ export default function Page() {
                     </div>
                   </div>
                 </div>
-              </Link>
+              </a>
             </div>
             <div className="col-6 col-md-6 col-lg-7 pr-0">
               <div className="card card-primary">
