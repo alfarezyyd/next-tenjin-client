@@ -10,7 +10,7 @@ const Dedicated = () => {
 
           {/* COLUMN-1 */}
           <div>
-            <Image src="/images/dedicated/man.svg" alt="man-icon" width={416} height={530} className="mx-auto md:mx-0"/>
+            <Image src="/assets/img/logo-3.png" alt="man-icon" width={416} height={400} className="mx-auto md:mx-0"/>
           </div>
 
           {/* COLUMN-2 */}
