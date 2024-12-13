@@ -132,7 +132,11 @@ export default function Page() {
             window.location.href = `admin/orders`
           }, onError: function (result) {
             console.error('Payment error:', result);
-            alert('Terjadi kesalahan saat memproses pembayaran.');
+            toast.error('Terjadi kesalahan saat memproses pembayaran.', {
+              position: 'top-center',
+              autoClose: 3000,
+              toastId: 'checkout-error',
+            });
           }, onClose: function (result) {
             window.location.href = `admin/orders`
           },

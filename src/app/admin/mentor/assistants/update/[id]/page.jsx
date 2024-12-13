@@ -19,6 +19,7 @@ import 'summernote/dist/summernote-bs4.css';
 import 'filepond/dist/filepond.min.css';
 import '@/../public/assets/css/components.css'
 import {toast} from "react-toastify";
+import ErrorPageAdmin from "@/app/errors/ErrorPageAdmin";
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -27,6 +28,7 @@ export default function Page() {
   const [assistanceDependency, setAssistanceDependency] = useState({
     categories: [], tags: [], languages: [],
   });
+  const [isError, setIsError] = useState(false);
   const router = useRouter();
   const params = useParams();
   const [files, setFiles] = useState([]);
@@ -166,7 +168,6 @@ export default function Page() {
         setAssistanceDependency(responseBody['result']['data']);
         setFormData({...formData, languages: responseBody['result']['data']['languages'].map(language => language.id)});
       } else {
-        console.error('Failed to fetch assistance dependency', responseBody);
       }
       setLoading(false)
     }
@@ -275,10 +276,10 @@ export default function Page() {
           setOldFiles(allFiles);
           setExistingAssistance(existingAssistance)
         } else {
-          console.error('Failed to fetch experiences', responseBody);
+          setIsError(true)
         }
       } catch (error) {
-        console.error('Error fetching experiences:', error);
+        setIsError(true)
       } finally {
         setLoading(false); // Menghentikan loading ketika data sudah diterima
       }
@@ -332,211 +333,218 @@ export default function Page() {
   useEffect(() => {
 
   }, [formData.topic]);
+
+
+  if (isError) {
+    return (<ErrorPageAdmin/>)
+  }
   return (<>
-    {loading ? (<Loading/>) : (<AdminWrapper>
-      <section className="section">
-        <div className="section-header">
-          <h1>Asistensi Mentor</h1>
-          <div className="section-header-breadcrumb">
-            <div className="breadcrumb-item active">
-              <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/dashboard`}>Dashboard</a>
+      {loading ? (<Loading/>) : (<AdminWrapper>
+        <section className="section">
+          <div className="section-header">
+            <h1>Asistensi Mentor</h1>
+            <div className="section-header-breadcrumb">
+              <div className="breadcrumb-item active">
+                <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/dashboard`}>Dashboard</a>
+              </div>
+              <div className="breadcrumb-item">
+                <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/assistants`}>Asistensi Mentor</a>
+              </div>
+              <div className="breadcrumb-item">Edit Data</div>
             </div>
-            <div className="breadcrumb-item">
-              <a href={`${process.env.NEXT_PUBLIC_BASE_URL}admin/assistants`}>Asistensi Mentor</a>
-            </div>
-            <div className="breadcrumb-item">Edit Data</div>
           </div>
-        </div>
 
-        <div className="section-body">
-          <h2 className="section-title">Mengubah Data Asistensi Mentor</h2>
-          <p className="section-lead col-6">
-            Pada halaman ini, Anda dapat mengubah data asistensi baru dengan mengisi semua field formulir yang tersedia.
-            Dengan informasi yang lengkap dan jelas, Anda dapat mengelola dan memfasilitasi proses bimbingan yang
-            efektif dan bermanfaat bagi setiap mentor dan cohort.
-          </p>
+          <div className="section-body">
+            <h2 className="section-title">Mengubah Data Asistensi Mentor</h2>
+            <p className="section-lead col-6">
+              Pada halaman ini, Anda dapat mengubah data asistensi baru dengan mengisi semua field formulir yang
+              tersedia.
+              Dengan informasi yang lengkap dan jelas, Anda dapat mengelola dan memfasilitasi proses bimbingan yang
+              efektif dan bermanfaat bagi setiap mentor dan cohort.
+            </p>
 
-          <div className="row">
-            <div className="col-12">
-              <div className="card">
-                <div className="card-header">
-                  <h4>Formulir Menambah Asistensi Mentor Baru</h4>
-                </div>
-                <div className="card-body">
-                  {formData.topic !== '' && <form onSubmit={handleSubmit} encType={"multipart/form-data"}>
-                    <div className="form-group row mb-4">
-                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="categoryId">
-                        Kategori Asistensi
-                      </label>
-                      <div className="col-sm-12 col-md-7">
-                        <select ref={categorySelectRef} className="form-control select2"
-                                name="categoryId" id="categoryId">
-                          {assistanceDependency['categories'].map((value, index) => (
-                            <option key={index} value={Number(value['id'])}>{value['name']}</option>))}
-                        </select>
-                      </div>
-                    </div>
-                    <div className="form-group row mb-4">
-                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="topic">
-                        Topik
-                      </label>
-                      <div className="col-sm-12 col-md-7">
-                        <input
-                          type="text"
-                          className={`form-control ${errors.topic ? 'is-invalid' : ''}`}
-                          name="topic"
-                          id="topic"
-                          value={formData.topic}
-                          onChange={handleChange}
-                        />
-                        {errorFeedback.topic}
-                      </div>
-                    </div>
-                    <div className="form-group row mb-4">
-                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
-                             htmlFor="durationMinutes">
-                        Durasi
-                      </label>
-                      <div className="col-sm-8 col-md-5 input-group">
-                        <input
-                          type="number"
-                          className={`form-control ${errors.durationMinutes ? 'is-invalid' : ''}`}
-                          name="durationMinutes"
-                          id="durationMinutes"
-                          value={formData.durationMinutes}
-                          onChange={handleChange}
-                        />
-                        <div className="input-group-append">
-                          <div className="input-group-text">
-                            Menit
-                          </div>
+            <div className="row">
+              <div className="col-12">
+                <div className="card">
+                  <div className="card-header">
+                    <h4>Formulir Menambah Asistensi Mentor Baru</h4>
+                  </div>
+                  <div className="card-body">
+                    {formData.topic !== '' && <form onSubmit={handleSubmit} encType={"multipart/form-data"}>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="categoryId">
+                          Kategori Asistensi
+                        </label>
+                        <div className="col-sm-12 col-md-7">
+                          <select ref={categorySelectRef} className="form-control select2"
+                                  name="categoryId" id="categoryId">
+                            {assistanceDependency['categories'].map((value, index) => (
+                              <option key={index} value={Number(value['id'])}>{value['name']}</option>))}
+                          </select>
                         </div>
-                        {errorFeedback.durationMinutes}
                       </div>
-                    </div>
-                    <div className="form-group row mb-4">
-                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
-                             htmlFor="price">
-                        Harga
-                      </label>
-                      <div className="col-sm-8 col-md-5 input-group">
-                        <div className="input-group-prepend">
-                          <div className="input-group-text">
-                            Rupiah
-                          </div>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="topic">
+                          Topik
+                        </label>
+                        <div className="col-sm-12 col-md-7">
+                          <input
+                            type="text"
+                            className={`form-control ${errors.topic ? 'is-invalid' : ''}`}
+                            name="topic"
+                            id="topic"
+                            value={formData.topic}
+                            onChange={handleChange}
+                          />
+                          {errorFeedback.topic}
                         </div>
-                        <input
-                          type="number"
-                          className={`form-control ${errors.price ? 'is-invalid' : ''}`}
-                          name="price"
-                          id="price"
-                          value={formData.price}
-                          onChange={handleChange}
-                        />
-                        {errorFeedback.price}
                       </div>
-                    </div>
-                    <div className="form-group row mb-4">
-                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
-                             htmlFor="capacity">
-                        Kapasitas
-                      </label>
-                      <div className="col-sm-9 col-md-5 input-group">
-                        <input
-                          type="number"
-                          className={`form-control ${errors.capacity ? 'is-invalid' : ''}`}
-                          name="capacity"
-                          id="capacity"
-                          value={formData.capacity}
-                          onChange={handleChange}
-                        />
-                        <div className="input-group-append">
-                          <div className="input-group-text">
-                            Orang
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
+                               htmlFor="durationMinutes">
+                          Durasi
+                        </label>
+                        <div className="col-sm-8 col-md-5 input-group">
+                          <input
+                            type="number"
+                            className={`form-control ${errors.durationMinutes ? 'is-invalid' : ''}`}
+                            name="durationMinutes"
+                            id="durationMinutes"
+                            value={formData.durationMinutes}
+                            onChange={handleChange}
+                          />
+                          <div className="input-group-append">
+                            <div className="input-group-text">
+                              Menit
+                            </div>
                           </div>
+                          {errorFeedback.durationMinutes}
                         </div>
-                        {errorFeedback.capacity}
                       </div>
-                    </div>
-                    <div className="form-group row mb-4">
-                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="format">
-                        Format Asistensi
-                      </label>
-                      <div className="col-sm-12 col-md-7">
-                        <select ref={formatSelectRef} className="form-control select2"
-                                name="format" id="format">
-                          <option key="INDIVIDUAL" value="INDIVIDUAL">INDIVIDUAL
-                          </option>
-                          <option key="GROUP" value="GROUP">GROUP</option>
-                          <option key="HYBRID" value="HYBRID">HYBRID</option>
-                        </select>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
+                               htmlFor="price">
+                          Harga
+                        </label>
+                        <div className="col-sm-8 col-md-5 input-group">
+                          <div className="input-group-prepend">
+                            <div className="input-group-text">
+                              Rupiah
+                            </div>
+                          </div>
+                          <input
+                            type="number"
+                            className={`form-control ${errors.price ? 'is-invalid' : ''}`}
+                            name="price"
+                            id="price"
+                            value={formData.price}
+                            onChange={handleChange}
+                          />
+                          {errorFeedback.price}
+                        </div>
                       </div>
-                    </div>
-                    <div className="form-group row mb-4">
-                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="tags">
-                        Tag
-                      </label>
-                      <div className="col-sm-12 col-md-7" id="select-container">
-                        <select
-                          ref={tagsSelectRef} className={`form-control select2 ${errors.tagId ? 'is-invalid' : ''}`}
-                          multiple={true}
-                          onChange={handleChange}
-                          name="tagId" id="tags">
-                          {filteredTags.length !== 0 && filteredTags.map((tag, index) => (
-                            <option key={`tags-${index}`} value={tag['id']}>{tag['name']}</option>))}
-                        </select>
-                        {errorFeedback.tagId}
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
+                               htmlFor="capacity">
+                          Kapasitas
+                        </label>
+                        <div className="col-sm-9 col-md-5 input-group">
+                          <input
+                            type="number"
+                            className={`form-control ${errors.capacity ? 'is-invalid' : ''}`}
+                            name="capacity"
+                            id="capacity"
+                            value={formData.capacity}
+                            onChange={handleChange}
+                          />
+                          <div className="input-group-append">
+                            <div className="input-group-text">
+                              Orang
+                            </div>
+                          </div>
+                          {errorFeedback.capacity}
+                        </div>
                       </div>
-                    </div>
-                    <div className="form-group row mb-4">
-                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="languages">
-                        Bahasa
-                      </label>
-                      <div className="col-sm-12 col-md-7">
-                        <select className="form-control select2" multiple={true} ref={languagesSelectRef}
-                                name="languages" id="languages">
-                          {assistanceDependency['languages'].map((value, index) => (
-                            <option key={"languages" + index} value={value['id']}>{value['name']}</option>))}
-                        </select>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="format">
+                          Format Asistensi
+                        </label>
+                        <div className="col-sm-12 col-md-7">
+                          <select ref={formatSelectRef} className="form-control select2"
+                                  name="format" id="format">
+                            <option key="INDIVIDUAL" value="INDIVIDUAL">INDIVIDUAL
+                            </option>
+                            <option key="GROUP" value="GROUP">GROUP</option>
+                            <option key="HYBRID" value="HYBRID">HYBRID</option>
+                          </select>
+                        </div>
                       </div>
-                    </div>
-                    <div className="form-group row mb-4">
-                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
-                             htmlFor="description">Deskripsi</label>
-                      <div className="col-sm-12 col-md-7">
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="tags">
+                          Tag
+                        </label>
+                        <div className="col-sm-12 col-md-7" id="select-container">
+                          <select
+                            ref={tagsSelectRef} className={`form-control select2 ${errors.tagId ? 'is-invalid' : ''}`}
+                            multiple={true}
+                            onChange={handleChange}
+                            name="tagId" id="tags">
+                            {filteredTags.length !== 0 && filteredTags.map((tag, index) => (
+                              <option key={`tags-${index}`} value={tag['id']}>{tag['name']}</option>))}
+                          </select>
+                          {errorFeedback.tagId}
+                        </div>
+                      </div>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3" htmlFor="languages">
+                          Bahasa
+                        </label>
+                        <div className="col-sm-12 col-md-7">
+                          <select className="form-control select2" multiple={true} ref={languagesSelectRef}
+                                  name="languages" id="languages">
+                            {assistanceDependency['languages'].map((value, index) => (
+                              <option key={"languages" + index} value={value['id']}>{value['name']}</option>))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3"
+                               htmlFor="description">Deskripsi</label>
+                        <div className="col-sm-12 col-md-7">
                             <textarea className={`summernote-simple ${errors.capacity ? 'is-invalid' : ''}`}
                                       name="description" id="description" ref={descriptionRef}
                                       defaultValue={formData.description}></textarea>
+                        </div>
                       </div>
-                    </div>
-                    <div className="form-group row mb-4">
-                      <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Gambar</label>
-                      <div className="col-sm-12 col-md-7">
-                        <FilePond
-                          files={files}
-                          onupdatefiles={setFiles}
-                          onremovefile={handleRemoveFile}
-                          allowMultiple={true}
-                          maxFiles={3}
-                          name="assistanceResources"
-                          labelIdle='Seret & Letakkan Gambar Anda atau <span class="filepond--label-action">Browse</span>'
-                        />
+                      <div className="form-group row mb-4">
+                        <label className="col-form-label text-md-right col-12 col-md-3 col-lg-3">Gambar</label>
+                        <div className="col-sm-12 col-md-7">
+                          <FilePond
+                            files={files}
+                            onupdatefiles={setFiles}
+                            onremovefile={handleRemoveFile}
+                            allowMultiple={true}
+                            maxFiles={3}
+                            name="assistanceResources"
+                            labelIdle='Seret & Letakkan Gambar Anda atau <span class="filepond--label-action">Browse</span>'
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="form-group row mb-4">
-                      <div className="col-sm-12 col-md-7 offset-md-3">
-                        <button type="submit" className="btn btn-primary">
-                          Submit
-                        </button>
+                      <div className="form-group row mb-4">
+                        <div className="col-sm-12 col-md-7 offset-md-3">
+                          <button type="submit" className="btn btn-primary">
+                            Submit
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </form>}
+                    </form>}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-    </AdminWrapper>)}
-  </>);
+        </section>
+      </AdminWrapper>)}
+    </>
+  );
 }

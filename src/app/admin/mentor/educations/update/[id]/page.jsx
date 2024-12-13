@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Loading} from "@/components/admin/Loading";
 import CommonScript from "@/components/admin/CommonScript";
-import {useParams, useRouter} from "next/navigation";
+import {useParams} from "next/navigation";
 import {CommonUtil} from "@/common/utils/common-util";
 
 // Style
@@ -14,14 +14,15 @@ import 'bootstrap-daterangepicker/daterangepicker.css'
 import 'summernote/dist/summernote-bs4.css'
 import '@/../public/assets/css/components.css'
 import {toast} from "react-toastify";
+import ErrorPageAdmin from "@/app/errors/ErrorPageAdmin";
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
+  const [isError, setIsError] = useState(true);
   const [formData, setFormData] = useState({
     name: '', degree: '', studyField: '',
   });
   const routerParam = useParams();
-  const router = useRouter()
   const [accessToken, setAccessToken] = useState();
 
   const [formDataRef, setFormDataRef] = useState({
@@ -48,8 +49,8 @@ export default function Page() {
 
   useEffect(() => {
     const loadAssets = async () => {
-
       const $ = (await import('jquery')).default;
+      window.jQuery = $;
 
       function updateSelectedStartDate() {
         setFormDataRef((prevFormDataRef) => ({
@@ -94,9 +95,9 @@ export default function Page() {
 
     if (typeof window !== 'undefined') {
       loadAssets();
+      setLoading(false);
     }
 
-    setLoading(false);
   }, []);
 
   // useCallback to memoize handleChange function
@@ -159,7 +160,7 @@ export default function Page() {
         startDate: experienceData.startDate,
       })
     } else {
-      console.error(responseBody);
+      setIsError(true)
     }
   }
 
@@ -174,6 +175,9 @@ export default function Page() {
     };
   }, [errors]);
 
+  if (isError) {
+    return (<ErrorPageAdmin/>)
+  }
   return (<>
     {loading ? (<Loading/>) : (<AdminWrapper>
       <section className="section">
