@@ -1,4 +1,8 @@
+"use client"
+import {useRouter} from "next/navigation";
+
 const Join = () => {
+  const router = useRouter()
   return (
     <div className="bg-joinus my-32" id="join-us-section">
       <div className='mx-auto max-w-2xl lg:max-w-7xl sm:py-4 lg:px-8'>
@@ -24,7 +28,10 @@ const Join = () => {
                      placeholder="Your email" autoComplete="off"/>
             </div>
             <div className="sm:mr-3">
-              <button type="submit"
+              <button type="submit" onClick={(e) => {
+                e.preventDefault();
+                router.push('/auth/register')
+              }}
                       className="joinButton w-full sm:w-0 text-xl text-white font-semibold text-center rounded-xl sm:rounded-full bg-blue hover:bg-btnblue">
                 Join!
               </button>
