@@ -8,6 +8,7 @@ import '@/../public/assets/css/invoice.css'
 import Cookies from "js-cookie";
 import {Loading} from "@/components/admin/Loading";
 import {CommonUtil} from "@/common/utils/common-util";
+import ErrorPageAdmin from "@/app/errors/ErrorPageAdmin";
 
 
 export default function Page() {
@@ -16,6 +17,7 @@ export default function Page() {
   const [order, setOrder] = useState({});
   const [loading, setLoading] = useState(true);
   const routerParam = useParams()
+  const [isError, setIsError] = useState(false);
   useEffect(() => {
     async function loadAssets() {
       const $ = (await import('jquery')).default;
@@ -52,17 +54,19 @@ export default function Page() {
       const responseBody = await responseFetch.json();
       if (responseFetch.ok) {
         setOrder(responseBody.result.data)
-        console.log(responseBody.result.data)
       } else {
-        console.error('Failed to fetch experiences', responseBody);
+        setIsError(true);
       }
     } catch (error) {
-      console.error('Error fetching experiences:', error);
+      setIsError(true);
     } finally {
       setLoading(false); // Menghentikan loading ketika data sudah diterima
     }
   }
 
+  if (isError) {
+    return (<ErrorPageAdmin/>)
+  }
   return (
     loading ? (<Loading/>) : (
       <AdminWrapper>
