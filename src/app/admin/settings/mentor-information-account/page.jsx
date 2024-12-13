@@ -34,10 +34,10 @@ export default function Page() {
       const $ = (await import('jquery')).default;
       window.jQuery = $
       await CommonScript();
-      setLoading(false)
     }
     if (typeof window !== 'undefined') {
       loadAssets();
+      setLoading(false)
     }
     setAccessToken(Cookies.get("accessToken"))
   }, [])
@@ -102,13 +102,13 @@ export default function Page() {
         <section className="section">
           <div className="section-header">
             <div className="section-header-back">
-              <a href="features-settings.html" className="btn btn-icon"><i className="fas fa-arrow-left"></i></a>
+              <a href="/admin/settings" className="btn btn-icon"><i className="fas fa-arrow-left"></i></a>
             </div>
             <h1>General Settings</h1>
             <div className="section-header-breadcrumb">
-              <div className="breadcrumb-item active"><a href="#">Dashboard</a></div>
-              <div className="breadcrumb-item active"><a href="#">Settings</a></div>
-              <div className="breadcrumb-item">General Settings</div>
+              <div className="breadcrumb-item "><a href="/admin/dashboard">Dashboard</a></div>
+              <div className="breadcrumb-item "><a href="/admin/settings">Settings</a></div>
+              <div className="breadcrumb-item active">Informasi Rekening</div>
             </div>
           </div>
 

@@ -148,13 +148,13 @@ export default function Page() {
     <section className="section">
       <div className="section-header">
         <div className="section-header-back">
-          <a href="features-settings.html" className="btn btn-icon"><i className="fas fa-arrow-left"></i></a>
+          <a href="/admin/settings" className="btn btn-icon"><i className="fas fa-arrow-left"></i></a>
         </div>
         <h1>General Settings</h1>
         <div className="section-header-breadcrumb">
-          <div className="breadcrumb-item active"><a href="#">Dashboard</a></div>
-          <div className="breadcrumb-item active"><a href="#">Settings</a></div>
-          <div className="breadcrumb-item">General Settings</div>
+          <div className="breadcrumb-item "><a href="/admin/dashboard">Dashboard</a></div>
+          <div className="breadcrumb-item "><a href="/admin/settings">Settings</a></div>
+          <div className="breadcrumb-item active">General Settings</div>
         </div>
       </div>
 

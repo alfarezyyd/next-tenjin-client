@@ -118,9 +118,8 @@ export default function Page() {
       <div className="section-header">
         <h1>Menarik Saldo</h1>
         <div className="section-header-breadcrumb">
-          <div className="breadcrumb-item active"><a href="#">Admin</a></div>
-          <div className="breadcrumb-item"><a href="#">Mentor</a></div>
-          <div className="breadcrumb-item">Pendidikan</div>
+          <div className="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></div>
+          <div className="breadcrumb-item active">Menarik Saldo</div>
         </div>
       </div>
 
