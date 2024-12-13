@@ -84,7 +84,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchCurrentUser();
-    if (localStorage.getItem("checkoutItem").length === 2) {
+    if (localStorage.getItem("checkoutItem").length === 2 || localStorage.getItem("checkoutItem").length === 0) {
       redirect("/marketplace")
     }
     const checkoutItem = JSON.parse(localStorage.getItem("checkoutItem"));
