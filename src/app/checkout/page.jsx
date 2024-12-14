@@ -34,7 +34,7 @@ export default function Page() {
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedInfoDate, setSelectedInfoDate] = useState(null);
   const calendarRef = useRef(null);
-  const [event, setEvent] = useState(null);
+  const [event, setEvent] = useState([{}]);
 
   const [totalPrice, setTotalPrice] = useState(0);
   const handleIncrement = () => {
@@ -50,17 +50,40 @@ export default function Page() {
   };
 
   useEffect(() => {
-    if (checkoutItem?.sessionStartTimestamp) {
+    if (loggedUser) {
+      // Cari event berdasarkan user
+      const createdEvent = event.find((ev) => ev.title === loggedUser.name);
+      if (createdEvent) {
+        let sessStart = new Date(createdEvent.start);
 
-      const eventEnd = new Date(checkoutItem.sessionStartTimestamp); // Salinan eventStart
-      eventEnd.setMinutes(eventEnd.getMinutes() + (checkoutItem['minutesDurations'] * count));
+        // Buat objek Date dari waktu end
+        sessStart.setHours(sessStart.getHours() + 7);
 
-      setCheckoutItem(prevState => ({
-        ...prevState, sessionEndTimestamp: eventEnd
-      }))
-      event.setEnd(eventEnd)
+        // Tambahkan durasi berdasarkan checkoutItem
+        sessStart.setMinutes(sessStart.getMinutes() + (checkoutItem['minutesDurations'] * count));
+
+        // Konversi kembali ke format ISO
+        // Format "YYYY-MM-DDTHH:mm:ss"
+        // Update properti end di createdEvent
+        createdEvent.end = sessStart.toISOString().substring(0, 19);
+
+        // Periksa konflik
+        if (isConflict(createdEvent, event)) {
+          toast.error('Jadwal Anda bertabrakan! silahkan pilih jadwal lain yang kosong');
+          return;
+        }
+
+        setEvent((prevState) => {
+          return prevState.map((ev) =>
+            ev.title === loggedUser.name
+              ? {...ev, end: createdEvent.end} // Update hanya event yang sesuai
+              : ev
+          );
+        });
+      }
     }
   }, [count]);
+
 
   useEffect(() => {
     setAccessToken(Cookies.get("accessToken"));
@@ -82,8 +105,37 @@ export default function Page() {
     }
   }, []);
 
+  async function fetchCurrentSchedule() {
+    if (accessToken) {
+      const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/orders/schedule/${checkoutItem.mentorId}`, {
+        method: 'GET', includeCredentials: true, headers: {
+          'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`
+        }
+      });
+      const responseBody = await responseFetch.json();
+      if (responseFetch.ok) {
+        const newEvent = [];
+        for (const eventData of responseBody['result']['data']) {
+          console.log(eventData)
+          let sessStart = new Date(eventData['sessionStartTimestamp']);
+          let sessEnd = new Date(eventData['sessionEndTimestamp']);
+          // Menambahkan 7 jam
+          sessStart.setHours(sessStart.getHours());
+          sessEnd.setHours(sessEnd.getHours());
+          newEvent.push({
+            title: "BOOKED", start: sessStart.toISOString(), end: sessEnd.toISOString(),
+          })
+        }
+        setEvent(newEvent)
+      } else {
+        console.error('Failed to fetch assistance dependency', responseBody);
+      }
+    }
+  }
+
   useEffect(() => {
     fetchCurrentUser();
+    fetchCurrentSchedule();
     if (localStorage.getItem("checkoutItem").length === 2 || localStorage.getItem("checkoutItem").length === 0) {
       redirect("/marketplace")
     }
@@ -115,7 +167,11 @@ export default function Page() {
         });
         return;
       }
+      const createdEvent = event.find((ev) => ev.title === loggedUser.name);
       checkoutItem.sessionCount = count;
+      checkoutItem.sessionStartTimestamp = createdEvent.start;
+      checkoutItem.sessionEndTimestamp = createdEvent.end;
+      console.log(checkoutItem)
       const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/orders`, {
         method: 'POST', includeCredentials: true, headers: {
           'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`
@@ -133,9 +189,7 @@ export default function Page() {
           }, onError: function (result) {
             console.error('Payment error:', result);
             toast.error('Terjadi kesalahan saat memproses pembayaran.', {
-              position: 'top-center',
-              autoClose: 3000,
-              toastId: 'checkout-error',
+              position: 'top-center', autoClose: 3000, toastId: 'checkout-error',
             });
           }, onClose: function (result) {
             window.location.href = `admin/orders`
@@ -147,24 +201,73 @@ export default function Page() {
     }
   }
 
+  async function handleEventDrop(eventDropInfo) {
+    const updatedEvent = {
+      start: eventDropInfo.event.start, end: eventDropInfo.event.end,
+    };
+
+    const otherEvents = event.filter((event) => event.id !== eventDropInfo.event.id);
+
+    // Validasi bentrok
+    if (isConflict(updatedEvent, otherEvents)) {
+      alert('This move creates a scheduling conflict!');
+      eventDropInfo.revert(); // Kembalikan event ke posisi semula
+    } else {
+      // Update event jika tidak ada konflik
+      setEvent((prev) => prev.map((event) => event.id === eventDropInfo.event.id ? {
+        ...event, start: updatedEvent.start, end: updatedEvent.end
+      } : event));
+    }
+  }
+
+  function isConflict(newEvent, existingEvents) {
+    return existingEvents.some(event => {
+      if (event.title === loggedUser.name) {
+        return false
+      }
+      const newStart = new Date(newEvent.start).getTime();
+      const newEnd = new Date(newEvent.end).getTime();
+      const existingStart = new Date(event.start).getTime();
+      const existingEnd = new Date(event.end).getTime();
+
+      // Kondisi bertabrakan: waktu baru ada di dalam rentang waktu event yang ada
+      return ((newStart >= existingStart && newStart < existingEnd) || // Awal baru di dalam rentang event lama
+        (newEnd > existingStart && newEnd <= existingEnd) || // Akhir baru di dalam rentang event lama
+        (newStart <= existingStart && newEnd >= existingEnd) // Jadwal baru melingkupi event lama
+      );
+    });
+  }
+
   async function handleDateSelect() {
-// Gabungkan tanggal dan waktu menjadi ISO string
-    const dateNow = `${selectedInfoDate.startStr.substring(0, 10)}T${String(selectedTime.hour).padStart(2, '0')}:${String(selectedTime.minute).padStart(2, '0')}:00`
+    // Gabungkan tanggal dan waktu menjadi ISO string
+    const dateNow = `${selectedInfoDate.startStr.substring(0, 10)}T${String(selectedTime.hour).padStart(2, '0')}:${String(selectedTime.minute).padStart(2, '0')}:00`;
 
     const eventStart = new Date(dateNow);
-    setCheckoutItem(prevState => ({
-      ...prevState, sessionStartTimestamp: eventStart
-    }))
+
     const eventEnd = new Date(eventStart); // Salinan eventStart
     eventEnd.setMinutes(eventEnd.getMinutes() + (checkoutItem['minutesDurations'] * count));
 
-    setCheckoutItem(prevState => ({
-      ...prevState, sessionEndTimestamp: eventEnd
-    }))
-    setEvent(selectedInfoDate.view.calendar.addEvent({
-      title: loggedUser.name, start: dateNow, end: eventEnd, allDay: false
-    }))
-    onOpenChange()
+    const newEvent = {
+      title: loggedUser.name, // Identifikasi user dengan nama atau ID unik
+      start: dateNow, end: eventEnd, allDay: false,
+    };
+
+    // Validasi: Cek apakah user sudah memiliki event
+    const existingEvent = event.find(e => e.title === loggedUser.name);
+
+    if (existingEvent) {
+      toast.error('Anda hanya bisa memiliki satu jadwal! Silakan hapus jadwal sebelumnya untuk memilih waktu baru.');
+      return; // Berhenti di sini jika sudah ada event
+    }
+
+    // Validasi bentrok dengan jadwal lain
+    if (isConflict(newEvent, event)) {
+      toast.error('Jadwal Anda bertabrakan! Silakan pilih waktu yang kosong.');
+    } else {
+      // Tambahkan jadwal baru jika lolos semua validasi
+      setEvent((prevState) => [...prevState, newEvent]);
+      onOpenChange(); // Tutup modal atau lakukan tindakan lain
+    }
   }
 
 // Then somewhere else on your React component, `window.snap` global object will be available to use
@@ -244,7 +347,7 @@ export default function Page() {
                 </div>
               </div>
             </div>
-            <div className="mt-2">
+            <div className="mt-2 mb-12">
               <FullCalendar
                 ref={calendarRef}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -253,8 +356,17 @@ export default function Page() {
                 headerToolbar={{
                   left: '', center: 'title', right: 'today,prev,next,timeGridWeek,timeGridDay'
                 }}
+                events={event} // Tambahkan event default dari server
                 buttonText={{
                   today: 'Today', week: 'Week', day: 'Day', list: 'list'
+                }}
+                eventClick={(info) => {
+                  if (info.event.title === loggedUser.name) {
+                    setEvent((prevState) => prevState.filter(e => e.title !== loggedUser.name));
+                    toast.success('Jadwal Anda berhasil dihapus!');
+                  } else {
+                    toast.error('Anda hanya bisa menghapus jadwal milik Anda.');
+                  }
                 }}
                 select={(e) => {
                   onOpenChange()
@@ -264,7 +376,7 @@ export default function Page() {
                   const minutes = dateObj.getMinutes().toString().padStart(2, "0");
                   setSelectedTime(new Time(Number(hours), Number(minutes)))
                 }}
-                editable={true}
+                editable={false}
                 selectable={true}
                 displayEventEnd={true}
                 slotLabelFormat={{
@@ -310,10 +422,8 @@ export default function Page() {
                          className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                          placeholder="Catatan" onChange={(e) => {
                     setCheckoutItem((prevState) => ({
-                        ...prevState,
-                        note: e.target.value
-                      }
-                    ))
+                      ...prevState, note: e.target.value
+                    }))
                   }}/>
                   <div
                     className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3 bg-zinc-200">
