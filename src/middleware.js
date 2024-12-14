@@ -29,7 +29,7 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  if (pathname.startsWith('/admin')) {
+  if (pathname.startsWith('/admin') || pathname.startsWith('/mentors/register')) {
     if (!token || CommonUtil.isTokenExpired(token)) {
       const loginUrl = new URL('/auth/login', request.url);
       return NextResponse.redirect(loginUrl);
@@ -40,5 +40,5 @@ export function middleware(request) {
 
 // Middleware config
 export const config = {
-  matcher: ['/admin/:path*', '/admin/mentor/:path*', '/checkout', '/auth/:path*'],
+  matcher: ['/admin/:path*', '/admin/mentor/:path*', '/mentors/register', '/checkout', '/auth/:path*'],
 };
