@@ -239,8 +239,12 @@ export default function Page() {
                       <label htmlFor="site-title"
                              className="form-control-label col-sm-3 text-md-right">Nomor Telepon</label>
                       <div className="col-sm-6 col-md-9">
-                        <input type="text" name="telephone" className="form-control" id="site-title"
+                        <input type="text" name="telephone"
+                               className={`form-control ${errors.telephone ? 'is-invalid' : ''}`} id="site-title"
                                value={payloadRequest.telephone ?? ''} onChange={handleChange}/>
+                        <div className={'invalid-feedback'}>
+                          {errors.telephone}
+                        </div>
                       </div>
                     </div>
                     <div className="form-group row align-items-center">
