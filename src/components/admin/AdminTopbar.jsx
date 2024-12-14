@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {CommonUtil} from "@/common/utils/common-util";
+import Cookies from "js-cookie";
 
 export default function AdminTopbar({parsedJwt}) {
   return (<nav className="navbar navbar-expand-lg main-navbar">
