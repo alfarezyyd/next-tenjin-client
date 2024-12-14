@@ -22,7 +22,13 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, F
 export default function Page() {
   const [loading, setLoading] = useState(true);
   const [currentStep, setCurrentStep] = useState(1); // State untuk mengelola langkah wizard
-  const [loggedUser, setLoggedUser] = useState({});
+  const [loggedUser, setLoggedUser] = useState({
+    name: '',
+    email: '',
+    telephone: '',
+    gender: '',
+    emailVerifiedAt: '',
+  });
   const [profilePhoto, setProfilePhoto] = useState([]);
   const [identityCard, setIdentityCard] = useState([]);
   const [curriculumVitae, setCurriculumVitae] = useState([]);
@@ -62,10 +68,28 @@ export default function Page() {
   const fetchCurrentUser = async () => {
     let accessToken = Cookies.get("accessToken");
     const user = CommonUtil.parseJwt(accessToken);
+    console.log(user)
     if (user.mentorId !== null) {
       window.location.href = '/admin/dashboard'
     }
-    setLoggedUser(user);
+    const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/users/${user.uniqueId}`, {
+      method: 'GET', includeCredentials: true, headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+
+    const responseBody = await fetchResponse.json();
+
+    console.log(responseBody);
+    if (fetchResponse.ok) {
+      setLoggedUser(responseBody.result.data);
+    } else {
+      toast.error('Data failed to be received', {
+        position: 'top-right', autoClose: 3000, toastId: 'received-fetch-danger'
+      });
+
+    }
   };
 
 
@@ -150,7 +174,6 @@ export default function Page() {
   // Fungsi untuk navigasi ke langkah berikutnya
   const nextStep = () => {
     if (currentStep === 1) {
-      console.log(loggedUser)
       if (loggedUser.emailVerifiedAt === null) {
         toast.error('Mohon verifikasi email anda terlebih dahulu')
         setCurrentStep((prevStep) => prevStep - 1);
@@ -248,10 +271,15 @@ export default function Page() {
                                  className="form-control"
                                  id="email" disabled value={loggedUser.email}
                                  name="email"/>
-                          <small>Anda harus memverifikasi e-mail terlebih <br/> dahulu apabila belum pada
-                            halaman <a
-                              href="">Verifikasi
-                              Email</a> </small>
+                          {!(loggedUser?.emailVerifiedAt) ? (
+                            <small>Anda harus memverifikasi e-mail terlebih <br/> dahulu apabila belum pada
+                              halaman <a
+                                href="">Verifikasi
+                                Email</a> </small>
+                          ) : (
+                            <small>Email Anda sudah terverifikasi</small>
+                          )
+                          }
                         </div>
                       </div>
                       <div className="row col-md-9 mx-auto">
