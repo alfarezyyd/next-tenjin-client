@@ -25,8 +25,8 @@ const Drawer = ({children, isOpen, setIsOpen}) => {
           <header className="px-4 py-4 flex items-center">
 
             <div className="flex flex-shrink-0 items-center border-right">
-              <Link href="/public" className='text-2xl font-semibold text-black'>
-                Desgy Solutions
+              <Link href="/publi" className='text-2xl font-semibold text-black'>
+                Tenjin Platform
               </Link>
             </div>
 

@@ -16,11 +16,11 @@ const Banner = () => {
             </button>
           </div>
           <div className="py-3 text-center lg:text-start">
-            <h1 className='text-3xl lg:text-6xl font-bold text-darkpurple'>
+            <h1 className='text-7xl lg:text-6xl font-bold text-darkpurple'>
               Belajar Langsung <br/> dari Para Ahli <br/>
               <span className='text-teal-300'>
               <Typewriter
-                words={[' Teknologi', ' Teknik', ' Arsitektur', ' Farmasi', ' Kedokteran']}
+                words={[' Teknologi', ' Teknik', ' Arsitektur', ' Farmasi', ' Kedokteran', ' Metalurgi', ' Editor', ' Matematika']}
                 loop={5}
                 cursor
                 cursorStyle='_'
