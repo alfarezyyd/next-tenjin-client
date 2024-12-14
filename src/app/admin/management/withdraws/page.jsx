@@ -191,22 +191,22 @@ export default function Page() {
                                   <li className="list-group-item d-flex justify-content-between align-items-center">
                                     Nama Pemilik Rekening
                                     <span
-                                      className="badge badge-primary badge-pill">{activeWithdraw?.mentorBankAccount?.accountHolderName}</span>
+                                      className="badge badge-primary badge-pill">{activeWithdraw?.userBankAccount?.accountHolderName}</span>
                                   </li>
                                   <li className="list-group-item d-flex justify-content-between align-items-center">
                                     Nomor Rekening
                                     <span
-                                      className="badge badge-primary badge-pill">{activeWithdraw?.mentorBankAccount?.accountNumber}</span>
+                                      className="badge badge-primary badge-pill">{activeWithdraw?.userBankAccount?.accountNumber}</span>
                                   </li>
                                   <li className="list-group-item d-flex justify-content-between align-items-center">
                                     Nama Bank
                                     <span
-                                      className="badge badge-primary badge-pill">{activeWithdraw?.mentorBankAccount?.bankName}</span>
+                                      className="badge badge-primary badge-pill">{activeWithdraw?.userBankAccount?.bankName}</span>
                                   </li>
                                   <li className="list-group-item d-flex justify-content-between align-items-center">
                                     Email Penerima Pembayaran
                                     <span
-                                      className="badge badge-primary badge-pill">{activeWithdraw?.mentorBankAccount?.paymentRecipientEmail}</span>
+                                      className="badge badge-primary badge-pill">{activeWithdraw?.userBankAccount?.paymentRecipientEmail}</span>
                                   </li>
                                 </ul>
                               </div>
