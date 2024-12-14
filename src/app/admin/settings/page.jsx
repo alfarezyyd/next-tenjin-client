@@ -81,6 +81,19 @@ export default function Page() {
                 </div>
               </div>
             </div>
+            <div className="col-lg-6">
+              <div className="card card-large-icons">
+                <div className="card-icon bg-primary text-white">
+                  <i className="far fa-money-bill-alt"></i></div>
+                <div className="card-body">
+                  <h4>Rekening</h4>
+                  <p>Pengaturan mengenai rekening yang digunakan oleh mentor</p>
+                  <a href="/admin/settings/mentor-information-account" className="card-cta">Change Setting <i
+                    className="fas fa-chevron-right"></i></a>
+                </div>
+              </div>
+            </div>
+
             {decodedAccessToken?.mentorId && (<>
               <div className="col-lg-6">
                 <div className="card card-large-icons">
@@ -91,19 +104,6 @@ export default function Page() {
                     <h4>Informasi Mentor</h4>
                     <p>Perubahan mengenai data pribadi mentor yang dimiliki</p>
                     <a href="/admin/settings/mentor-information" className="card-cta">Change Setting <i
-                      className="fas fa-chevron-right"></i></a>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <div className="card card-large-icons">
-                  <div className="card-icon bg-primary text-white">
-                    <i className="fas fa-power-off"></i>
-                  </div>
-                  <div className="card-body">
-                    <h4>Rekening</h4>
-                    <p>Pengaturan mengenai rekening yang digunakan oleh mentor</p>
-                    <a href="/admin/settings/mentor-information-account" className="card-cta">Change Setting <i
                       className="fas fa-chevron-right"></i></a>
                   </div>
                 </div>

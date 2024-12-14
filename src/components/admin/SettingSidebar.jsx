@@ -17,13 +17,13 @@ export const SettingSidebar = ({currentUser}) => {
     <li className="nav-item"><a href="/admin/settings/password"
                                 className={`nav-link ${lastPathName === 'password' ? 'active' : ''}`}>Password</a>
     </li>
+    <li className="nav-item"><a href="/admin/settings/mentor-information-account"
+                                className={`nav-link ${lastPathName === 'mentor-information-account' ? 'active' : ''}`}>Informasi
+      Rekening</a></li>
     {currentUser?.mentorId && (<>
       <li className="nav-item"><a href="/admin/settings/mentor-information"
                                   className={`nav-link ${lastPathName === 'mentor-information' ? 'active' : ''}`}>Informasi
         Mentor</a></li>
-      <li className="nav-item"><a href="/admin/settings/mentor-information-account"
-                                  className={`nav-link ${lastPathName === 'mentor-information-account' ? 'active' : ''}`}>Informasi
-        Rekening</a></li>
     </>)}
 
   </ul>))

@@ -79,22 +79,22 @@ export default function Page() {
                             <li className="list-group-item d-flex justify-content-between align-items-center">
                               Nama Pemilik Rekening
                               <span
-                                className="badge badge-primary badge-pill ml-4">{item?.mentorBankAccount?.accountHolderName}</span>
+                                className="badge badge-primary badge-pill ml-4">{item?.userBankAccount?.accountHolderName}</span>
                             </li>
                             <li className="list-group-item d-flex justify-content-between align-items-center">
                               Nomor Rekening
                               <span
-                                className="badge badge-primary badge-pill ml-4">{item?.mentorBankAccount?.accountNumber}</span>
+                                className="badge badge-primary badge-pill ml-4">{item?.userBankAccount?.accountNumber}</span>
                             </li>
                             <li className="list-group-item d-flex justify-content-between align-items-center">
                               Nama Bank
                               <span
-                                className="badge badge-primary badge-pill ml-4">{item?.mentorBankAccount?.bankName}</span>
+                                className="badge badge-primary badge-pill ml-4">{item?.userBankAccount?.bankName}</span>
                             </li>
                             <li className="list-group-item d-flex justify-content-between align-items-center">
                               Email Penerima Pembayaran
                               <span
-                                className="badge badge-primary badge-pill ml-4">{item?.mentorBankAccount?.paymentRecipientEmail}</span>
+                                className="badge badge-primary badge-pill ml-4">{item?.userBankAccount?.paymentRecipientEmail}</span>
                             </li>
                             <li className="list-group-item d-flex justify-content-between align-items-center">
                               Status
