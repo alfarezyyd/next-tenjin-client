@@ -83,7 +83,6 @@ export default function Page() {
             return prevState.filter((experience) => experience.id !== id);
           });
 
-
         } else {
           console.error('Failed to fetch experiences', responseBody);
         }

@@ -93,7 +93,6 @@ export default function Page({}) {
       firstAssistance = {
         ...firstAssistance, averageRating: isNaN(averageRatingOperation) ? 0 : averageRatingOperation,
       }
-      console.log(firstAssistance);
       setActiveCategory(firstAssistance);
       if (firstAssistance['AssistanceResource'].length > 0) {
         setSlides(firstAssistance['AssistanceResource'].map((item) => {
@@ -130,12 +129,7 @@ export default function Page({}) {
   }
 
   async function loadMoreReview() {
-    console.log(activeCategory)
-    console.log({
-      mentorUniqueId: pathName.mentorId,
-      assistantId: activeCategory.id,
-      lastReviewId: activeCategory.Review[activeCategory.Review.length - 1].id,
-    });
+
     let responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/reviews/more-review`, {
       method: 'POST', headers: {
         'Accept': 'application/json', 'Content-Type': 'application/json',
@@ -148,7 +142,21 @@ export default function Page({}) {
     });
     const responseBody = await responseFetch.json();
     if (responseFetch.ok) {
-      console.log(responseBody.result.data)
+      const reviewData = responseBody.result.data;
+      if (reviewData.length === 0) {
+        toast.success('Semua review telah di-load')
+      } else {
+        const activeReview = activeCategory.Review;
+        for (let reviewElement of reviewData) {
+          activeReview.push(reviewElement)
+        }
+        setActiveCategory((prevActiveCategory) => {
+          return {
+            ...prevActiveCategory,
+            Review: activeReview
+          }
+        })
+      }
     } else {
       toast.error('Terdapat kesalahan ketika meload review')
     }
