@@ -274,7 +274,7 @@ export default function Page() {
                           {!(loggedUser?.emailVerifiedAt) ? (
                             <small>Anda harus memverifikasi e-mail terlebih <br/> dahulu apabila belum pada
                               halaman <a
-                                href="">Verifikasi
+                                href="/admin/verify-email">Verifikasi
                                 Email</a> </small>
                           ) : (
                             <small>Email Anda sudah terverifikasi</small>

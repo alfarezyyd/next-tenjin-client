@@ -71,8 +71,10 @@ export default function Page() {
     if (accessToken) {
       const responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}authentication/self/verify-otp/${oneTimePassword}`, {
         method: 'POST', includeCredentials: true, headers: {
-          'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`
-        }
+          'Accept': 'application/json', 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json',
+        }, body: JSON.stringify({
+          email: decodedAccessToken.email
+        })
       });
       const responseBody = await responseFetch.json();
       if (responseFetch.ok) {

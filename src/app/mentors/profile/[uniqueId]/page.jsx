@@ -227,7 +227,7 @@ const Page = () => {
                         ) : (
                           <Card>
                             <CardBody>
-                              <div className="relative my-5 text-left px-12">
+                              <div className="relative my-5 text-left px-12 z-0">
                                 {mentorExperience.length > 0 && mentorExperience.map((value, index) => {
                                   return (
                                     <div className="flex items-center relative" key={"education" + index}>
@@ -263,7 +263,7 @@ const Page = () => {
                                                   setSlides(value.ExperienceResource.map((item) => {
                                                     return (
                                                       {
-                                                        src: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/experience-resources/${mentorData.user.id}/${item.experienceId}/${item.imagePath}`,
+                                                        src: `${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/experience-resources/${mentorData.id}/${item.experienceId}/${item.imagePath}`,
                                                         width: 3840,
                                                         height: 5760
                                                       }
