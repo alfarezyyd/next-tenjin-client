@@ -270,7 +270,7 @@ const Page = () => {
                                                     )
                                                   }))
                                                 }}
-                                                src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/experience-resources/${mentorData.user.id}/${item.experienceId}/${item.imagePath}`}
+                                                src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/experience-resources/${mentorData.id}/${item.experienceId}/${item.imagePath}`}
                                                 width="100%"
                                               />
                                               <Lightbox
