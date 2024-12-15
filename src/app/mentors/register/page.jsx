@@ -42,7 +42,7 @@ export default function Page() {
       subDistrict: "",
       district: "",
       province: "",
-    }, pin: "", mentorBankAccount: {
+    }, pin: "", userBankAccount: {
       accountHolderName: "", bankName: "", accountNumber: "", paymentRecipientEmail: "",
     }
   });
@@ -159,7 +159,7 @@ export default function Page() {
       setFormData((prevData) => ({
         ...prevData, photo: null,
       }));
-
+      console.log(responseBody);
       responseBody.errors.message.forEach((error) => {
         errorMessages[error.path[0]] = error.message;
       });
@@ -470,7 +470,6 @@ export default function Page() {
                             files={profilePhoto}
                             onupdatefiles={(files) => {
                               setProfilePhoto(files);
-                              const file = files[0].file; // Ambil file asli
                             }}
                             allowMultiple={false}
                             maxFiles={1}
@@ -524,9 +523,9 @@ export default function Page() {
                             id="accountHolderName"
                             name="accountHolderName"
                             placeholder="Nama Pemilik Rekening"
-                            value={formData.mentorBankAccount.accountHolderName}
+                            value={formData.userBankAccount.accountHolderName}
                             onChange={(e) => {
-                              handleChange(e, "mentorBankAccount")
+                              handleChange(e, "userBankAccount")
                             }}
                           />
                           <div className="invalid-feedback">{errors.accountHolderName}</div>
@@ -539,9 +538,9 @@ export default function Page() {
                             id="bankName"
                             name="bankName"
                             placeholder="Nama Bank"
-                            value={formData.mentorBankAccount.bankName}
+                            value={formData.userBankAccount.bankName}
                             onChange={(e) => {
-                              handleChange(e, "mentorBankAccount")
+                              handleChange(e, "userBankAccount")
                             }}
                           />
                           <div className="invalid-feedback">{errors.bankName}</div>
@@ -556,9 +555,9 @@ export default function Page() {
                             id="accountNumber"
                             name="accountNumber"
                             placeholder="Nomor Rekening"
-                            value={formData.mentorBankAccount.accountNumber}
+                            value={formData.userBankAccount.accountNumber}
                             onChange={(e) => {
-                              handleChange(e, "mentorBankAccount")
+                              handleChange(e, "userBankAccount")
                             }}
                           />
                           <div className="invalid-feedback">{errors.accountNumber}</div>
@@ -571,9 +570,9 @@ export default function Page() {
                             id="paymentRecipientEmail"
                             name="paymentRecipientEmail"
                             placeholder="Email Penerima Pembayaran"
-                            value={formData.mentorBankAccount.paymentRecipientEmail}
+                            value={formData.userBankAccount.paymentRecipientEmail}
                             onChange={(e) => {
-                              handleChange(e, "mentorBankAccount")
+                              handleChange(e, "userBankAccount")
                             }}
                           />
                           <div className="invalid-feedback">{errors.paymentRecipientEmail}</div>
@@ -605,7 +604,7 @@ export default function Page() {
                             </div>
                             <div className="card-body">
                               <ul className="list-group list-group-flush">
-                                {Object.entries(formData.mentorBankAccount).map(([key, value]) => (
+                                {Object.entries(formData.userBankAccount).map(([key, value]) => (
                                   <li key={`mentor-addresses-result-${key}`}
                                       className="list-group-item">{convertToTitleCase(key)} : {value}</li>
                                 ))}
