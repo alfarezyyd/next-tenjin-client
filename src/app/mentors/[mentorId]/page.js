@@ -19,6 +19,7 @@ import Link from "next/link";
 export default function Page({}) {
   const [mentorData, setMentorData] = useState({});
   const pathName = useParams();
+
   const {push} = useRouter();
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState(null);
@@ -32,10 +33,16 @@ export default function Page({}) {
   const [slides, setSlides] = useState([]);
   const [imageAssistant, setImageAssistant] = useState(null);
   useEffect(() => {
-    if (pathName.mentorId) {
-      fetchMentorData(pathName.mentorId);
+    const params = new URLSearchParams(window.location.search);
+    const refAssistantId = params.get("ref");
+    if (pathName.mentorId && refAssistantId) {
+      fetchMentorData(pathName.mentorId, refAssistantId);
     }
   }, [pathName])
+
+  useEffect(() => {
+    console.log(slides)
+  }, [slides]);
 
   useEffect(() => {
     setAccessToken(Cookies.get("accessToken"));
@@ -71,10 +78,8 @@ export default function Page({}) {
     }
   }, [checkout]);
 
-  useEffect(() => {
-
-  }, [decodedAccessToken]);
-  const fetchMentorData = async (mentorId) => {
+  const fetchMentorData = async (mentorId, refAssistantId) => {
+    console.log(refAssistantId);
     setLoading(true);
     let responseFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/mentors/${mentorId}`, {
       method: 'GET', headers: {
@@ -83,7 +88,13 @@ export default function Page({}) {
     });
     let responseBody = await responseFetch.json();
     let sumOfAllRating = 0;
-    let firstAssistance = responseBody['result']['data']['Assistance'][0];
+    console.log(responseBody['result']['data']['Assistance'])
+    let firstAssistance = responseBody['result']['data']['Assistance'].find((assistant) => {
+      return assistant.id == refAssistantId
+    });
+    if (firstAssistance === undefined || firstAssistance === null) {
+      firstAssistance = responseBody['result']['data']['Assistance'][0];
+    }
     if (responseFetch.ok) {
       setMentorData(responseBody['result']['data']);
       for (const reviewElement of firstAssistance['Review']) {
@@ -425,11 +436,7 @@ export default function Page({}) {
                               src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/assistants/${mentorData.id}/${item.assistantId}/${item.imagePath}`}
                               width="100%"
                             />
-                            <Lightbox
-                              open={lightboxOpen}
-                              close={() => setLightboxOpen(false)}
-                              slides={slides}
-                            />
+
                           </CardBody>
                         </Card>))}
                     </div>
@@ -489,5 +496,10 @@ export default function Page({}) {
         </div>
       </div>
     </div>
+    <Lightbox
+      open={lightboxOpen}
+      close={() => setLightboxOpen(false)}
+      slides={slides}
+    />
   </LandingWrapper>))
 }

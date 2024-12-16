@@ -82,8 +82,11 @@ export default function Page() {
         }));
       });
       $(formatSelectRef.current).on("change", () => {
+
         setFormData(prev => ({
-          ...prev, format: $(formatSelectRef.current).val()
+          ...prev,
+          format: $(formatSelectRef.current).val(),
+          capacity: $(formatSelectRef.current).val() === 'INDIVIDUAL' && formData.capacity === 0 ? 1 : formData.capacity,
         }));
       })
       $(descriptionRef.current).on("summernote.change", () => {

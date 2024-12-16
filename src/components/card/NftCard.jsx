@@ -5,7 +5,7 @@ import {Image} from "@nextui-org/react";
 
 const NftCard = ({title, author, price, image, uniqueId, mentorId, extra, durationMinutes, assistantId}) => {
   const [heart, setHeart] = useState(true);
-  return (<Link href={`${process.env.NEXT_PUBLIC_BASE_URL}mentors/${uniqueId}`}>
+  return (<Link href={`${process.env.NEXT_PUBLIC_BASE_URL}mentors/${uniqueId}?ref=${assistantId}`}>
     <Card
       extra={`flex flex-col w-full h-full !p-4 3xl:p-![18px] bg-white ${extra}`}
     >
