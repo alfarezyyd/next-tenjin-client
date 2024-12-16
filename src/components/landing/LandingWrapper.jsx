@@ -41,6 +41,7 @@ export default function LandingWrapper({children}) {
 
   useEffect(() => {
     if (socket && decodedAccessToken) {
+
       socket.on("allRelatedUsers", (relatedUser) => {
         setChatData((prevChatData) => {
           const updatedChatData = {...prevChatData}; // Salin data lama (spread operator untuk objek)
@@ -52,6 +53,7 @@ export default function LandingWrapper({children}) {
                 uniqueId: relatedUserElement.userUniqueId,
                 userId: relatedUserElement.userId,
                 messages: relatedUserElement.messages,
+                photoPath: relatedUserElement.photoPath,
               };
             }
           });
@@ -67,9 +69,7 @@ export default function LandingWrapper({children}) {
   }, [activeChat])
 
   const handlePrivateMessage = (message) => {
-    console.log("Message" + message);
     setChatData((prevChatData) => {
-      console.log(prevChatData);
       const updatedChatData = {...prevChatData};
       if (message.message.isSender) {
         if (updatedChatData[message.destinationUserUniqueId]) {
@@ -174,7 +174,8 @@ export default function LandingWrapper({children}) {
       name: chatData.name,
       messages: chatData.messages,
       destinationUserUniqueId: chatData.uniqueId,
-      userId: chatData.userId
+      userId: chatData.userId,
+      photoPath: chatData.photoPath
     })
   }
 
@@ -206,7 +207,7 @@ export default function LandingWrapper({children}) {
                   <div className="flex items-center space-x-3">
                     <Image
                       className="w-12 h-12 rounded-full object-cover shrink-0 min-w-[48px] min-h-[48px]"
-                      src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-48-01_nugblk.jpg"
+                      src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${decodedAccessToken?.photoPath}`}
                       alt="Lauren Marsano"
                     />
                     <div className="">
@@ -221,12 +222,13 @@ export default function LandingWrapper({children}) {
                   {chatData && Object.values(chatData).length > 0 && Object.values(chatData).map((chat) => {
 
                     return (<button key={chat.uniqueId} onClick={() => {
+                      console.log(chat)
                       handleActiveChat(chat)
                     }}
                                     className={`w-full flex items-center p-2 rounded-md hover:bg-sky-500 transition group ${chat.uniqueId === activeChat?.destinationUserUniqueId ? 'bg-sky-200' : 'bg-gray-100'}`}>
                       <Image
                         className="w-8 h-8 rounded-full mr-3"
-                        src={`https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-32-01_pfck4u.jpg`}
+                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${chat?.photoPath}`}
                         alt={chat.name}
                       />
                       <div>
@@ -241,8 +243,8 @@ export default function LandingWrapper({children}) {
               </div>
               <div className="flex flex-col justify-between w-full lg:w-7/12 p-4">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">Chatbot</h2>
-                  <p className="text-sm text-gray-500">Powered by Mendable and Vercel</p>
+                  <h2 className="text-lg font-semibold text-gray-900">Tenjin-san Chat</h2>
+                  <p className="text-sm text-gray-500">Chat with Your mentor</p>
                 </div>
                 <div className="mt-6 space-y-4 overflow-y-auto flex-grow">
                   {activeChat?.messages?.length > 0 && activeChat.messages.map((chat, index) => {
@@ -272,8 +274,8 @@ export default function LandingWrapper({children}) {
             </span>
                       </div>
                       <Image
-                        className="w-9 h-8 rounded-full"
-                        src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-48-01_nugblk.jpg"
+                        className="w-9 h-9 rounded-full"
+                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${decodedAccessToken.photoPath}`}
                         alt="Jese image"
                       />
                     </div>) : (<div
@@ -281,9 +283,10 @@ export default function LandingWrapper({children}) {
                       key={index}
                       ref={isLastMessage ? lastMessageRef : null} // Tambahkan ref ke pesan terakhir
                     >
+                      {console.log(activeChat)}
                       <Image
                         className="w-9 h-8 rounded-full"
-                        src="https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-48-01_nugblk.jpg"
+                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}public/assets/user-resources/${activeChat?.photoPath}`}
                         alt="Jese image"
                       />
                       <div
